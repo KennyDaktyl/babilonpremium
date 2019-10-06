@@ -73,13 +73,21 @@ WSGI_APPLICATION = 'babilonpremium.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "NAME": "babilon03",
+#         "ENGINE": "django.db.backends.postgresql",
+#         "USER": os.environ.get('DB_USER'),
+#         "PASSWORD": os.environ.get('DB_PASSWORD'),
+#         "HOST": "localhost",
+#         # 'PORT': '8888',
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "NAME": "biuro01",
-        "ENGINE": "django.db.backends.postgresql",
-        "USER": os.environ.get('DB_USER'),
-        "PASSWORD": os.environ.get('DB_PASSWORD'),
-        "HOST": "localhost",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -127,7 +135,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static/media/")
 
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 LANGUAGE_CODE = 'pl-pl'
 
