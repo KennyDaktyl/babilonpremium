@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'babilonpremium.wsgi.application'
 
 DATABASES = {
     "default": {
-        "NAME": "babilon03",
+        "NAME": "babilon05",
         "ENGINE": "django.db.backends.postgresql",
         "USER": os.environ.get('DB_USER'),
         "PASSWORD": os.environ.get('DB_PASSWORD'),
