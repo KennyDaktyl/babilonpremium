@@ -80,7 +80,7 @@ DATABASES = {
         "USER": os.environ.get('DB_USER'),
         "PASSWORD": os.environ.get('DB_PASSWORD'),
         "HOST": "localhost",
-        # 'PORT': '8888',
+        'PORT': '5000',
     }
 }
 
