@@ -26,7 +26,7 @@ SECRET_KEY = 'omfpar0^(au6or)_&8+#z(d21b0hw94trfc)euf_q7+rg=j%ha'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['babilonpremium.herokuapp.com']
+ALLOWED_HOSTS = ['pizzeriababilon.herokuapp.com']
 
 # Application definition
 
