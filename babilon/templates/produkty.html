@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row col-12 mt-2">
+
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-12 m-2"><a class="dodaj" href="dodaj_klienta">Dodaj
+            nowy produkt</a></button>
+</div>
+<div class=".col-lg-4 .col-xl-12 m-2">
+    <label>
+        Wszystkie</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Pizza</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Składniki</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Sosy</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Napoje</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-2 m-2"><a class="dodaj"
+            href="/zamowienie_skladane/">Wyświetlane na stronie</a></button>
+
+
+</div>
+<div class="row col-12 mt-2">
+    <div class="col-12">
+        <label for=""><b>Wyszukiwarka:</b> (uwzględnij wielkość liter)</label>
+    </div>
+    <div class="col-12">
+        <input id="search" class=".col-lg-6 .col-xl-12 m-2" name="szukaj" maxlength="256" type="text"
+            class="form-control" placeholder="Sos, Pizza, Napój" aria-label="Recipient's username"
+            aria-describedby="basic-addon2">
+    </div>
+    <!-- <button type="submit" class="btn btn-dark .col-lg-6 .col-xl-6 m-2"><span>Przeszukaj całą
+            bazę</span></button> -->
+</div>
+</div>
+<button type="button" class="btn btn-warning .col-lg-12 .col-xl-12 m-2"><a class="dodaj"
+        href="/zamowienie_skladane/">Poskładaj
+        zamówienie z zaznaczonych pozycji</a></button>
+<table class="table lista">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Zaznacz</th>
+            <th scope="col">Wybierz jedną</th>
+            <th scope="col">Kategoria</th>
+            <th scope="col">Nazwa produktu</th>
+            <th scope="col">Skład i gramatura</th>
+            <th scope="col">Rozmiar</th>
+            <th scope="col">Cena</th>
+            <th scope="col">Ilość w mag.</th>
+            <th scope="col">Opis</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            </td>
+            <td>Pizza</td>
+            <td>Spinacci</td>
+            <td>ser, pieczarki, cebula, szynka</td>
+            <td>
+                <select class="custom-select">
+                    <option value="0">---</option>
+                    <option value="1">Mała</option>
+                    <option value="2">Średnia</option>
+                    <option value="3">Duża</option>
+                </select>
+            <td>45zł</td>
+            <td>12</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            <td>Pizza</td>
+            <td>Wieloskładnikowa</td>
+            <td>
+                <form>
+                    <button id="wielosklad" type="button" class="btn btn-primary">Wybierz składniki</button>
+                    <select multiple class="form-control skladniki" id="exampleFormControlSelect2">
+                        <option>Ser</option>
+                        <option>Pieczarki</option>
+                        <option>Cebula</option>
+                        <option>Pomidor</option>
+                        <option>Ogórek</option>
+                    </select>
+                    </div>
+                    <button id="zapisz" type="button" class="btn btn-primary skladniki">Zapisz</button>
+            </td>
+            <td><select class="custom-select">
+                    <option value="0">---</option>
+                    <option value="1">Mała</option>
+                    <option value="2">Średnia</option>
+                    <option value="3">Duża</option>
+                </select></td>
+            <td>45zł</td>
+            <td>12</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            <td>Pizza</td>
+            <td>Salami</td>
+            <td>ser, salami, cebula, szynka</td>
+            <td>
+                <select class="custom-select">
+                    <option value="0">---</option>
+                    <option value="1">Mała</option>
+                    <option value="2">Średnia</option>
+                    <option value="3">Duża</option>
+                </select>
+            <td>38zł</td>
+            <td>12</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            <td>Składniki</td>
+            <td>pieczarki</td>
+            <td></td>
+            <td><select class="custom-select">
+                    <option value="0">---</option>
+                    <option value="1">Mała</option>
+                    <option value="2">Średnia</option>
+                    <option value="3">Duża</option>
+                </select></td>
+            <td>3zł</td>
+            <td>4kg</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            <td>Sos</td>
+            <td>Czosnkowy</td>
+            <td></td>
+            <td></td>
+            <td>3</td>
+            <td>3l</td>
+            <td></td>
+        </tr>
+
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            <td>Napój</td>
+            <td>Coca cola</td>
+            <td></td>
+            <td>1 l</td>
+            <td>10zł</td>
+            <td>12szt</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            <td>Napój</td>
+            <td>Coca cola</td>
+            <td></td>
+            <td>0,5l</td>
+            <td>10zł</td>
+            <td>12szt</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Wybierz</a>
+            <td>Napój</td>
+            <td>Coca cola</td>
+            <td></td>
+            <td>0,33</td>
+            <td>10zł</td>
+            <td>12szt</td>
+            <td></td>
+        </tr>
+
+    </tbody>
+</table>
+{% endblock %}

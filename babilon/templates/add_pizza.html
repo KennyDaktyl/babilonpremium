@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row col-12 mt-2 mx-auto text-nowrap">
+    <div class="row col-12 border">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="active_form">
+                {{ form.as_p }}
+                <div class="form-group row col-10 mt-2">
+                    <button type="submit" class="btn btn-dark">Dodaj pizzę</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

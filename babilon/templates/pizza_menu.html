@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<div class="col-12 mx-auto text-center bg-light p-1 border">
+    <div class="row col-12 mt-2 mx-auto text-nowrap">
+        <h4 class="text-left col-12 mt-2">Produkty</h4>
+        <div class="col-12 text-wrap">
+            <div class="col-12">
+                <div class="row col-12">
+
+                    {% for size in el_pizza_sizes %}
+                    <div class="row orders mx-auto">
+                        <button type="button" class="btn btn-success size {{size}}">{{size}}</button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row ">
+                {% for el in product %}
+                <form method="GET" action="/add_to_order/{{el.id}}" class="text-center mx-auto">
+                    {% csrf_token %}
+                    <button type="submit" class="col-12 mx-auto btn btn-primary m-1 p-3}}">
+                        {{el.name}}<br>
+                        <span class="text-center">{{el.price}}zł</span><br>
+                        <span class="text-center">Rozmiar: {{el.size}}</span>
+                        <span>ID: {{el.id}}</span>
+                    </button>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

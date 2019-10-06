@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Błedy w formularzu</title>
+</head>
+
+<body>
+    {% if form %}
+    <ul>
+        {% for field in form %}
+        <li>
+            {{ field.name }}: {{ field.errors }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif%}
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+
+
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static "babilon/style.css" %}">
+    {% block head_additional %}
+    {% endblock %}
+    <title>Pizza System Babilon | {% block title %}{% endblock %}</title>
+</head>
+
+<body class="bg-secondary">
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Babilon Premium</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle col-xs-12" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Zamówienia
+                    </a>
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item col-xs-6" href="/zamowienia/">Zamówienia</a>
+                        <a class="dropdown-item" href="/lista_produktow/">Lista produktów</a>
+                        <a class="dropdown-item" href="/lista_klientow/">Baza klienci</a>
+                        <a class="dropdown-item" href="/lista_pracownikow/">Lista pracowników</a>
+                        <!-- <a class="dropdown-item" href="/faktura_zakupu/">Faktura Vat</a>
+                        <a class="dropdown-item" href="/lista_faktur/">Lista Faktura Vat</a>
+                        <a class="dropdown-item" href="/dodaj_telefon/">Dodaj telefon</a> -->
+                    </div>
+
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Magazyn
+                    </a>
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/stan_magazynu/">Stan magazynu</a>
+                        <a class="dropdown-item" href="/archiwum_serwisow/">Oblicz cenę kulki</a>
+                        <a class="dropdown-item" href="/lista_czesci/">Ustaw gramaturę</a>
+                        <!-- <a class="dropdown-item" href="/dodaj_czesc/">Dodaj część?</a> -->
+                        <!-- <a class="dropdown-item" href="/dodaj_serwis/">Przyjmij sprzęt do naprawy</a> -->
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Kasa
+                    </a>
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/stan_kasy/">Stan kasy bieżący</a>
+                        <a class="dropdown-item" href="/wydatki_miesiac/">Miesięczna lista wydatków</a>
+                        <a class="dropdown-item" href="/ustaw_koszty/">Lista kosztów stałych</a>
+                        <a class="dropdown-item" href="/przychody_zysk/">Przychody i zysk</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Produkty
+                    </a>
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/add_pizza_list/">Dodaj i edytuj Pizzę</a>
+                        <a class="dropdown-item" href="/wydatki_miesiac/">Miesięczna lista wydatków</a>
+                        <a class="dropdown-item" href="/ustaw_koszty/">Lista kosztów stałych</a>
+                        <a class="dropdown-item" href="/przychody_zysk/">Przychody i zysk</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Grafik
+                    </a>
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/grafik_miesieczny/">Grafik bieżący miesiąc</a>
+                        <a class="dropdown-item" href="/ustaw_grafik_miesieczny/">Ustal grafik miesięczny</a>
+                        <a class="dropdown-item" href="/wypłaty_pracownikow/">Wypłaty pracowników</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Administracja
+                    </a>
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/dodaj_uzytkownika/">Dodaj użytkownika</a>
+                        <a class="dropdown-item" href="/lista_uzytkownikow/">Lista pracownikow</a>
+                        <a class="dropdown-item" href="/dodaj_sklep/">Dodaj sklep/magazyn</a>
+                        <a class="dropdown-item" href="/dodaj_usluge/">Dodaj usługę</a>
+                        <a class="dropdown-item" href="/dodaj_marke/">Dodaj markę</a>
+                        <a class="dropdown-item" href="/dodaj_kategorie/">Dodaj kategorię</a>
+                        <a class="dropdown-item" href="/dodaj_typ/">Dodaj typ części</a>
+                        <a class="dropdown-item" href="/dodaj_hurtownie/">Dodaj hurtownię</a>
+                        <a class="dropdown-item" href="/dodaj_adres/">Dodaj adres</a>
+
+                    </div>
+                </li>
+            </ul>
+            <!-- <form class="form-inline my-2 my-lg-0" method="POST" action="/szukaj_czesci/">
+                {% csrf_token %}
+                <input name="szukaj" class=" form-control mr-sm-2" type="search" placeholder="Części"
+                    aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Części</button>
+            </form> -->
+
+            <ul class="navbar-nav ml-auto nav-flex-icons">
+
+                <li class="nav-item dropdown">
+
+
+                    {% if user.is_authenticated %}
+                    <i class="fas fa-user"></i>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                        {% else %}
+                        <a class="dropdown-item text-light" href="/login/">Zaloguj</a>
+                        {% endif %}
+                        </i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                        aria-labelledby="navbarDropdownMenuLink-333">
+                        <a class="dropdown-item" href="/profil/{{user.id}}">Mój profil</a>
+                        <a class="dropdown-item" href="#">Dane adresowe</a>
+                        <a class="dropdown-item" href="#">Dokumenty</a>
+                        <a class="dropdown-item" href="/logout/">Wyloguj</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+    {% block content %}
+
+
+
+
+    {% endblock %}
+    </div>
+    </div>
+    <div class="container-fluid mr-auto">
+        <div class="col-12 mt-2 mx-auto">
+            <div class="container text-center">
+                <footer class="footer col-12 mx-auto">
+                    <span class="copyright col-12 mx-auto">Copyright &copy; Miktel Premium 2019</span>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="{% static "babilon/main.js" %}" type="text/javascript"></script>
+</body>
+
+</html>

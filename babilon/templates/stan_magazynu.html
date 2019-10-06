@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row col-12 mt-2">
+
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-12 m-2"><a class="dodaj" href="dodaj_klienta">Dodaj
+            nowy produkt</a></button>
+</div>
+<div class=".col-lg-4 .col-xl-12 m-2">
+    <label>
+        Wszystkie</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Ciasto</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Składniki</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Sosy</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Napoje</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <label>
+        Pudełka</label>
+    <input name="checks" class="form-check-input position-static col-1" type="checkbox" id="blankCheckbox"
+        value="{{el.id}} " aria-label="..." checked>
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-2 m-2"><a class="dodaj"
+            href="/zamowienie_skladane/">Wyświetlane na stronie</a></button>
+
+
+</div>
+<div class="row col-12 mt-2">
+    <div class="col-12">
+        <label for=""><b>Wyszukiwarka:</b> (uwzględnij wielkość liter)</label>
+    </div>
+    <div class="col-12">
+        <input id="search" class=".col-lg-6 .col-xl-12 m-2" name="szukaj" maxlength="256" type="text"
+            class="form-control" placeholder="Sos, Pizza, Napój" aria-label="Recipient's username"
+            aria-describedby="basic-addon2">
+    </div>
+    <!-- <button type="submit" class="btn btn-dark .col-lg-6 .col-xl-6 m-2"><span>Przeszukaj całą
+            bazę</span></button> -->
+</div>
+</div>
+
+<table class="table lista">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Zaznacz</th>
+            <th scope="col">Dodaj/Usuń</th>
+            <th scope="col">Kategoria</th>
+            <th scope="col">Nazwa produktu</th>
+            <th scope="col">Waga/sztuki</th>
+            <th scope="col">Cena średnia</th>
+            <th scope="col">Wartość</th>
+            <th scope="col">Data ostaniej dostawy</th>
+            <th scope="col">Opis</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Warzywa</td>
+            <td>Pomidor</td>
+            <td>18kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Warzywa</td>
+            <td>Pieczarki</td>
+            <td>26kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Warzywa</td>
+            <td>Ser</td>
+            <td>18kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Warzywa</td>
+            <td>Mozzarella</td>
+            <td>18kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Mięso</td>
+            <td>Szynka</td>
+            <td>18kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Mieso</td>
+            <td>Kurczak</td>
+            <td>18kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Warzywa</td>
+            <td>Mozzarella</td>
+            <td>18kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Mięso</td>
+            <td>Szynka</td>
+            <td>18kg<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>13zł/kg</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+        <tr class="table lista">
+            <th scope="row">1</th>
+            <td><input name="checks" class="form-check-input position-static" type="checkbox" id="blankCheckbox"
+                    value="{{el.id}}" aria-label="..."></td>
+            <td><a href="">Dodaj</a>
+                <br><a href="">Usuń</a>
+            </td>
+            <td>Napój</td>
+            <td>Coca-Cola</td>
+            <td>52szt<br>
+                <a href="">Ustaw aktualną</a></td>
+            <td>3,5zł/szt</td>
+            <td>234</td>
+            <td>21- wrzesien 2019</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

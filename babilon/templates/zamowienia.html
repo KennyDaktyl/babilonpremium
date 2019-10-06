@@ -1,0 +1,109 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="row col-12 mt-2">
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="dodaj"
+            href="dodaj_zamowienie_wywoz/">Dodaj
+            zamówienie LOKAL</a></button>
+
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="dodaj"
+            href="/dodaj_zamowienie_wywoz/">Dodaj
+            zamówienie WYWÓZ</a></button>
+</div>
+<h2>Lista zamówień na dzień 2 listopad 2019 Pizzeria <b>Budryka 2</b></h2>
+<div>
+    <label>Pokaż inne pizzerie</label>
+</div>
+<select class="custom-select col-4">Pokaż inne pizzerie
+    <option value="0">---</option>
+    <option value="1">Makuszyńskiego 8</option>
+    <option value="2">Centrum B1</option>
+</select>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col w-auto">#</th>
+            <th scope="col w-auto">Nr</th>
+            <th scope="col w-auto">Czas</th>
+            <th scope="col w-auto">Status</th>
+            <th scope="col w-auto">Lokal/Wywóz</th>
+            <th scope="col w-auto">Klient</th>
+            <!-- <th scope="col w-auto">Adres</th> -->
+            <th scope="col w-auto">Zamówienie</th>
+            <th scope="col w-auto">Płatność</th>
+            <th scope="col w-auto">Cena</th>
+            <th scope="col w-auto">Kierowca</th>
+            <th scope="col w-auto">Wyjazd</th>
+            <th scope="col w-auto">Dostawa</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr class="table-danger">
+            <th scope="row">1</th>
+            <td class="col w-auto">{{order.number}}</td>
+            <td class="col w-auto">{{order.data}}</td>
+            <td class="col w-auto">{{order.get_status_display}}</td>
+            <td class="col w-auto">{{order.get_delivery_display}}</td>
+            <td class="text-wrap">{{order.client}}</td>
+            <td class="text-wrap">
+                {% for el in order.product.all %}
+                {{el.quantity}}x {{el.name}} Rozm.{{el.size}}<br>
+                {% endfor %}
+            </td>
+            <td>{{order.get_paymethod_display}}</td>
+            <td>{{order.total_price}}</td>
+            <td>{{order.driver}}</td>
+            <td>{{order.time_get}}</td>
+            <td>{{order.time_in}}</td>
+            <td><button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class=""
+                        href="#">Szegóły</a></button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="col-8 input-group mb-3 mx-auto">
+    <div class="col-1"></div>
+    <nav aria-label="...">
+        {% if czesc.has_other_pages %}
+        <ul class="pagination text-dark">
+            {% if czesc.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="?page={{ czesc.previous_page_number }}">Poprzednia</a>
+            </li>
+            <li class="page-item"><a class="page-link text-dark"
+                    href="?page={{ czesc.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span></span></li>
+            {% endif %}
+            {% for i in czesc.paginator.page_range %}
+            {% if czesc.number == i %}
+            <li class="page-item text-light bg-dark active">
+                <span class="page-link text-light bg-dark">
+                    {{ i }}
+                    <span class="sr-only text-dark">(current)</span>
+                </span>
+            </li>
+            {% else %}
+            <li class="page-item text-dark"></li><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% if czesc.has_next %}
+            <li class="page-item text-dark"><a class="page-link text-dark"
+                    href="?page={{ czesc.next_page_number }}">&raquo;</a>
+            </li>
+
+            <li class="page-item text-dark ">
+                <a class="page-link text-dark" href="?page={{ czesc.next_page_number }}">Następna</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span></span></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+</div>
+<div class="col-1"></div>
+
+{% endblock %}

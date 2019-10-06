@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div><label for=""><b>Wyszukiwarka:</b></label>
+    </div>
+    <div class="row col-8 m-2">
+        <select name="szukaj" id="search2">
+            <option value="{{el.nazwa}}">Wybierz sklep</option>
+            {% for el in pizzeria %}
+            <option value="{{el.nazwa}}">{{el.name}}{{el.adress}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row col-12 mt-2">
+            <input id="search" class="row .col-lg-6 .col-xl-6 m-2" name="szukaj" maxlength="128" type="text"
+                class="form-control" placeholder="numer umowy, kategoria, nazwa, model, imei"
+                aria-label="Recipient's username" aria-describedby="basic-addon2">
+
+            <button type="submit" class="btn btn-dark .col-lg-6 .col-xl-6 m-2"><span>Przeszukaj całą
+                    bazę</span></button>
+        </div>
+    </form>
+
+    <div class="row col-12 mt-2">
+        <button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="dodaj" href="#">Dodaj
+                nową pizzę</a></button>
+    </div>
+
+    <span class="row col-12 mt-2">
+        <table class="table table-dark">
+            <H1>Lista pizz</H1>
+            <thead>
+                <tr>
+                    <th scope="col">L.P.</th>
+                    <th scope="col">Nazwa</th>
+                    <th scope="col">Składniki</th>
+                    <th scope="col">Rozmiary</th>
+                    <th scope="col">Cennik</th>
+                    <th scope="col">Szczegóły</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for el in pizzas %}
+
+                <tr class="lista">
+                    <th scope="row">{{ forloop.counter0}}</th>
+                    <td>{{el.name}}</td>
+                    <td>{% for comp in el.pizza_componets.all %} <span>{{comp.name}}, </span>{% endfor %}</td>
+                    <td>{{el.size}}</td>
+                    <!-- <td>{% for size in sizes %} <span>{{size}}, </span>{% endfor %}</td> -->
+                    <td>{{el.price}}</td>
+                    <td><button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="edytuj"
+                                href="{% url 'edytuj_pizze' %}">Edytuj Pizzę</a></button></td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+        </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row col-12 border mt-2 mx-auto">
+    <p class="col-12 text-left">Składniki pizzy: {{product.name}}</p>
+
+    {% for el in toppings %} <b>
+        <form class="mx-auto" method="POST">
+            {% csrf_token %}
+            <input name="toppings" type="hidden" value="{{toppings}}">
+            <input name="product.change_info" type="hidden" value="{{product.change_info}}">
+            <input name="deltopps" type="hidden" value="{{el.id}}">
+            <button type="submit" class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
+                    {{el.price}}</span><br><span>{{el.topping.name}}</span></button></a>
+    </b></form>{% endfor %}
+</div>
+
+<div class="row col-12 border mt-2 mx-auto">
+    {% for el in vegetopps %} <b>
+        <form class="mx-auto" method="POST">
+            {% csrf_token %}
+            <input name="vegetopps" type="hidden" value="{{el.id}}">
+            <button type="submit" class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
+                    {{el.price}}</span></button></a>
+    </b></form>{% endfor %}
+</div>
+
+<div class="row col-12 border mt-2 mx-auto">
+    {% for el in beeftopps %} <b>
+        <form class="mx-auto" method="POST">
+            {% csrf_token %}
+            <input name="beeftopps" type="hidden" value="{{el.id}}">
+            <button type="submit" class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
+                    {{el.price}}</span></button></a>
+    </b></form>{% endfor %}
+</div>
+<div class="row col-12 border mt-2 mx-auto">
+    <h5 class="col-12 text-left">Składniki mięsne: {{beefcounter}}, składniki warzywne {{vegecounter}}</h5>
+    <h5 class="col-12 text-left">Zmiana składników</h5>
+    <p>{{product.change_topps}}</p>
+</div>
+<p class="col-12 text-left"></p>
+<p class="col-12 text-left">Cena produktu</p>
+<form class="mx-auto col-12" method="POST" action="/add_modyfi_to_order/">
+    {% csrf_token %}
+    <input name="productId" type="hidden" value="{{product.id}}">
+    <input name="changeTopps" type="hidden" value="{{product.change_topps}}">
+    <h5 class="col-12 text-left"><b>{{product.price}}</b> zł</h5>
+    <button type="submit" class="col-4 mx-auto btn btn-success">Zapisz</button>
+</form>
+{% endblock %}
