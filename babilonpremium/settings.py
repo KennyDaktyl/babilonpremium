@@ -124,8 +124,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = 'static/media/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-
-SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 LANGUAGE_CODE = 'pl-pl'
 
@@ -151,6 +151,6 @@ USE_L10N = True
 USE_TZ = True
 TIME_ZONE = "Poland"
 
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
