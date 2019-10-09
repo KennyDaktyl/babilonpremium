@@ -97,9 +97,34 @@ class Category(models.Model):
 class ProductSize(models.Model):
     size = models.CharField(verbose_name="Rozmiar", max_length=64)
     pizza = models.BooleanField(verbose_name="Pizza", null=True, blank=True)
+
     bottle = models.BooleanField(verbose_name="Butelka", null=True, blank=True)
     sauce = models.BooleanField(verbose_name="Sos", null=True, blank=True)
     pizza_box = models.BooleanField(verbose_name="Sos", null=True, blank=True)
+
+    vege_topps_price = models.DecimalField(
+        verbose_name="Cena dodatku warzywnego",
+        null=True,
+        blank=True,
+        max_digits=19,
+        decimal_places=2)
+    beef_topps_price = models.DecimalField(
+        verbose_name="Cena dodatku mięsnego",
+        null=True,
+        blank=True,
+        max_digits=19,
+        decimal_places=2)
+    cheese_topps_price = models.DecimalField(
+        verbose_name="Cena dodatku serowego",
+        null=True,
+        blank=True,
+        max_digits=19,
+        decimal_places=2)
+    sauce_price = models.DecimalField(verbose_name="Cena dodatkowego sosu",
+                                      null=True,
+                                      blank=True,
+                                      max_digits=19,
+                                      decimal_places=2)
 
     class Meta:
         ordering = ("size", )
@@ -129,60 +154,40 @@ class ToppingCategory(models.Model):
 
 
 class Products(models.Model):
+    menu_category = models.ForeignKey("MainMenu",
+                                      verbose_name="Kategoria w Menu",
+                                      blank=True,
+                                      null=True,
+                                      on_delete=models.CASCADE,
+                                      related_name="cat_menu")
+
+    name = models.CharField(verbose_name="Nazwa productu", max_length=128)
+    number_in_menu = models.IntegerField(verbose_name="Rabat",
+                                         null=True,
+                                         unique=True,
+                                         blank=True)
+    size = models.ForeignKey("ProductSize",
+                             verbose_name="Rozmiar",
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE,
+                             related_name="Product_size")
     quantity = models.IntegerField(verbose_name="Ilosc",
                                    null=True,
                                    blank=True,
                                    default=1)
-    name = models.CharField(verbose_name="Nazwa productu", max_length=128)
-    change_info = models.CharField(verbose_name="Zaminy w składnikach",
-                                   max_length=128,
-                                   null=True,
-                                   blank=True)
-
-    pizza = models.BooleanField(verbose_name="Pizza?", null=True, blank=True)
-    pizza_componets = models.ManyToManyField("Products",
-                                             verbose_name="Składniki",
-                                             related_name="pizza_component",
-                                             blank=True)
-    topping = models.ForeignKey("ToppingCategory",
-                                verbose_name="Categoria dodatki pizzy",
-                                blank=True,
-                                null=True,
-                                on_delete=models.CASCADE,
-                                related_name="product_category")
+    toppings = models.ManyToManyField("Products",
+                                      verbose_name="Składniki",
+                                      related_name="pizza_component",
+                                      blank=True)
     change_toppings = models.CharField(verbose_name="Zaminy w składnikach",
                                        max_length=128,
                                        null=True,
                                        blank=True,
                                        default="")
-    beff_topps_price = models.DecimalField(
-        verbose_name="Cena za dodatek mięsny",
-        null=True,
-        blank=True,
-        max_digits=19,
-        decimal_places=2)
-    vege_topps_price = models.DecimalField(
-        verbose_name="Cena za dodatek warzywny",
-        null=True,
-        blank=True,
-        max_digits=19,
-        decimal_places=2)
-    cheese_topps_price = models.DecimalField(
-        verbose_name="Cena za dodatek serowy",
-        null=True,
-        blank=True,
-        max_digits=19,
-        decimal_places=2)
-    cake_topps_price = models.DecimalField(
-        verbose_name="Cena za ser w rantach",
-        null=True,
-        blank=True,
-        max_digits=19,
-        decimal_places=2)
     cake_modyfy = models.BooleanField(verbose_name="Czy ser w rantach możliwy",
                                       null=True,
                                       blank=True)
-    drink = models.BooleanField(verbose_name="Napój?", null=True, blank=True)
     component = models.IntegerField(verbose_name="component",
                                     choices=RODZAJ_SKŁADNIKA,
                                     null=True,
@@ -193,12 +198,7 @@ class Products(models.Model):
     cake = models.BooleanField(verbose_name="Składnik do ciasta?",
                                null=True,
                                blank=True)
-    size = models.ForeignKey("ProductSize",
-                             verbose_name="Rozmiar",
-                             blank=True,
-                             null=True,
-                             on_delete=models.CASCADE,
-                             related_name="Product_size")
+
     price = models.DecimalField(verbose_name="Cena produktu",
                                 null=True,
                                 blank=True,
@@ -219,12 +219,6 @@ class Products(models.Model):
                             verbose_name="Stawka VAT",
                             null=True,
                             blank=True)
-    menu_category = models.ForeignKey("MainMenu",
-                                      verbose_name="Kategoria w Menu",
-                                      blank=True,
-                                      null=True,
-                                      on_delete=models.CASCADE,
-                                      related_name="cat_menu")
 
     class Meta:
         ordering = (
@@ -251,9 +245,9 @@ class Products(models.Model):
         return suma
 
     @property
-    def total_price_pizzamix(self):
-        price_comp = self.price_pizzamix
-        total = price_comp + self.price
+    def total_price(self):
+
+        total = self.extra_price + self.price
         return total
 
     @property
@@ -277,7 +271,7 @@ class Products(models.Model):
 
     def __str__(self):
         return str(self.name) + ", " + str(self.size) + ", " + str(
-            self.price) + ", " + str(self.tax)
+            self.price) + ", " + str(self.extra_price)
 
 
 class Vat(models.Model):
@@ -315,6 +309,7 @@ class Orders(models.Model):
                                       blank=True,
                                       related_name="pozition_order")
     other = models.ManyToManyField("Products",
+                                   blank=True,
                                    verbose_name="Dodatkowe produkty")
     paymethod = models.IntegerField(verbose_name="Status zamówienia",
                                     choices=PŁATNOŚĆ,
@@ -336,9 +331,12 @@ class Orders(models.Model):
         total = []
         product = self.position.all()
         for el in product:
-            suma = el.total_price
+            suma = el.price + el.extra_price
             total.append(suma)
         return sum(total)
+
+    def __str__(self):
+        return str(self.id) + " " + str(self.number)
 
 
 class PositionOrder(models.Model):
@@ -358,7 +356,8 @@ class PositionOrder(models.Model):
                                       related_name="pizza_toppings",
                                       blank=True)
     change_topps = models.CharField(verbose_name="Zmiany składników",
-                                    max_length=128)
+                                    max_length=128,
+                                    default="")
     extra_price = models.DecimalField(verbose_name="Cena dodatków",
                                       null=True,
                                       blank=True,
@@ -373,19 +372,22 @@ class PositionOrder(models.Model):
 
     @property
     def total_price(self):
-        return (self.extra_price + self.price) * self.quantity
+        return (float(self.extra_price) + float(self.price)) * self.quantity
+
+    # def total_price(self):
+    #     return (float(self.extra_price) + float(self.price)) * self.quantity
 
     # def __str__(self):
     #     return str(self.position)
     def __str__(self):
-        return str(self.position)
+        return str(self.id) + ", " + str(self.position)
 
 
 class MainMenu(models.Model):
     name = models.CharField(verbose_name="Kategoria menu", max_length=128)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.id) + ", " + str(self.name)
 
 
 class Pizza(models.Model):

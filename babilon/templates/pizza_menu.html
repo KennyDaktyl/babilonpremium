@@ -20,15 +20,14 @@
             </div>
             <div class="row ">
                 {% for el in product %}
-                <form method="GET" action="/add_to_order/{{el.id}}" class="text-center mx-auto">
-                    {% csrf_token %}
-                    <button type="submit" class="col-12 mx-auto btn btn-primary m-1 p-3}}">
+                <a class="text-center mx-auto" href="/add_to_order/{{el.id}}">
+                    <button type="button" class="col-12 mx-auto btn btn-primary m-1 p-3}}">
                         {{el.name}}<br>
                         <span class="text-center">{{el.price}}zł</span><br>
                         <span class="text-center">Rozmiar: {{el.size}}</span>
                         <span>ID: {{el.id}}</span>
                     </button>
-                </form>
+                </a>
                 {% endfor %}
             </div>
         </div>

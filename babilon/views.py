@@ -49,153 +49,213 @@ class AddToOrdersView(View):
         otherSize = Products.objects.filter(
             name=product_add.name).order_by('size')
 
+        orderPosition = add_position_to_order(product_add)
+
         vege_components = Products.objects.filter(component="1")
         beef_components = Products.objects.filter(component="2")
         sizes = ProductSize.objects.filter(pizza=True)
         products = Products.objects.all()
-        souse = Products.objects.filter(menu_category=3)
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
         ctx = {
-            # 'orderId': orderId,
+            'orderPosition': orderPosition,
             'product_add': product_add,
             'otherSize': otherSize,
             'vege_components': vege_components,
             'beef_components': beef_components,
             'sizes': sizes,
             'products': products,
-            'souse': souse
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
         }
-        return TemplateResponse(request, "add_order.html", ctx)
+        return TemplateResponse(request, "add_product_to_order.html", ctx)
 
     def post(self, request, pk):
-        orderId = request.POST.get('orderId')
-        addProduct = request.POST.get('addProduct')
+
+        productId = request.POST.get('productId')
+        orderPositionId = request.POST.get('orderPosition')
+        print(orderPositionId)
+
+        orderPositionAdd = PositionOrder.objects.get(pk=orderPositionId)
+        product_add = Products.objects.get(id=pk)
         changeTopps = request.POST.get('changeTopps')
         product_add = Products.objects.get(id=pk)
 
-        add_position_do_order(product_add, changeTopps)
+        new_positionOrder(orderPositionAdd)
 
         return TemplateResponse(request, "product_list.html")
 
 
 class AddModyfiProduct(View):
-    def post(self, request):
-        productId = request.POST.get('productId')
-        # product_add = request.POST.get('addProduct')
-        changeTopps = request.POST.get('changeTopps')
+    def get(self, request, pk, modyfi):
+        product_add = Products.objects.get(id=pk)
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
 
-        # print(product_add)
-        NewPositionOrder = PositionOrder.objects.get(pk=productId)
-        print(NewPositionOrder.position)
-        try:
-            order = Orders.objects.get(active=True)
-        except ObjectDoesNotExist:
-            order = Orders()
-            order.active = True
-            orderId = order.id
-            order.save()
-        order.position.add(NewPositionOrder)
-        order.save()
+        orderPosition = PositionOrder.objects.get(pk=modyfi)
+
+        vege_components = Products.objects.filter(component="1")
+        beef_components = Products.objects.filter(component="2")
+        sizes = ProductSize.objects.filter(pizza=True)
+        products = Products.objects.all()
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vege_components': vege_components,
+            'beef_components': beef_components,
+            'sizes': sizes,
+            'products': products,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
+        return TemplateResponse(request, "add_product_to_order.html", ctx)
+
+    def post(self, request, pk, modyfi):
+
+        productId = request.POST.get('productId')
+        orderPositionId = request.POST.get('orderPosition')
+        orderPositionAdd = PositionOrder.objects.get(pk=orderPositionId)
+        product_add = Products.objects.get(id=pk)
+        changeTopps = request.POST.get('changeTopps')
+        product_add = Products.objects.get(id=pk)
+        new_positionOrder(orderPositionAdd)
 
         return TemplateResponse(request, "product_list.html")
 
 
 class ChangeToppsView(View):
-    def get(self, request, pk):
-        product = Products.objects.get(pk=pk)
-        vegetopps = Products.objects.filter(topping=1)
-        beeftopps = Products.objects.filter(topping=4)
-
-        NewOrderPosition = new_positionOrder(product)
-        ilosc = product.quantity
-        NewOrderPosition.position = "{}x {} Rozmiar:{}, Cena{}".format(
-            ilosc, product.name, product.size, product.price)
-        NewOrderPosition.save()
-        NewOrderPosition.change_info = ""
-        NewOrderPosition.save()
-        # print(NewOrderPosition)
+    def get(self, request, pk, modyfi):
+        product = Products.objects.get(id=pk)
+        orderPosition = PositionOrder.objects.get(pk=modyfi)
+        vegetopps = Products.objects.filter(component="1")
+        beeftopps = Products.objects.filter(component="2")
+        cheesetopps = Products.objects.filter(component="3")
 
         toppings = []
-        for el in NewOrderPosition.toppings.all():
+        for el in orderPosition.toppings.all():
             toppings.append(el)
+        #
         vegecounter = 0
         beefcounter = 0
-        for el in NewOrderPosition.toppings.all():
-            if el.topping.id == 1:
+        cheesecounter = 0
+        for el in toppings:
+            if el.component == 1:
                 vegecounter += 1
-            if el.topping.id == 4:
+
+            if el.component == 2:
                 beefcounter += 1
-        NewOrderPosition.save()
+            if el.component == 3:
+                cheesecounter += 1
+        # ilosc = 1
+        # product_modyfi = PositionOrder()
+        # product_modyfi.position = "{}x {} Rozmiar:{}, Cena{}".format(
+        #     ilosc, product.name, product.size, product.price)
+        # product_modyfi.price = product.price
+        # # print(product_modyfi.price)
+        # product_modyfi.save()
+        # product_modyfi.extra_price = product.extra_price
+        # product_modyfi.quantity = ilosc
+        # product_modyfi.save()
+        # for el in toppings:
+        #     product_modyfi.toppings.add(el)
+        #     product_modyfi.save()
+
         ctx = {
-            'product': NewOrderPosition,
+            'product': product,
+            'product_modyfi': orderPosition,
+            'cheesetopps': cheesetopps,
             'toppings': toppings,
             'vegetopps': vegetopps,
             'beeftopps': beeftopps,
             'vegecounter': vegecounter,
-            'beefcounter': beefcounter
+            'beefcounter': beefcounter,
+            'cheesecounter': cheesecounter
         }
         return TemplateResponse(request, "change_topps.html", ctx)
 
-    def post(self, request, pk):
-        # productId = request.POST.get('productId')
-        # print(productId)
+    def post(self, request, pk, modyfi):
         product = Products.objects.get(pk=pk)
-        NewOrderPosition = PositionOrder.objects.last()
-        # print(NewOrderPosition)
+        product_modyfi = PositionOrder.objects.get(pk=modyfi)
+
         deltopps = request.POST.get('deltopps')
-        # print(deltopps)
         vegetopps = request.POST.get('vegetopps')
         beeftopps = request.POST.get('beeftopps')
-        toppings = []
-        for el in NewOrderPosition.toppings.all():
-            toppings.append(el)
-            # NewOrderPosition.save()
-        #     # print(el)
+        cheesetopps = request.POST.get('cheesetopps')
+
         if deltopps != None:
             deltop = Products.objects.get(pk=deltopps)
-            NewOrderPosition.change_topps += "- {}, ".format(deltop.name)
-            NewOrderPosition.save()
-            for el in NewOrderPosition.toppings.all():
+            product_modyfi.change_topps += "- {}, ".format(deltop.name)
+            # product_modyfi.toppings.add(deltop)
+            # product_modyfi.save()
+            for el in product_modyfi.toppings.all():
                 if deltop.id == el.id:
-                    NewOrderPosition.toppings.remove(el)
-                    NewOrderPosition.save()
-
+                    product_modyfi.toppings.remove(el)
+                    product_modyfi.save()
         if vegetopps != None:
             vegetopp = Products.objects.get(pk=vegetopps)
-            NewOrderPosition.change_topps += "+ {}, ".format(vegetopp.name)
-            NewOrderPosition.toppings.add(vegetopp)
-            NewOrderPosition.save()
+            print(vegetopps)
+            product_modyfi.change_topps += "+ {}, ".format(vegetopp.name)
+            product_modyfi.toppings.add(vegetopp)
+            product_modyfi.save()
         if beeftopps != None:
             beeftopp = Products.objects.get(pk=beeftopps)
-            NewOrderPosition.change_topps += "+ {}, ".format(beeftopp.name)
-            NewOrderPosition.toppings.add(beeftopp)
-            NewOrderPosition.save()
+            product_modyfi.change_topps += "+ {}, ".format(beeftopp.name)
+            product_modyfi.toppings.add(beeftopp)
+            product_modyfi.save()
+        if cheesetopps != None:
+            cheesetopp = Products.objects.get(pk=beeftopps)
+            product_modyfi.change_topps += "+ {}, ".format(cheesetopp.name)
+            product_modyfi.toppings.add(cheesetopp)
+            product_modyfi.save()
 
-        # for el in NewOrderPosition.toppings.all():
-        #     NewOrderPosition.toppings.add(el)
-        #     NewOrderPosition.save()
-
-        toppings = []
-        for el in NewOrderPosition.toppings.all():
-            toppings.append(el)
         vegecounter = 0
         beefcounter = 0
+        cheesecounter = 0
+        toppings = []
+        for el in product_modyfi.toppings.all():
+            toppings.append(el)
         for el in toppings:
-            if el.topping.id == 1:
+            if el.component == 1:
                 vegecounter += 1
-            if el.topping.id == 4:
+            if el.component == 2:
                 beefcounter += 1
+            if el.component == 3:
+                cheesecounter += 1
 
-        vegetopps = Products.objects.filter(topping=1)
-        beeftopps = Products.objects.filter(topping=4)
-        NewOrderPosition.save()
+        deltopps = request.POST.get('deltopps')
+        vegetopps = request.POST.get('vegetopps')
+        beeftopps = request.POST.get('beeftopps')
+
+        # try:
+        #     order = Orders.objects.get(active=True)
+        #     order.save()
+        #     order.position.add(product_modyfi)
+        #     order.save()
+        # except ObjectDoesNotExist:
+        #     order = Orders()
+        #     order.active = True
+        #     orderId = order.id
+        #     order.save()
+        #     order.position.add(product_modyfi)
+        #     order.save()
+
+        vegetopps = Products.objects.filter(component="1")
+        beeftopps = Products.objects.filter(component="2")
+        cheesetopps = Products.objects.filter(component="3")
         ctx = {
-            'product': NewOrderPosition,
+            'product': product,
+            'product_modyfi': product_modyfi,
             'toppings': toppings,
             'vegetopps': vegetopps,
             'beeftopps': beeftopps,
+            'cheesetopps': cheesetopps,
             'vegecounter': vegecounter,
-            'beefcounter': beefcounter
-            # 'pizza.change_info': product.change_info
+            'beefcounter': beefcounter,
+            'cheesecounter': cheesecounter,
+            'product_modyfi.change_info': product_modyfi.change_topps
         }
 
         return TemplateResponse(request, "change_topps.html", ctx)

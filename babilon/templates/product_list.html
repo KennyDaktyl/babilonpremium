@@ -20,18 +20,14 @@
             </div>
             <div class="row ">
                 {% for el in products %}
-                <form method="GET" action="/add_to_order/{{el.id}}" class="text-center mx-auto">
-                    {% csrf_token %}
-                    <input name="orderId" type="hidden" value="{{orderId}}">
-                    <input name="addProduct" type="hidden" value="{{el.id}}">
+                <a href="/add_to_order/chuj">
                     <button type="submit"
                         class="pizzamenu {{el.name}} {{el.size}} col-12 mx-auto btn btn-primary m-1 p-3 {{el.menu_category.name}}">
                         {{el.name}}<br>
                         <span class="text-center">{{el.price}}zł</span><br>
                         <span class="text-center">Rozmiar: {{el.size}}</span>
                         <span>ID: {{el.id}}</span>
-                    </button>
-                </form>
+                    </button></a>
                 {% endfor %}
             </div>
         </div>

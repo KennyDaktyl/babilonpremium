@@ -194,24 +194,27 @@
                     <h5 class="text-left mt-3"> Klient:</h5>
                     <h5 class="text-left">Adres:</h5>
                 </div>
-                <h5 class="text-left col-12 mt-4 "><b>Zamówienie:</b></h5>
+                <h5 class="text-left col-12 mt-4 "><b>Zamówienie: {{order.total_price}}</b></h5>
 
                 <div class="col-12 text-wrap bg-light">
                     {% for el in order %}
                     <div type="submit" class="">
+                        <p>{{el.total_price_order}}</p>
                         <p class="text-left"> Numer:{{el.number}}</p>
                         <p class="text-left"> Status:{{el.get_status_display}}</p>
                         <p class="text-left"> Produkty:
                             <ul class="text-left col-12">
                                 {% for prod in el.position.all %}
-                                <li class="text-left">{{prod.position}}<br>{{prod.change_topps}}</li>
+                                <li class="text-left">{{prod.position}}
+                                    <br>{{prod.total_price}}<br>{{prod.change_topps}}
+                                </li>
                                 {% endfor %}
                             </ul>
                         </p>
                     </div>
                     <div class="row col-12">
                         <p class="text-left col-6"> <b>Kwota:</b></p>
-                        <h4 class="text-center col-6">{{el.total_price}}</h4>
+                        <h4 class="text-center col-12">{{el.total_price}}</h4>
                         <a href="/close_order/{{el.id}}" class="col-12"> <button type="submit"
                                 class="col-12 btn btn-success m-1 w-100 ">Zatwierdź</button>
                         </a>

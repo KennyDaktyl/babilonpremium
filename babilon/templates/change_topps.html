@@ -1,50 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row col-12 border mt-2 mx-auto">
-    <p class="col-12 text-left">Składniki pizzy: {{product.name}}</p>
-
-    {% for el in toppings %} <b>
+    <p class="col-12 text-left">Składniki pizzy: <b>{{product_modyfi}}</b>, rozmiar <b>{{product.size}}</b></p>
+    {% for el in product_modyfi.toppings.all %} <b>
         <form class="mx-auto" method="POST">
             {% csrf_token %}
-            <input name="toppings" type="hidden" value="{{toppings}}">
+            <!-- <input name="toppings" type="hidden" value="{{toppings}}"> -->
+            <input name="product_modyfi" type="hidden" value="{{product_modyfi.id}}">
             <input name="product.change_info" type="hidden" value="{{product.change_info}}">
             <input name="deltopps" type="hidden" value="{{el.id}}">
-            <button type="submit" class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
-                    {{el.price}}</span><br><span>{{el.topping.name}}</span></button></a>
+            <button type="submit" class="btn btn-danger">{{el.name}}</button></a>
     </b></form>{% endfor %}
 </div>
 
 <div class="row col-12 border mt-2 mx-auto">
+    <p class="col-12 text-left">Dodatki warzywne:</p>
     {% for el in vegetopps %} <b>
         <form class="mx-auto" method="POST">
             {% csrf_token %}
+            <input name="product_modyfi" type="hidden" value="{{product_modyfi.id}}">
             <input name="vegetopps" type="hidden" value="{{el.id}}">
-            <button type="submit" class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
-                    {{el.price}}</span></button></a>
+            <button type="submit"
+                class="btn btn-warning mw-50">{{el.name}}<br><span>{{product.size.vege_topps_price}}</span></button></a>
     </b></form>{% endfor %}
 </div>
 
 <div class="row col-12 border mt-2 mx-auto">
+    <p class="col-12 text-left">Dodatki mięsne:</p>
+
     {% for el in beeftopps %} <b>
         <form class="mx-auto" method="POST">
             {% csrf_token %}
+            <input name="product_modyfi" type="hidden" value="{{product_modyfi.id}}">
             <input name="beeftopps" type="hidden" value="{{el.id}}">
-            <button type="submit" class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
-                    {{el.price}}</span></button></a>
+            <button type="submit"
+                class="btn btn-warning mw-50">{{el.name}}<br><span>{{product.size.beef_topps_price}}</button></a>
+    </b></form>{% endfor %}
+</div>
+
+<div class="row col-12 border mt-2 mx-auto">
+    <p class="col-12 text-left">Dodatki serowe:</p>
+
+    {% for el in cheesetopps %} <b>
+        <form class="mx-auto" method="POST">
+            {% csrf_token %}
+            <input name="product_modyfi" type="hidden" value="{{product_modyfi.id}}">
+            <input name="beeftopps" type="hidden" value="{{el.id}}">
+            <button type="submit"
+                class="btn btn-warning mw-50">{{el.name}}<br><span>{{product.size.cheese_topps_price}}</button></a>
     </b></form>{% endfor %}
 </div>
 <div class="row col-12 border mt-2 mx-auto">
-    <h5 class="col-12 text-left">Składniki mięsne: {{beefcounter}}, składniki warzywne {{vegecounter}}</h5>
-    <h5 class="col-12 text-left">Zmiana składników</h5>
-    <p>{{product.change_topps}}</p>
+    <h6 class="col-12 text-left">Składniki mięsne: <b>{{beefcounter}}</b>, składniki warzywne
+        <b>{{vegecounter}}</b>, składniki serowe:
+        <b>{{cheesecounter}}</b></h6>
+    <h6 class="col-12 text-left">Zmiany składników: {{product_modyfi.change_topps}}</h6>
+    <h6 class="col-12 text-left">Dopłata dodatki: <b>{{product_modyfi.extra_price}}</b></h6>
 </div>
 <p class="col-12 text-left"></p>
-<p class="col-12 text-left">Cena produktu</p>
-<form class="mx-auto col-12" method="POST" action="/add_modyfi_to_order/">
-    {% csrf_token %}
-    <input name="productId" type="hidden" value="{{product.id}}">
-    <input name="changeTopps" type="hidden" value="{{product.change_topps}}">
-    <h5 class="col-12 text-left"><b>{{product.price}}</b> zł</h5>
+<p class="col-12 text-left">Cena produktu <b>{{product_modyfi.total_price}}</b></p>
+
+<a href="/add_modyfi_to_order/{{product.id}}/{{product_modyfi.id}}/" class="col-12">
     <button type="submit" class="col-4 mx-auto btn btn-success">Zapisz</button>
-</form>
+</a>
 {% endblock %}

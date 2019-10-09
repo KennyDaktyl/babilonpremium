@@ -20,14 +20,14 @@ class AddPizzaForm(forms.Form):
                            max_length=128)
     size = forms.ModelChoiceField(
         label="Rozmiar", queryset=ProductSize.objects.filter(pizza=True))
-    vegetopps = forms.ModelMultipleChoiceField(
-        label="Dodaj składniki warzywne",
-        queryset=Products.objects.filter(topping__id=1),
-        required=False)
-    beeftopps = forms.ModelMultipleChoiceField(
-        label="Dodaj składniki mięsne",
-        queryset=Products.objects.filter(topping__id=4),
-        required=False)
+    # vegetopps = forms.ModelMultipleChoiceField(
+    #     label="Dodaj składniki warzywne",
+    #     queryset=Products.objects.filter(topping__id=1),
+    #     required=False)
+    # beeftopps = forms.ModelMultipleChoiceField(
+    #     label="Dodaj składniki mięsne",
+    #     queryset=Products.objects.filter(topping__id=4),
+    #     required=False)
     price = forms.DecimalField(label="Cena pizzy",
                                max_digits=19,
                                decimal_places=2)

@@ -39,7 +39,7 @@
 </div>
 <div class="row col-12 border mt-2 mx-auto">
     <p class="col-10 text-left">Składniki pizzy:</p>
-    <a href="/change_topps/{{product_add.id}}">
+    <a href="/change_topps/{{product_add.id}}/{{orderPosition.id}}">
         <button type="submit" class=" col-1btn btn-success mx-auto">Zmień składniki</button></a>
     </a>
     {% for el in product_add.pizza_componets.all %} <b>
@@ -55,22 +55,32 @@
 </div>
 <div class="row col-12 border mt-2 mx-auto">
     <p class="col-12 text-left">Wybierz sos darmowy:</p>
-    {% for el in souse %} <b>
+    {% for el in souse_free %} <b>
         <form class="mx-auto" method="POST" action="/delete_from_pizza/">
             {% csrf_token %}
             <input name="orderId" type="hidden" value="{{orderId}}">
             <input name="pizza_id" type="hidden" value="{{product_add.id}}">
             <input name="del_comp" type="hidden" value="{{el.id}}"><button type="submit"
-                class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
-                    {{el.price}}</span></button></a>
+                class="btn btn-warning mw-50">{{el.name}}</span></button></a>
+    </b></form>{% endfor %}
+</div>
+<div class="row col-12 border mt-2 mx-auto">
+    <p class="col-12 text-left">Wybierz sos płatny:</p>
+    {% for el in souse_pay %} <b>
+        <form class="mx-auto" method="POST" action="/delete_from_pizza/">
+            {% csrf_token %}
+            <input name="orderId" type="hidden" value="{{orderId}}">
+            <input name="pizza_id" type="hidden" value="{{product_add.id}}">
+            <input name="del_comp" type="hidden" value="{{el.id}}"><button type="submit"
+                class="btn btn-warning mw-50">{{el.name}} cena: {{el.price}}</button></a>
     </b></form>{% endfor %}
 </div>
 <div class="row col-12 border mt-2 mx-auto">
     <div class="col-4">
-        <form class="mx-auto" method="POST" action="/delete_from_pizza/">
+        <form class="text-left" method="POST" action="/delete_from_pizza/">
             {% csrf_token %}
             <p class="col-12 text-left">Rabat</p>
-            <input name="discount" type="number" value="0">
+            <input class="col-3 text-left" name="discount" type="number" value="0">
             <button type="submit" class="btn btn-warning mw-50">Ustaw</button>
         </form>
     </div>
@@ -88,13 +98,18 @@
         </div>
 
     </div>
-    <p class="col-12 text-left"></p>
-    <p class="col-12 text-left">Cena produktu</p>
-    <form class="mx-auto col-12" method="POST" action="">
-        {% csrf_token %}
-        <h5 class="col-12 text-left"><b>{{product_add.price}}</b> zł</h5>
-        <button type="submit" class="col-4 mx-auto btn btn-success">Dodaj</button>
-    </form>
+    <div class="row col-12">
+        <p class="col-12 text-left"></p>
+        <p class="col-6 text-left">Cena produktu</p>
+        <form class="mx-auto col-12 row" method="POST" action="">
+            {% csrf_token %}
+            <input class="col-4" name="productId" type="hidden" value="{{product.id}}">
+            <input class="col-4" name="orderPosition" type="hidden" value="{{orderPosition.id}}">
+            <input class="col-4" name="discount" type="hidden" value="0">
+            <h5 class="col-6 text-left"><b>{{orderPosition.price}}</b> zł</h5>
+            <button type="submit" class="col-4 mx-auto btn btn-success">Dodaj</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
 

@@ -6,8 +6,11 @@ Rodzaj_Umowy = (
 RODZAJ_SKŁADNIKA = (
     (1, "Warzywny"),
     (2, "Mięsny"),
-    (3, "Podstawowy"),
-    (4, "Wyrób ciasta"),
+    (3, "Serowy"),
+    (4, "Podstawowy"),
+    (5, "Wyrób ciasta"),
+    (6, "Sosy płatne"),
+    (7, "Sosy darmowe"),
 )
 
 STATUS_KLIENTA = ((1, "Vip"), (1, "Normal"), (2, "Podejrzany"))
