@@ -7,8 +7,8 @@ RODZAJ_SKŁADNIKA = (
     (1, "Warzywny"),
     (2, "Mięsny"),
     (3, "Serowy"),
-    (4, "Podstawowy"),
-    (5, "Wyrób ciasta"),
+    (4, "Dodatki extra"),
+    (5, "Rodzaj ciasta"),
     (6, "Sosy płatne"),
     (7, "Sosy darmowe"),
 )

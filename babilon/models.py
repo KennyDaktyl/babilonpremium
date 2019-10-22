@@ -86,6 +86,9 @@ class Pizzeria(models.Model):
                                blank=True,
                                on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.id) + ", " + str(self.name)
+
 
 class Category(models.Model):
     name = models.CharField(verbose_name="Kategoria produktu", max_length=128)
@@ -96,30 +99,30 @@ class Category(models.Model):
 
 class ProductSize(models.Model):
     size = models.CharField(verbose_name="Rozmiar", max_length=64)
+    menu = models.ForeignKey('MainMenu',
+                             verbose_name="Rozmiar kategori",
+                             blank=True,
+                             null=True,
+                             on_delete=models.CASCADE,
+                             related_name="Menu_rozmiar")
+
     pizza = models.BooleanField(verbose_name="Pizza", null=True, blank=True)
 
     bottle = models.BooleanField(verbose_name="Butelka", null=True, blank=True)
     sauce = models.BooleanField(verbose_name="Sos", null=True, blank=True)
     pizza_box = models.BooleanField(verbose_name="Sos", null=True, blank=True)
 
-    vege_topps_price = models.DecimalField(
-        verbose_name="Cena dodatku warzywnego",
-        null=True,
-        blank=True,
-        max_digits=19,
-        decimal_places=2)
-    beef_topps_price = models.DecimalField(
-        verbose_name="Cena dodatku mięsnego",
-        null=True,
-        blank=True,
-        max_digits=19,
-        decimal_places=2)
-    cheese_topps_price = models.DecimalField(
-        verbose_name="Cena dodatku serowego",
-        null=True,
-        blank=True,
-        max_digits=19,
-        decimal_places=2)
+    vege_topps_price = models.FloatField(
+        verbose_name="Cena dodatku warzywnego", null=True, blank=True)
+    beef_topps_price = models.FloatField(verbose_name="Cena dodatku mięsnego",
+                                         null=True,
+                                         blank=True)
+    cheese_topps_price = models.FloatField(
+        verbose_name="Cena dodatku serowego", null=True, blank=True)
+    extra_topps_price = models.FloatField(verbose_name="Cena dodatku extra_1",
+                                          null=True,
+                                          blank=True)
+
     sauce_price = models.DecimalField(verbose_name="Cena dodatkowego sosu",
                                       null=True,
                                       blank=True,
@@ -162,10 +165,7 @@ class Products(models.Model):
                                       related_name="cat_menu")
 
     name = models.CharField(verbose_name="Nazwa productu", max_length=128)
-    number_in_menu = models.IntegerField(verbose_name="Rabat",
-                                         null=True,
-                                         unique=True,
-                                         blank=True)
+
     size = models.ForeignKey("ProductSize",
                              verbose_name="Rozmiar",
                              blank=True,
@@ -185,6 +185,17 @@ class Products(models.Model):
                                        null=True,
                                        blank=True,
                                        default="")
+    change_extra_toppings = models.CharField(
+        verbose_name="Zaminy w składnikach",
+        max_length=128,
+        null=True,
+        blank=True,
+        default="")
+    cake_info = models.CharField(verbose_name="Zaminy w składnikach",
+                                 max_length=128,
+                                 null=True,
+                                 blank=True,
+                                 default="")
     cake_modyfy = models.BooleanField(verbose_name="Czy ser w rantach możliwy",
                                       null=True,
                                       blank=True)
@@ -199,17 +210,13 @@ class Products(models.Model):
                                null=True,
                                blank=True)
 
-    price = models.DecimalField(verbose_name="Cena produktu",
-                                null=True,
-                                blank=True,
-                                max_digits=19,
-                                decimal_places=2)
-    extra_price = models.DecimalField(verbose_name="Cena za dodatki",
-                                      null=True,
-                                      blank=True,
-                                      max_digits=19,
-                                      decimal_places=2,
-                                      default=0)
+    extra_price = models.FloatField(verbose_name="Cena dodatków",
+                                    null=True,
+                                    blank=True,
+                                    default=0)
+    price = models.FloatField(verbose_name="Cena podstawowa",
+                              null=True,
+                              blank=True)
     discount = models.IntegerField(verbose_name="Rabat",
                                    default=0,
                                    null=True,
@@ -224,6 +231,7 @@ class Products(models.Model):
         ordering = (
             "menu_category",
             "name",
+            "size",
         )
 
     @property
@@ -270,8 +278,7 @@ class Products(models.Model):
         # #     print(el.id)
 
     def __str__(self):
-        return str(self.name) + ", " + str(self.size) + ", " + str(
-            self.price) + ", " + str(self.extra_price)
+        return str(self.name) + ", " + str(self.size)
 
 
 class Vat(models.Model):
@@ -286,9 +293,15 @@ class Vat(models.Model):
 class Orders(models.Model):
     active = models.BooleanField(null=True, blank=True, default=False)
     data = models.DateTimeField(auto_now_add=True)
-    number = models.IntegerField(verbose_name="Numer zamówienia",
+    pizzeria = models.ForeignKey('Pizzeria',
+                                 on_delete=models.CASCADE,
+                                 verbose_name="Pizzeria",
                                  null=True,
                                  blank=True)
+    number = models.CharField(verbose_name="Numer zamówienia",
+                              max_length=64,
+                              null=True,
+                              blank=True)
     status = models.IntegerField(verbose_name="Status zamówienia",
                                  choices=STATUS_ZAMOWIENIA,
                                  default=1)
@@ -311,7 +324,7 @@ class Orders(models.Model):
     other = models.ManyToManyField("Products",
                                    blank=True,
                                    verbose_name="Dodatkowe produkty")
-    paymethod = models.IntegerField(verbose_name="Status zamówienia",
+    paymethod = models.IntegerField(verbose_name="Płatność zamówienia",
                                     choices=PŁATNOŚĆ,
                                     default=1)
     driver = models.ForeignKey('MyUser',
@@ -326,65 +339,86 @@ class Orders(models.Model):
                                blank=True,
                                null=True)
 
+    class Meta:
+        ordering = ("-number", )
+
     @property
     def total_price(self):
         total = []
         product = self.position.all()
         for el in product:
-            suma = el.price + el.extra_price
-            total.append(suma)
-        return sum(total)
+            total.append(el.total_price)
+        return round(sum(total), 2)
 
     def __str__(self):
         return str(self.id) + " " + str(self.number)
 
 
 class PositionOrder(models.Model):
-    # order = models.ForeignKey('Order',
-    #                           on_delete=models.CASCADE,
-    #                           verbose_name="Zamówienie nr.",
-    #                           null=True,
-    #                           blank=True)
-    quantity = models.IntegerField(verbose_name="Ilosc",
-                                   null=True,
-                                   blank=True,
-                                   default=1)
-    position = models.CharField(verbose_name="Pozycja zamówienia",
-                                max_length=128)
-    toppings = models.ManyToManyField("Products",
-                                      verbose_name="Składniki",
-                                      related_name="pizza_toppings",
-                                      blank=True)
+    order = models.ForeignKey('Orders',
+                              on_delete=models.CASCADE,
+                              verbose_name="Zamówienie nr.",
+                              null=True,
+                              blank=True)
+    quantity = models.IntegerField(verbose_name="Ilosc", default=1)
+    position = models.ForeignKey('Products',
+                                 on_delete=models.CASCADE,
+                                 verbose_name="Pozycja zamówienia")
+
     change_topps = models.CharField(verbose_name="Zmiany składników",
-                                    max_length=128,
+                                    max_length=512,
+                                    null=True,
+                                    blank=True,
                                     default="")
-    extra_price = models.DecimalField(verbose_name="Cena dodatków",
+    add_sauces_free = models.CharField(verbose_name="Sosy darmowe",
+                                       max_length=256,
+                                       null=True,
+                                       blank=True,
+                                       default="")
+    add_sauces_pay = models.CharField(verbose_name="Sosy płatne",
+                                      max_length=256,
                                       null=True,
                                       blank=True,
-                                      max_digits=19,
-                                      decimal_places=2,
-                                      default=0)
-    price = models.DecimalField(verbose_name="Cena podstawowa",
-                                null=True,
-                                blank=True,
-                                max_digits=19,
-                                decimal_places=2)
+                                      default="")
+    extra_price = models.FloatField(verbose_name="Cena dodatków",
+                                    null=True,
+                                    blank=True,
+                                    default=0)
+    info = models.CharField(verbose_name="Informacje",
+                            max_length=256,
+                            null=True,
+                            blank=True,
+                            default="")
+    price = models.FloatField(verbose_name="Cena podstawowa", )
+    discount = models.IntegerField(verbose_name="Rabat",
+                                   null=True,
+                                   blank=True,
+                                   default=0)
 
     @property
     def total_price(self):
-        return (float(self.extra_price) + float(self.price)) * self.quantity
+        if self.discount > 0:
+            return round(
+                float(self.price) - +(float(self.price)) *
+                (float(self.discount) * 0.01) + float(self.extra_price), 2)
+        if self.discount > 0 and self.extra_price == 0:
+            return round(
+                float(self.price) - ((float(self.price) *
+                                      (float(self.discount) * 0.01))), 2)
+        else:
 
-    # def total_price(self):
-    #     return (float(self.extra_price) + float(self.price)) * self.quantity
+            return round(((float(self.extra_price) + float(self.price)) *
+                          int(self.quantity)), 2)
 
-    # def __str__(self):
-    #     return str(self.position)
     def __str__(self):
         return str(self.id) + ", " + str(self.position)
 
 
 class MainMenu(models.Model):
     name = models.CharField(verbose_name="Kategoria menu", max_length=128)
+
+    class Meta:
+        ordering = ("name", )
 
     def __str__(self):
         return str(self.id) + ", " + str(self.name)

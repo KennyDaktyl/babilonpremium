@@ -198,39 +198,39 @@
 
 // });
 
-$(document).ready(function () {
-    var topps = $('button.topps').hide()
-    var vegetopps = $('button.vegetopps')
-    var beeftopps = $('button.beeftopps')
-    var cheesetopps = $('button.cheesetopps')
-    var changes = $('span.change')
-    topps.each(function (index) {
+// $(document).ready(function () {
+//     var topps = $('button.topps')
+//     var vegetopps = $('button.vegetopps')
+//     var beeftopps = $('button.beeftopps')
+//     var cheesetopps = $('button.cheesetopps')
+//     var changes = $('span.change')
+//     topps.each(function (index) {
 
-        $(this).on("click", function () {
-            $(this).hide()
-            text = $(this).text()
-            changes = "- " + changes.text(text)
-        });
-    });
+//         $(this).on("click", function () {
+//             $(this).hide()
+//             text = $(this).text()
+//             changes = "- " + changes.text(text)
+//         });
+//     });
 
-    vegetopps.each(function (index) {
+//     vegetopps.each(function (index) {
 
-        $(this).on("click", function () {
-            $(this).hide()
-            text = $(this).text()
-            changes = changes.text(text)
-        });
-    });
-    beeftopps.each(function (index) {
+//         $(this).on("click", function () {
+//             $(this).hide()
+//             text = $(this).text()
+//             changes = changes.text(text)
+//         });
+//     });
+//     beeftopps.each(function (index) {
 
-        $(this).on("click", function () {
-            $(this).hide()
-        });
-    });
-    cheesetopps.each(function (index) {
+//         $(this).on("click", function () {
+//             $(this).hide()
+//         });
+//     });
+//     cheesetopps.each(function (index) {
 
-        $(this).on("click", function () {
-            $(this).hide()
-        });
-    });
-});
+//         $(this).on("click", function () {
+//             $(this).hide()
+//         });
+//     });
+// });

@@ -8,21 +8,13 @@
     <div class="row col-12 mt-2 mx-auto text-nowrap">
         <h4 class="text-left col-12 mt-2">Produkty</h4>
         <div class="col-12 text-wrap">
-            <div class="col-12">
-                <div class="row col-12">
 
-                    {% for size in pizza_sizes %}
-                    <div class="{{size}} row orders mx-auto Pizza">
-                        <button type="button" class="btn btn-success size {{size}}">{{size}}</button>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="row ">
+            <div class="row mx-auto ">
                 {% for el in products %}
-                <a href="/add_to_order/chuj">
+
+                <a class="mx-auto" href="/add_to_order/{{el.id}}">
                     <button type="submit"
-                        class="pizzamenu {{el.name}} {{el.size}} col-12 mx-auto btn btn-primary m-1 p-3 {{el.menu_category.name}}">
+                        class="pizzamenu {{el.name}} {{el.size}} m-2 btn btn-primary  {{el.menu_category.name}}">
                         {{el.name}}<br>
                         <span class="text-center">{{el.price}}zł</span><br>
                         <span class="text-center">Rozmiar: {{el.size}}</span>

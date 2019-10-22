@@ -8,20 +8,17 @@
     <div class="row col-12 mt-2 mx-auto text-nowrap">
         <h4 class="text-left col-12 mt-2">Produkty</h4>
         <div class="col-12 text-wrap">
-            <div class="col-12">
-                <div class="row col-12">
-
-                    {% for size in el_pizza_sizes %}
-                    <div class="row orders mx-auto">
-                        <button type="button" class="btn btn-success size {{size}}">{{size}}</button>
-                    </div>
-                    {% endfor %}
+            <div class="row col-12">
+                {% for size in otherSize %}
+                <div class="{{size}} col-4 row orders mx-auto Pizza">
+                    <button type="button" class="mx-auto btn col-4 btn-success size {{size}}">{{size}}</button>
                 </div>
+                {% endfor %}
             </div>
-            <div class="row ">
+            <div class="col-12 text-wrap product">
                 {% for el in product %}
-                <a class="text-center mx-auto" href="/add_to_order/{{el.id}}">
-                    <button type="button" class="col-12 mx-auto btn btn-primary m-1 p-3}}">
+                <a class="col-12 text-center mx-auto" href="/add_to_order/{{el.id}}">
+                    <button type="button" class="col-2 mx-auto btn btn-primary m-1 {{el.menu_category}} {{el.size}}">
                         {{el.name}}<br>
                         <span class="text-center">{{el.price}}zł</span><br>
                         <span class="text-center">Rozmiar: {{el.size}}</span>
@@ -31,7 +28,6 @@
                 {% endfor %}
             </div>
         </div>
-
     </div>
 </div>
 

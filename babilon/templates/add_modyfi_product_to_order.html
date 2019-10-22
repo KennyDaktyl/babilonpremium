@@ -12,19 +12,6 @@
         <h5 class="col-8 text-right mx-auto">{{product_add.price}}zł</h5>
     </div>
 </div>
-
-<!-- <div class="row col-12 border mt-2 mx-auto">
-    {% for el in otherSize %}
-    <form class="col-4 mx-auto" method="POST" action="/add_to_order/{{el.id}}">
-        {% csrf_token %}
-        <input name="orderId" type="hidden" value="{{orderId}}">
-        <input name="addProduct" type="hidden" value="{{el.id}}">
-        <button type="submit" class="w-100 mx-auto btn btn-primary size">Rozmiar{{el.size}}
-            <br><span clas="text-center">Cena: {{el.price}}</span>
-        </button>
-    </form>
-    {% endfor %}
-</div> -->
 <div class="row col-12 border mt-2 mx-auto">
     {% for el in otherSize %}
     <form class="col-4 mx-auto" method="POST" action="/add_to_order/{{el.id}}">
@@ -106,6 +93,7 @@
             <input class="col-4" name="productId" type="hidden" value="{{product.id}}">
             <input class="col-4" name="orderPosition" type="hidden" value="{{orderPosition.id}}">
             <input class="col-4" name="discount" type="hidden" value="0">
+            <input class="col-4" id="sauces_form" name="sauces" type="hidden" value="{{orderPosition.extra_price}}">
             <h5 class="col-6 text-left"><b>{{orderPosition.price}}</b> zł</h5>
             <button type="submit" class="col-4 mx-auto btn btn-success">Dodaj</button>
         </form>

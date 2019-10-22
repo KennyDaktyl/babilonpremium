@@ -11,7 +11,7 @@ def menu(request):
 
 
 def products(request):
-    products = Products.objects.all()
+    products = Products.objects.filter(menu_category__name="Pizza")
     ctx = {
         "products": products,
         "version": "1.0",

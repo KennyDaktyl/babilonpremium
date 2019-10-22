@@ -33,6 +33,13 @@ from babilon.forms import *
 from babilon.function import *
 # from miktel.hasla import *
 
+# import json
+# from babilon.serializers import *
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status
+# from django.http import Http404
+
 from datetime import datetime
 rok = datetime.now().year
 miesiac = datetime.now().month
@@ -40,7 +47,58 @@ miesiac = datetime.now().month
 
 class MainView(View):
     def get(self, request):
+
         return TemplateResponse(request, "product_list.html")
+
+
+# serializer = ProductSerializer()
+# data = Products.objects.get(id=1)
+
+# json = json.loads(data)
+# print(json)
+
+# class MainView(APIView):
+#     def get(self, request, format=None):
+#         product = Products.objects.all()
+#         serializer = ProductSerializer(product,
+#                                        many=True,
+#                                        context={"request": request})
+#         return Response(serializer.data)
+
+#     def post(self, request, format=None):
+#         serializer = ProductSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class ProductView(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Products.objects.get(pk=pk)
+#         except Products.DoesNotExist:
+#             raise Http404
+
+#     def get(self, request, id, format=None):
+#         Product = self.get_object(id)
+#         serializer = ProductSerializer(Product, context={"request": request})
+#         return Response(serializer.data)
+
+#     def delete(self, request, id, format=None):
+#         product = self.get_object(id)
+#         product.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#     def put(self, request, id, format=None):
+#         product = self.get_object(id)
+#         serializer = ProductSerializer(product, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     def post(self, request, id, format=None):
+#         pass
 
 
 class AddToOrdersView(View):
@@ -71,29 +129,166 @@ class AddToOrdersView(View):
         return TemplateResponse(request, "add_product_to_order.html", ctx)
 
     def post(self, request, pk):
+        add = request.POST.get('add')
+        quantity = request.POST.get('quantity')
+        sauces = request.POST.get('sauces')
+        info = request.POST.get('info')
+        add_sauces_free = request.POST.get('add_sauces_free')
+        add_sauces_pay = request.POST.get('add_sauces_pay')
 
         productId = request.POST.get('productId')
         orderPositionId = request.POST.get('orderPosition')
-        print(orderPositionId)
+        orderPosition = PositionOrder.objects.get(pk=orderPositionId)
+        discount = request.POST.get('discount')
+        if quantity != None:
+            if int(quantity) > 0:
+                orderPosition.quantity = int(quantity)
+                orderPosition.save()
 
-        orderPositionAdd = PositionOrder.objects.get(pk=orderPositionId)
+        if discount != 0:
+            print(discount)
+            orderPosition.discount = int(discount)
+            orderPosition.save()
+        if sauces != None:
+            orderPosition.extra_price = float(sauces.replace(",", "."))
+            orderPosition.save()
+        else:
+            orderPosition.extra_price = orderPosition.extra_price
+            orderPosition.save()
+        if info != "":
+            orderPosition.info = info
+            orderPosition.save()
+        if add_sauces_free != "":
+            orderPosition.add_sauces_free = add_sauces_free
+            orderPosition.save()
+        if add_sauces_pay != "":
+            orderPosition.add_sauces_pay = add_sauces_pay
+            orderPosition.save()
         product_add = Products.objects.get(id=pk)
         changeTopps = request.POST.get('changeTopps')
-        product_add = Products.objects.get(id=pk)
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+        vege_components = Products.objects.filter(component="1")
+        beef_components = Products.objects.filter(component="2")
+        sizes = ProductSize.objects.filter(pizza=True)
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        if add != None:
+            new_positionOrder(orderPosition)
+            return redirect('main_view')
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vege_components': vege_components,
+            'beef_components': beef_components,
+            'sizes': sizes,
+            'products': product_add,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
 
-        new_positionOrder(orderPositionAdd)
-
-        return TemplateResponse(request, "product_list.html")
+        return TemplateResponse(request, "add_product_to_order.html", ctx)
 
 
 class AddModyfiProduct(View):
+    def get(self, request, pk, modyfi, extra_price, cake, changes):
+        product_add = Products.objects.get(id=pk)
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+
+        orderPosition = PositionOrder.objects.get(pk=modyfi)
+        orderPosition.extra_price = float(extra_price)
+        changes = changes.replace("  ", '')
+
+        orderPosition.change_topps = cake + changes
+        orderPosition.save()
+        vege_components = Products.objects.filter(component="1")
+        beef_components = Products.objects.filter(component="2")
+        sizes = ProductSize.objects.filter(pizza=True)
+        products = Products.objects.all()
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vege_components': vege_components,
+            'beef_components': beef_components,
+            'sizes': sizes,
+            'products': products,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
+        return TemplateResponse(request, "add_product_to_order.html", ctx)
+
+    def post(self, request, pk, modyfi, extra_price, cake, changes):
+        productId = request.POST.get('productId')
+        add = request.POST.get('add')
+        quantity = request.POST.get('quantity')
+        sauces = request.POST.get('sauces')
+        info = request.POST.get('info')
+        add_sauces_free = request.POST.get('add_sauces_free')
+        add_sauces_pay = request.POST.get('add_sauces_pay')
+        orderPosition = PositionOrder.objects.get(pk=modyfi)
+        discount = request.POST.get('discount')
+        if quantity != None:
+            if int(quantity) > 0:
+                orderPosition.quantity = int(quantity)
+                orderPosition.save()
+
+        if discount != 0:
+            orderPosition.discount = int(discount)
+            orderPosition.save()
+        orderPosition.extra_price = float(sauces.replace(",", "."))
+        print(orderPosition.extra_price)
+        orderPosition.save()
+        if info != "":
+            orderPosition.info = info
+            orderPosition.save()
+        if add_sauces_free != "":
+            orderPosition.add_sauces_free = add_sauces_free
+            orderPosition.save()
+        if add_sauces_pay != "":
+            orderPosition.add_sauces_pay = add_sauces_pay
+            orderPosition.save()
+        product_add = Products.objects.get(id=pk)
+        changeTopps = request.POST.get('changeTopps')
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+        vege_components = Products.objects.filter(component="1")
+        beef_components = Products.objects.filter(component="2")
+        sizes = ProductSize.objects.filter(pizza=True)
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        if add != None:
+            new_positionOrder(orderPosition)
+            return redirect('main_view')
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vege_components': vege_components,
+            'beef_components': beef_components,
+            'sizes': sizes,
+            'products': product_add,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
+
+        return TemplateResponse(request, "add_product_to_order.html", ctx)
+
+
+class AddModyfiProductWithOut(View):
     def get(self, request, pk, modyfi):
         product_add = Products.objects.get(id=pk)
         otherSize = Products.objects.filter(
             name=product_add.name).order_by('size')
 
         orderPosition = PositionOrder.objects.get(pk=modyfi)
-
+        orderPosition.extra_price = 0
+        orderPosition.change_topps = ""
+        orderPosition.save()
         vege_components = Products.objects.filter(component="1")
         beef_components = Products.objects.filter(component="2")
         sizes = ProductSize.objects.filter(pizza=True)
@@ -114,33 +309,90 @@ class AddModyfiProduct(View):
         return TemplateResponse(request, "add_product_to_order.html", ctx)
 
     def post(self, request, pk, modyfi):
-
+        add = request.POST.get('add')
         productId = request.POST.get('productId')
-        orderPositionId = request.POST.get('orderPosition')
-        orderPositionAdd = PositionOrder.objects.get(pk=orderPositionId)
+        # orderPositionId = request.POST.get('orderPosition')
+        orderPosition = PositionOrder.objects.get(pk=modyfi)
         product_add = Products.objects.get(id=pk)
         changeTopps = request.POST.get('changeTopps')
         product_add = Products.objects.get(id=pk)
-        new_positionOrder(orderPositionAdd)
+        # new_positionOrder(orderPositionAdd)
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+        vege_components = Products.objects.filter(component="1")
+        beef_components = Products.objects.filter(component="2")
+        sizes = ProductSize.objects.filter(pizza=True)
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
 
-        return TemplateResponse(request, "product_list.html")
+        if add != None:
+            new_positionOrder(orderPosition)
+            return redirect('main_view')
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vege_components': vege_components,
+            'beef_components': beef_components,
+            'sizes': sizes,
+            'products': product_add,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
+
+        return TemplateResponse(request, "add_product_to_order.html", ctx)
+
+
+class AddPositionToOrder(View):
+    def post(self, request):
+        productId = request.POST.get('productId')
+        orderPositionId = request.POST.get('orderPosition')
+        orderPosition = PositionOrder.objects.get(pk=orderPositionId)
+        product_add = Products.objects.get(id=productId)
+
+        new_positionOrder(orderPosition)
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+        vege_components = Products.objects.filter(component="1")
+        beef_components = Products.objects.filter(component="2")
+        sizes = ProductSize.objects.filter(pizza=True)
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vege_components': vege_components,
+            'beef_components': beef_components,
+            'sizes': sizes,
+            'products': product_add,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
+
+        return redirect('/add_to_order/', product_add.id)
 
 
 class ChangeToppsView(View):
     def get(self, request, pk, modyfi):
         product = Products.objects.get(id=pk)
         orderPosition = PositionOrder.objects.get(pk=modyfi)
+        orderPosition.change_topps = ""
+
         vegetopps = Products.objects.filter(component="1")
         beeftopps = Products.objects.filter(component="2")
         cheesetopps = Products.objects.filter(component="3")
+        extratopps = Products.objects.filter(component="4")
+        cake = Products.objects.filter(component="5")
 
         toppings = []
-        for el in orderPosition.toppings.all():
+        for el in product.toppings.all():
             toppings.append(el)
-        #
         vegecounter = 0
         beefcounter = 0
         cheesecounter = 0
+        extracounter = 0
+        cakecounter = 0
         for el in toppings:
             if el.component == 1:
                 vegecounter += 1
@@ -149,30 +401,55 @@ class ChangeToppsView(View):
                 beefcounter += 1
             if el.component == 3:
                 cheesecounter += 1
-        # ilosc = 1
-        # product_modyfi = PositionOrder()
-        # product_modyfi.position = "{}x {} Rozmiar:{}, Cena{}".format(
-        #     ilosc, product.name, product.size, product.price)
-        # product_modyfi.price = product.price
-        # # print(product_modyfi.price)
-        # product_modyfi.save()
-        # product_modyfi.extra_price = product.extra_price
-        # product_modyfi.quantity = ilosc
-        # product_modyfi.save()
-        # for el in toppings:
-        #     product_modyfi.toppings.add(el)
-        #     product_modyfi.save()
+            if el.component == 4:
+                cheesecounter += 1
+            if el.component == 5:
+                cheesecounter += 1
+        addvege_pay_control = vegecounter
+        beef_pay_control = beefcounter
+        cheese_pay_control = cheesecounter
+        extra_pay_control = extracounter
+        cake_pay_control = cakecounter
+        vege_pay = vegecounter
+        beef_pay = beefcounter
+        cheese_pay = cheesecounter
+        extra_pay = extracounter
+        cake_pay = cakecounter
+        change_topps_vege = 0
+        change_topps_beef = 0
+        change_topps_cheese = 0
+        change_topps_extra = 0
+        change_topps_cake = 0
 
         ctx = {
             'product': product,
             'product_modyfi': orderPosition,
-            'cheesetopps': cheesetopps,
             'toppings': toppings,
             'vegetopps': vegetopps,
             'beeftopps': beeftopps,
+            'cheesetopps': cheesetopps,
+            'extratopps': extratopps,
+            'cake': cake,
             'vegecounter': vegecounter,
             'beefcounter': beefcounter,
-            'cheesecounter': cheesecounter
+            'cheesecounter': cheesecounter,
+            'extracounter': extracounter,
+            'cakecounter': cakecounter,
+            'addvege_pay_control': addvege_pay_control,
+            'beef_pay_control': beef_pay_control,
+            'cheese_pay_control': cheese_pay_control,
+            'extra_pay_control': extra_pay_control,
+            'cake_pay_control': cake_pay_control,
+            'vege_pay': vege_pay,
+            'beef_pay': beef_pay,
+            'cheese_pay': cheese_pay,
+            'extra_pay': extra_pay,
+            'cake_pay': cake_pay,
+            'change_topps_vege': change_topps_vege,
+            'change_topps_beef': change_topps_beef,
+            'change_topps_cheese': change_topps_cheese,
+            'change_topps_extra': change_topps_extra,
+            'change_topps_cake': change_topps_cake,
         }
         return TemplateResponse(request, "change_topps.html", ctx)
 
@@ -185,31 +462,74 @@ class ChangeToppsView(View):
         beeftopps = request.POST.get('beeftopps')
         cheesetopps = request.POST.get('cheesetopps')
 
+        change_topps_vege = int(request.POST.get('change_topps_vege'))
+        change_topps_beef = int(request.POST.get('change_topps_beef'))
+        change_topps_cheese = int(request.POST.get('change_topps_cheese'))
+
+        addvege_pay_control = int(request.POST.get('addvege_pay_control'))
+        beef_pay_control = int(request.POST.get('beef_pay_control'))
+        cheese_pay_control = int(request.POST.get('cheese_pay_control'))
+
+        vege_pay = int(request.POST.get('vege_pay'))
+        beef_pay = int(request.POST.get('beef_pay'))
+        cheese_pay = int(request.POST.get('cheese_pay'))
+
+        toppings = []
+        for el in product_modyfi.toppings.all():
+            toppings.append(el)
+
         if deltopps != None:
             deltop = Products.objects.get(pk=deltopps)
             product_modyfi.change_topps += "- {}, ".format(deltop.name)
-            # product_modyfi.toppings.add(deltop)
-            # product_modyfi.save()
             for el in product_modyfi.toppings.all():
                 if deltop.id == el.id:
                     product_modyfi.toppings.remove(el)
                     product_modyfi.save()
+                    vege_pay -= 1
+
+                    if deltop.component == 1:
+                        change_topps_vege -= 1
+                    if deltop.component == 2:
+                        change_topps_beef -= 1
+                    if deltop.component == 3:
+                        change_topps_cheese -= 1
+
+            product_modyfi.save()
+            # addvege_pay_control += 1
+
         if vegetopps != None:
             vegetopp = Products.objects.get(pk=vegetopps)
-            print(vegetopps)
             product_modyfi.change_topps += "+ {}, ".format(vegetopp.name)
             product_modyfi.toppings.add(vegetopp)
             product_modyfi.save()
+            vege_pay += 1
+            change_topps_vege += 1
+            if change_topps_vege > 0:
+                i = vege_pay - addvege_pay_control
+                price_copy = product_modyfi.extra_price
+                product_modyfi.extra_price += product.size.vege_topps_price
+                product_modyfi.save()
+                # addvege_pay_control += 1
+
         if beeftopps != None:
             beeftopp = Products.objects.get(pk=beeftopps)
             product_modyfi.change_topps += "+ {}, ".format(beeftopp.name)
             product_modyfi.toppings.add(beeftopp)
             product_modyfi.save()
+            beef_pay += 1
+            change_topps_beef += 1
+            if change_topps_beef > 0:
+                i = beef_pay - beef_pay_control
+                price_copy = product_modyfi.extra_price
+                product_modyfi.extra_price += product.size.beef_topps_price
+                product_modyfi.save()
         if cheesetopps != None:
-            cheesetopp = Products.objects.get(pk=beeftopps)
+            cheesetopp = Products.objects.get(pk=cheesetopps)
             product_modyfi.change_topps += "+ {}, ".format(cheesetopp.name)
             product_modyfi.toppings.add(cheesetopp)
             product_modyfi.save()
+            cheese_pay += 1
+            change_topps_cheese += 1
 
         vegecounter = 0
         beefcounter = 0
@@ -224,27 +544,20 @@ class ChangeToppsView(View):
                 beefcounter += 1
             if el.component == 3:
                 cheesecounter += 1
-
-        deltopps = request.POST.get('deltopps')
-        vegetopps = request.POST.get('vegetopps')
-        beeftopps = request.POST.get('beeftopps')
-
-        # try:
-        #     order = Orders.objects.get(active=True)
-        #     order.save()
-        #     order.position.add(product_modyfi)
-        #     order.save()
-        # except ObjectDoesNotExist:
-        #     order = Orders()
-        #     order.active = True
-        #     orderId = order.id
-        #     order.save()
-        #     order.position.add(product_modyfi)
-        #     order.save()
-
         vegetopps = Products.objects.filter(component="1")
         beeftopps = Products.objects.filter(component="2")
         cheesetopps = Products.objects.filter(component="3")
+
+        if change_topps_vege == 0 and change_topps_beef == 0 and change_topps_cheese == 0:
+            product_modyfi.extra_price = 0
+        else:
+
+            if change_topps_cheese > 0:
+                product_modyfi.extra_price += product.size.cheese_topps_price
+                product_modyfi.save()
+
+        product_modyfi.save()
+
         ctx = {
             'product': product,
             'product_modyfi': product_modyfi,
@@ -255,7 +568,16 @@ class ChangeToppsView(View):
             'vegecounter': vegecounter,
             'beefcounter': beefcounter,
             'cheesecounter': cheesecounter,
-            'product_modyfi.change_info': product_modyfi.change_topps
+            'product_modyfi.change_info': product_modyfi.change_topps,
+            'addvege_pay_control': addvege_pay_control,
+            'beef_pay_control': beef_pay_control,
+            'cheese_pay_control': cheese_pay_control,
+            'vege_pay': vege_pay,
+            'beef_pay': beef_pay,
+            'cheese_pay': cheese_pay,
+            'change_topps_vege': change_topps_vege,
+            'change_topps_beef': change_topps_beef,
+            'change_topps_cheese': change_topps_cheese
         }
 
         return TemplateResponse(request, "change_topps.html", ctx)
@@ -356,31 +678,6 @@ class AddOrderOutsideView(View):
         return TemplateResponse(request, "dodaj_zam_wywoz.html", ctx)
 
 
-# class AddToOrdersView(View):
-#     def post(self, request):
-#         product_id = request.POST.get('addProduct')
-#         product_add = Products.objects.get(id=product_id)
-
-#         orderId = request.POST.get('orderId')
-#         if orderId != None:
-#             order = Orders.objects.get(pk=orderId)
-#         else:
-#             order = Orders()
-#             order.save()
-
-#         order.product.add(product_add)
-#         order.save()
-#         vege_components = Products.objects.filter(component="1")
-#         beef_components = Products.objects.filter(component="2")
-#         ctx = {
-#             'orderId': orderId,
-#             'product_add': product_add,
-#             'vege_components': vege_components,
-#             'beef_components': beef_components,
-#         }
-#         return TemplateResponse(request, "add_order.html", ctx)
-
-
 class PizzaMixView(View):
     def post(self, request):
         orderId = request.POST.get('orderId')
@@ -475,7 +772,36 @@ class AddPizzaView(View):
 class CategoryListView(View):
     def get(self, request, pk):
         products = Products.objects.filter(menu_category=pk)
-        pizzas = Pizza.objects.all()
-
-        ctx = {'product': products}
+        if pk == 1:
+            otherSize = ProductSize.objects.filter(menu=1)
+            ctx = {'product': products, 'otherSize': otherSize}
+        else:
+            ctx = {'product': products}
         return TemplateResponse(request, "pizza_menu.html", ctx)
+
+
+class UpdatePositionOrderView(UpdateView):
+    # permission_required='miktel.delete_usluga'
+    model = PositionOrder
+    fields = [
+        'quantity', 'change_topps', 'add_sauces_free', 'add_sauces_pay',
+        'extra_price', 'price', 'info', 'discount'
+    ]
+    template_name_suffix = ('_update_form')
+    success_url = ('/')
+
+
+class DeletePositionOrderView(DeleteView):
+    # permission_required='miktel.delete_usluga'
+    model = PositionOrder
+    fields = '__all__'
+    template_name_suffix = ('_confirm_delete')
+    success_url = ('/')
+
+
+class UpdateOrderView(UpdateView):
+    # permission_required='miktel.delete_usluga'
+    model = Orders
+    fields = ['pizzeria', 'number', 'delivery', 'paymethod']
+    template_name_suffix = ('_update_form')
+    success_url = ('/')

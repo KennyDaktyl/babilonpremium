@@ -2,6 +2,8 @@
 
 {% block content %}
 <div class="row col-12 mt-2">
+        <form method="POST" action="/uzyj_czesci/">
+            {% csrf_token %}
     <button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="dodaj"
             href="dodaj_zamowienie_wywoz/">Dodaj
             zamówienie LOKAL</a></button>
@@ -9,16 +11,15 @@
     <button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="dodaj"
             href="/dodaj_zamowienie_wywoz/">Dodaj
             zamówienie WYWÓZ</a></button>
+
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="dodaj"
+            href="dodaj_zamowienie_wywoz/">Dodaj
+            zamówienie ON-LINE Wywóz</a></button>
+
+    <button type="button" class="btn btn-warning .col-lg-12 .col-xl-4 m-2"><a class="dodaj"
+            href="/dodaj_zamowienie_wywoz/">Dodaj
+            zamówienie ON-LINE Lokal</a></button>
 </div>
-<h2>Lista zamówień na dzień 2 listopad 2019 Pizzeria <b>Budryka 2</b></h2>
-<div>
-    <label>Pokaż inne pizzerie</label>
-</div>
-<select class="custom-select col-4">Pokaż inne pizzerie
-    <option value="0">---</option>
-    <option value="1">Makuszyńskiego 8</option>
-    <option value="2">Centrum B1</option>
-</select>
 <table class="table">
     <thead>
         <tr>

@@ -3,20 +3,21 @@
 <html lang="pl">
 
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-    <meta charset="UTF-8">
+    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
     <link rel="stylesheet" href="{% static "babilon/style.css" %}">
     {% block head_additional %}
     {% endblock %}
@@ -169,7 +170,7 @@
                 <div class="col-12 text-wrap">
                     {% for el in menu %}
                     <a href="/category_list/{{el.id}}">
-                        <button type="submit" class="menu {{el.name}} btn btn-primary m-1 w-100 ">
+                        <button type="submit" class="menu btn btn-primary m-1 w-100 ">
                             {{el.name}}</button></a>
                     {% endfor %}
                 </div>
@@ -198,15 +199,55 @@
 
                 <div class="col-12 text-wrap bg-light">
                     {% for el in order %}
-                    <div type="submit" class="">
+                    <div type="submit" class="text-wrap">
+
                         <p>{{el.total_price_order}}</p>
-                        <p class="text-left"> Numer:{{el.number}}</p>
-                        <p class="text-left"> Status:{{el.get_status_display}}</p>
+                        <p class="text-left"> Numer:{{el.number}} <a href="/update_order/{{el.id}}"><span
+                                    class="text-primary"><b>E</b></a></p>
+                        <p class="text-left"> Gdzie: {{el.get_delivery_display}}</p>
                         <p class="text-left"> Produkty:
-                            <ul class="text-left col-12">
+                            <ul class="text-left col-12 text-wrap">
                                 {% for prod in el.position.all %}
-                                <li class="text-left">{{prod.position}}
-                                    <br>{{prod.total_price}}<br>{{prod.change_topps}}
+                                <li class="text-left text-wrap"> <a href="/delete_position_order/{{prod.id}}"><span
+                                            class="text-danger"><b>X
+                                            </b></span></a><a href="/update_position_order/{{prod.id}}"><span
+                                            class="text-primary"><b>E
+                                            </b></span></a><b>{{prod.quantity}}x
+                                        {{prod.position}}
+                                    </b>
+                                    <br><b>Cena:</b> {{prod.price}},
+                                    {% if prod.discount == 0 %}
+                                    {% else %}
+                                    <b>Rabat:</b> {{prod.discount}}%
+                                    {% endif %}
+
+                                    {% if prod.extra_price > 0 %}
+                                    <b>dodatki:</b> {{prod.extra_price}}
+                                    {% endif %}
+
+
+                                    {% if prod.add_sauces_free.strip %}
+                                    <b>Sosy:</b>
+                                    {{prod.add_sauces_free}}
+                                    {% else %}
+                                    {% endif %}
+                                    {% if prod.add_sauces_pay.strip %}
+                                    <b>Sosy płatne:</b>
+                                    {{prod.add_sauces_pay}}
+                                    {% else %}
+                                    {% endif %}
+                                    {% if prod.change_topps.strip %}
+                                    Zmiany
+                                    <b></b><br>{{prod.change_topps}}
+                                    {% else %}
+                                    {% endif %}
+                                    {% if prod.info.strip %}
+                                    <b>Info:</b> {{prod.info}}
+                                    {% else %}
+                                    {% endif %}
+                                    <br><b>Razem</b>
+                                    {{prod.total_price}}
+
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -231,35 +272,25 @@
                     {% endfor %}
                 </div>
             </div>
-
-            <div class="container-fluid mr-auto">
-                <div class="col-12 mt-2 mx-auto">
-                    <div class="container text-center">
-                        <footer class="footer col-12 mx-auto">
-                            <span class="copyright col-12 mx-auto">Copyright &copy; Miktel Premium 2019</span>
-                        </footer>
-                    </div>
+        </div>
+        <div class="container-fluid mr-auto">
+            <div class="col-12 mt-2 mx-auto">
+                <div class="container text-center">
+                    <footer class="footer col-12 mx-auto">
+                        <span class="copyright col-12 mx-auto">Copyright &copy; Miktel Premium 2019</span>
+                    </footer>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js">
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js">
-    </script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
