@@ -23,10 +23,7 @@ $(document).ready(function () {
     // sum_ctr_gr_extra = parseInt(sum_ctr_gr_extra);
 
 
-    //Widok dodaj pizze ilość plus i minus jeden
-    var qplus = $("#quantity_plus");
-    var qminus = $("#quantity_minus");
-    var quantity = $("#quantity");
+   
 
     //Dodatki vege, beef i cheese
     var vegetopps = $('button.vegetopps')

@@ -198,9 +198,15 @@ class AddModyfiProduct(View):
             name=product_add.name).order_by('size')
 
         orderPosition = PositionOrder.objects.get(pk=modyfi)
-        orderPosition.extra_price = float(extra_price)
+        extra_price = request.GET.get('extra_price')
+        if extra_price != "":
+            orderPosition.extra_price = float(extra_price)
+            orderPosition.save()
+        else:
+            orderPosition.extra_price = 0
+            orderPosition.save()
         changes = changes.replace("  ", '')
-
+        print(orderPosition.extra_price)
         orderPosition.change_topps = cake + changes
         orderPosition.save()
         vege_components = Products.objects.filter(component="1")
@@ -282,11 +288,18 @@ class AddModyfiProduct(View):
 class AddModyfiProductWithOut(View):
     def get(self, request, pk, modyfi):
         product_add = Products.objects.get(id=pk)
+
         otherSize = Products.objects.filter(
             name=product_add.name).order_by('size')
 
         orderPosition = PositionOrder.objects.get(pk=modyfi)
-        orderPosition.extra_price = 0
+        extra_price = request.GET.get('extra_price')
+        if extra_price != "":
+            orderPosition.extra_price = float(extra_price)
+            orderPosition.save()
+        else:
+            orderPosition.extra_price = 0
+            orderPosition.save()
         orderPosition.change_topps = ""
         orderPosition.save()
         vege_components = Products.objects.filter(component="1")
@@ -377,13 +390,14 @@ class ChangeToppsView(View):
     def get(self, request, pk, modyfi):
         product = Products.objects.get(id=pk)
         orderPosition = PositionOrder.objects.get(pk=modyfi)
+
         orderPosition.change_topps = ""
 
-        vegetopps = Products.objects.filter(component="1")
-        beeftopps = Products.objects.filter(component="2")
-        cheesetopps = Products.objects.filter(component="3")
-        extratopps = Products.objects.filter(component="4")
-        cake = Products.objects.filter(component="5")
+        vegetopps = Products.objects.filter(component="1").order_by('name')
+        beeftopps = Products.objects.filter(component="2").order_by('name')
+        cheesetopps = Products.objects.filter(component="3").order_by('name')
+        extratopps = Products.objects.filter(component="4").order_by('name')
+        cake = Products.objects.filter(component="5").order_by('name')
 
         toppings = []
         for el in product.toppings.all():
@@ -402,14 +416,15 @@ class ChangeToppsView(View):
             if el.component == 3:
                 cheesecounter += 1
             if el.component == 4:
-                cheesecounter += 1
+                extracounter += 1
             if el.component == 5:
-                cheesecounter += 1
+                cakecounter += 1
         addvege_pay_control = vegecounter
         beef_pay_control = beefcounter
         cheese_pay_control = cheesecounter
         extra_pay_control = extracounter
         cake_pay_control = cakecounter
+        print(cheese_pay_control)
         vege_pay = vegecounter
         beef_pay = beefcounter
         cheese_pay = cheesecounter
@@ -544,9 +559,9 @@ class ChangeToppsView(View):
                 beefcounter += 1
             if el.component == 3:
                 cheesecounter += 1
-        vegetopps = Products.objects.filter(component="1")
-        beeftopps = Products.objects.filter(component="2")
-        cheesetopps = Products.objects.filter(component="3")
+        vegetopps = Products.objects.filter(component="1").order_by('name')
+        beeftopps = Products.objects.filter(component="2").order_by('name')
+        cheesetopps = Products.objects.filter(component="3").order_by('name')
 
         if change_topps_vege == 0 and change_topps_beef == 0 and change_topps_cheese == 0:
             product_modyfi.extra_price = 0

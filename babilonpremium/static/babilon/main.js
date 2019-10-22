@@ -3,6 +3,14 @@ $(document).ready(function () {
     var topps = $('button.topps');
     var add_topps = $('#add_topps');
     var changes = 0;
+    var ul_del = $('#text_change_topps_del');
+    var ul_add = $('#text_change_topps_add');
+    var input_del_text = "";
+    var input_add_text = "";
+    var input_value = $('#input_value');
+    var input_add_topps = $('#input_add_topps');
+    var input_del_topps = $('#input_del_topps');
+
 
 
     var change_vege = $('#change_vege').data('vege_plus');
@@ -21,6 +29,14 @@ $(document).ready(function () {
     price_beef_toops = price_beef_toops.replace(',', ".");
     price_beef_toops = parseFloat(price_beef_toops).toFixed(2);
 
+    var change_cheese = $('#change_cheese').data('cheese_plus');
+    var cheese_toops_array = [];
+    var ctr_cheese_array = [];
+    var sum_ctr_cheese_array = 0;
+    var price_cheese_toops = ($('#price_size_cheese').data('price'));
+    price_cheese_toops = price_cheese_toops.replace(',', ".");
+    price_cheese_toops = parseFloat(price_cheese_toops).toFixed(2);
+
     var change_extra = $('#change_extra').data('extra_plus');
     var extra_toops_array = [];
     var ctr_extra_array = [];
@@ -32,6 +48,7 @@ $(document).ready(function () {
     var price_beef = 0;
     var price_cheese = 0;
     var price_extra = 0;
+    var price_cake = 0;
     var price = 0;
 
 
@@ -45,7 +62,11 @@ $(document).ready(function () {
 
     var vegetopps = $('button.vegetopps');
     var beeftopps = $('button.beeftopps');
+    var cheesetopps = $('button.cheesetopps');
     var extratopps = $('button.extratopps');
+
+    var caketopps = $('button.caketopps');
+    var change_cake = $('#change_cake');
 
     var i_vege = $('#change_vege');
     var i_beef = $('#change_beef');
@@ -64,26 +85,45 @@ $(document).ready(function () {
                     sum_ctr_vege_array = eval(ctr_vege_array.join("+"));
                     sum_ctr_vege_array = parseInt(sum_ctr_vege_array);
                     i_vege.text(sum_ctr_vege_array);
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -91,28 +131,28 @@ $(document).ready(function () {
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
 
@@ -123,32 +163,34 @@ $(document).ready(function () {
                             price_beef = 0;
                         }
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+
                     if (sum_ctr_extra_array == 0) {
                         price_extra = 0;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
                 } else {
                     $(this).removeClass("btn-secondary");
@@ -157,26 +199,42 @@ $(document).ready(function () {
                     sum_ctr_vege_array = eval(ctr_vege_array.join("+"));
                     sum_ctr_vege_array = parseInt(sum_ctr_vege_array);
                     i_vege.text(sum_ctr_vege_array);
+                    text_add = "+" + $(this).text() + ", ";
+                    ul_add.append('<li>' + text_add + '</li>');
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -184,28 +242,28 @@ $(document).ready(function () {
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
 
@@ -216,32 +274,33 @@ $(document).ready(function () {
                             price_beef = 0;
                         }
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_extra = 0;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
                 }
             });
@@ -257,26 +316,44 @@ $(document).ready(function () {
                     sum_ctr_beef_array = eval(ctr_beef_array.join("+"));
                     sum_ctr_beef_array = parseInt(sum_ctr_beef_array);
                     i_beef.text(sum_ctr_beef_array);
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -284,28 +361,28 @@ $(document).ready(function () {
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
 
@@ -316,32 +393,33 @@ $(document).ready(function () {
                             price_beef = 0;
                         }
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_extra = 0;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
                 } else {
                     changes += 1;
@@ -351,26 +429,42 @@ $(document).ready(function () {
                     sum_ctr_beef_array = eval(ctr_beef_array.join("+"));
                     sum_ctr_beef_array = parseInt(sum_ctr_beef_array);
                     i_beef.text(sum_ctr_beef_array);
+                    text_add = "+" + $(this).text() + ", ";
+                    ul_add.append('<li>' + text_add + '</li>');
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -378,28 +472,28 @@ $(document).ready(function () {
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
 
@@ -410,37 +504,73 @@ $(document).ready(function () {
                             price_beef = 0;
                         }
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_extra = 0;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                 }
             });
         }
         if (($(this).attr("class").split((/\s+/))[0]) == 3) {
             cheese_toops_array.push(1);
+            $(this).on("click", function () {
+                if ($(this).hasClass("btn-danger")) {
+                    changes -= 1;
+                    $(this).removeClass("btn-danger");
+                    $(this).addClass("btn-secondary");
+                    ctr_cheese_array.push(-1);
+                    sum_ctr_cheese_array = eval(ctr_cheese_array.join("+"));
+                    sum_ctr_cheese_array = parseInt(sum_ctr_cheese_array);
+                    i_cheese.text(sum_ctr_cheese_array);
+                    price_cheese = sum_ctr_cheese_array * price_cheese_toops;
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
+                    if (price_cheese < 0) {
+                        price_cheese = 0;
+                    }
+                    extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                } else {
+                    changes += 1;
+                    $(this).removeClass("btn-secondary");
+                    $(this).addClass("btn-danger");
+                    ctr_cheese_array.push(1);
+                    sum_ctr_cheese_array = eval(ctr_cheese_array.join("+"));
+                    sum_ctr_cheese_array = parseInt(sum_ctr_cheese_array);
+                    i_cheese.text(sum_ctr_cheese_array);
+                    price_cheese = sum_ctr_cheese_array * price_cheese_toops;
+                    if (price_cheese < 0) {
+                        price_cheese = 0;
+                    }
+                    extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                }
+            })
         }
 
         if (($(this).attr("class").split((/\s+/))[0]) == 4) {
@@ -454,26 +584,44 @@ $(document).ready(function () {
                     sum_ctr_extra_array = eval(ctr_extra_array.join("+"));
                     sum_ctr_extra_array = parseInt(sum_ctr_extra_array);
                     i_extra.text(sum_ctr_extra_array);
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -481,28 +629,28 @@ $(document).ready(function () {
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
 
@@ -513,32 +661,33 @@ $(document).ready(function () {
                             price_beef = 0;
                         }
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_extra = 0;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
                 } else {
                     changes += 1;
@@ -548,26 +697,42 @@ $(document).ready(function () {
                     sum_ctr_extra_array = eval(ctr_extra_array.join("+"));
                     sum_ctr_extra_array = parseInt(sum_ctr_extra_array);
                     i_extra.text(sum_ctr_extra_array);
+                    text_add = "+" + $(this).text() + ", ";
+                    ul_add.append('<li>' + text_add + '</li>');
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                         price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        eextra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
                     if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -575,28 +740,28 @@ $(document).ready(function () {
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = (sum_ctr_vege_array * price_vege_toops);
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                         price_vege = sum_ctr_vege_array * price_vege_toops;
                         if ((price_vege) < 0) {
                             price_vege = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
 
 
@@ -607,32 +772,33 @@ $(document).ready(function () {
                             price_beef = 0;
                         }
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_beef = sum_ctr_beef_array * price_beef_toops;
                         if ((price_beef) < 0) {
                             price_beef = 0;
                         }
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array > 0) {
                         price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
                     if (sum_ctr_extra_array == 0) {
                         price_extra = 0;
 
-                        extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
                 }
             });
@@ -648,26 +814,44 @@ $(document).ready(function () {
             i_vege.text(sum_ctr_vege_array);
             new_button = $(this).clone();
             new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
             if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                 price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                 price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                 price_vege = (sum_ctr_vege_array * price_vege_toops);
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
             if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -675,28 +859,28 @@ $(document).ready(function () {
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                 price_vege = (sum_ctr_vege_array * price_vege_toops);
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                 price_vege = sum_ctr_vege_array * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                 price_vege = sum_ctr_vege_array * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
 
@@ -707,32 +891,33 @@ $(document).ready(function () {
                     price_beef = 0;
                 }
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array == 0) {
                 price_beef = sum_ctr_beef_array * price_beef_toops;
                 if ((price_beef) < 0) {
                     price_beef = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array > 0) {
                 price_beef = sum_ctr_beef_array * price_beef_toops;
                 if ((price_beef) < 0) {
                     price_beef = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array > 0) {
                 price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array == 0) {
                 price_extra = 0;
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
         });
     });
 
@@ -744,26 +929,44 @@ $(document).ready(function () {
             i_beef.text(sum_ctr_beef_array);
             new_button = $(this).clone();
             new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
             if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                 price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                 price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                eextra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                 price_vege = (sum_ctr_vege_array * price_vege_toops);
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
             if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -771,28 +974,28 @@ $(document).ready(function () {
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                 price_vege = (sum_ctr_vege_array * price_vege_toops);
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                 price_vege = sum_ctr_vege_array * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                 price_vege = sum_ctr_vege_array * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
 
@@ -803,35 +1006,58 @@ $(document).ready(function () {
                     price_beef = 0;
                 }
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array == 0) {
                 price_beef = sum_ctr_beef_array * price_beef_toops;
                 if ((price_beef) < 0) {
                     price_beef = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array > 0) {
                 price_beef = sum_ctr_beef_array * price_beef_toops;
                 if ((price_beef) < 0) {
                     price_beef = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array > 0) {
                 price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array == 0) {
                 price_extra = 0;
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
         })
     });
+    cheesetopps.each(function (index) {
+        $(this).on("click", function () {
+            ctr_cheese_array.push(1);
+            sum_ctr_cheese_array = eval(ctr_cheese_array.join("+"));
+            sum_ctr_cheese_array = parseInt(sum_ctr_cheese_array);
+            i_cheese.text(sum_ctr_cheese_array);
+            new_button = $(this).clone();
+            new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            price_cheese = sum_ctr_cheese_array * price_cheese_toops;
+
+            if (price_cheese < 0) {
+                price_cheese = 0;
+            }
+            extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+        });
+    });
+
 
     extratopps.each(function (index) {
         $(this).on("click", function () {
@@ -841,26 +1067,44 @@ $(document).ready(function () {
             i_extra.text(sum_ctr_extra_array);
             new_button = $(this).clone();
             new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
             if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
                 price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
                 price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
                 price_vege = (sum_ctr_vege_array * price_vege_toops);
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
             if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
@@ -868,28 +1112,28 @@ $(document).ready(function () {
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
                 price_vege = (sum_ctr_vege_array * price_vege_toops);
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
                 price_vege = sum_ctr_vege_array * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
                 price_vege = sum_ctr_vege_array * price_vege_toops;
                 if ((price_vege) < 0) {
                     price_vege = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
 
@@ -899,36 +1143,58 @@ $(document).ready(function () {
                 if ((price_beef) < 0) {
                     price_beef = 0;
                 }
-
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array == 0) {
                 price_beef = sum_ctr_beef_array * price_beef_toops;
                 if ((price_beef) < 0) {
                     price_beef = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array > 0) {
                 price_beef = sum_ctr_beef_array * price_beef_toops;
                 if ((price_beef) < 0) {
                     price_beef = 0;
                 }
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array > 0) {
                 price_extra = sum_ctr_extra_array * price_extra_toops;
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
             if (sum_ctr_extra_array == 0) {
                 price_extra = 0;
 
-                extra_price_text = extra_price_text.text(price_vege + price_beef + price_extra);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
         })
     });
+    caketopps.each(function (index) {
+        $(this).on("click", function () {
+            i_cake += 1;
+            caketopps.removeClass("btn-success");
+            caketopps.addClass("btn-warning");
+            $(this).removeClass("btn-warning");
+            $(this).addClass("btn-success");
+            change_cake.text(i_cake);
+            cake_topp_price = ($(this).data('cakeprice'));
+            cake_topp = cake_topp_price.replace(',', ".");
+            price_cake = parseFloat(cake_topp);
+            extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+
+        });
+    });
+    
+
 
 
 })
