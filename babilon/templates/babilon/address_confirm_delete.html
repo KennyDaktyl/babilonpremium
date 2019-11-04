@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="row col-12">
+    <form method="POST" enctype="multipart/form-data" class="col-12 mx-auto">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>Usunąć adres? "{{ object }}"?</p>
+        <input type="submit" value="Potwierdź usuwanie">
+
+    </form>
+    <a href="/"><button>Cofnij</button></a>
+</div>
+
+{% endblock %}

@@ -34,6 +34,10 @@ $(document).ready(function () {
     array_extra_price = [0, ];
     array_extra_sauce = [0, ];
 
+    var caketopps = $('button.caketopps');
+    var input_add_cake_text = $('#input_add_cake');
+    var extra_price = $('#extra_price');
+    var price_cake = 0.00;
 
 
     var refresh = $('#refresh');
@@ -91,10 +95,13 @@ $(document).ready(function () {
                 sauce_price = sauce_price.toFixed(2);
                 array_extra_sauce.push(sauce_price);
                 var tab = eval(array_extra_sauce.join("+"))
+                tab = parseFloat(tab) + parseFloat(price_cake);
 
                 price_sauce_edit = extra_price_edit.data('price');
                 price_sauce_edit = price_sauce_edit.replace(',', ".");
                 price_sauce_edit = parseFloat(price_sauce_edit);
+
+
 
                 price_sauce_edit += tab;
                 price_sauce_edit = price_sauce_edit.toFixed(2);
@@ -106,7 +113,7 @@ $(document).ready(function () {
 
             } else {
                 alert("Za dużo zmian");
-                sauces_text.attr('value', text_sauce_pay);
+                // sauces_text.attr('value', text_sauce_pay);
             }
 
         });
@@ -126,5 +133,56 @@ $(document).ready(function () {
         });
 
     })
+    caketopps.each(function (index) {
+        $(this).on("click", function () {
+            caketopps.removeClass("btn-success");
+            caketopps.addClass("btn-warning");
+            $(this).removeClass("btn-warning");
+            $(this).addClass("btn-success");
+            // change_cake.text(i_cake);
+            cake_topp_price = ($(this).data('price'));
+            cake_topp = cake_topp_price.replace(',', ".");
+            price_cake = parseFloat(cake_topp);
 
+
+            price_sauce_edit = extra_price_edit.data('price');
+            price_sauce_edit = price_sauce_edit.replace(',', ".");
+            price_sauce_edit = parseFloat(price_sauce_edit);
+            console.log(price_sauce_edit + price_cake)
+            console.log(tab)
+
+
+            price_cake = price_cake.toFixed(2);
+            // array_extra_sauce.push(price_cake);
+            var tab = eval(array_extra_sauce.join("+"))
+            tab = parseFloat(tab);
+
+
+            extra_price_edit.html("<b>" + ((parseFloat(tab) + parseFloat(price_sauce_edit) + parseFloat(price_cake))).toFixed(2) + "</b>");
+            price_sauce_edit = ((parseFloat(tab) + parseFloat(price_sauce_edit) + parseFloat(price_cake))).toFixed(2);
+            // cake_topp_price += tab;
+            // cake_topp_price = cake_topp_price.toFixed(2);
+
+            // extra_price_edit.html("<b>" + price_sauce_edit + "</b>");
+
+            // extra_price_text = extra_price_text.text(parseFloat(add_topps_price) + parseFloat(price_cake));
+
+            input_add_cake = $(this).text();
+            input_add_cake_text.attr('value', input_add_cake);
+            sauces_form.attr('value', price_sauce_edit);
+            // input_extra_price.attr('value', ((parseFloat(tab) + parseFloat(price_sauce_edit) + parseFloat(price_cake))).toFixed(2));
+            // input_topps_free = input_topps_free.attr('value', text_add);
+            // input_extra_price.attr('value', (parseFloat(add_topps_price) + parseFloat(price_cake)));
+            // console.log(input_add_cake_text.attr('value'));
+
+
+            // cake_topp_price += tab;
+            // cake_topp_price = cake_topp_price.toFixed(2);
+
+            // extra_price_edit.html("<b>" + cake_topp_price + "</b>");
+            // sauces_form.attr('value', price_sauce_edit);
+            // sauce_pay_text.text(text_sauce_pay);
+            // add_sauces_pay = add_sauces_pay.attr('value', text_sauce_pay);
+        });
+    });
 });

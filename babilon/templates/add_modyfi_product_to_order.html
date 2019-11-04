@@ -1,4 +1,113 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="row col-12 border">
+    <div class="col-8 row">
+        <h5 class="col-8 text-left p-auto">Nazwa: {{product_add.name}} </h5>
+        <h5 class="col-3 text-left p-auto">Rozmiar: {{product_add.size}}</h5>
+    </div>
+    <div class="col-1">
+        <button type="submit" class="btn btn-success mx-auto">1/2</button>
+    </div>
+    <div class="col-3">
+        <h5 class="col-8 text-right mx-auto">{{product_add.price}}zł</h5>
+    </div>
+</div>
+<div class="row col-12 border mt-2 mx-auto">
+    {% for el in otherSize %}
+    <a class="text-center mx-auto" href="/add_to_order/{{el.id}}">
+        <button type="submit" class="w-100 mx-auto btn btn-primary size">Rozmiar{{el.size}}
+            <br><span clas="text-center">Cena: {{el.price}}</span>
+        </button>
+    </a>
+    {% endfor %}
+</div>
+<div class="row col-12 border mt-2 mx-auto text-wrap">
+    <p class="col-10 text-left">Składniki pizzy:</p>
+    <a href="/change_topps/{{product_add.id}}/{{orderPosition.id}}">
+        <button type="submit" class=" col-1btn btn-success mx-auto">Zmień składniki</button></a>
+    </a>
+    <p class="col-10 text-left">{{orderPosition.change_topps}}</p>
+    {% for el in product_add.pizza_componets.all %} <b>
+        <form class="mx-auto" method="POST" action="/delete_from_pizza/">
+            {% csrf_token %}
+            <input name="orderId" type="hidden" value="{{orderId}}">
+            <input name="pizza_id" type="hidden" value="{{product_add.id}}">
+            <input name="del_comp" type="hidden" value="{{el.id}}"><button type="submit"
+                class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
+                    {{el.price}}</span></button></a>
+    </b></form>{% endfor %}
+</div>
+<div class="row col-12 border mt-2 mx-auto text-wrap">
+    <p class="col-2 text-left"><b>Sosy:</b></p>
+    <span id="sauce_free_text" class="col-10 text-left"></span>
+    <p class="col-2 mt-1 text-left"><b>Sosy płatne:</b></p>
+    <span id="sauce_pay_text" class="col-10 text-left"></span>
+    <div class="col-12 text-right">
+        <button id="refresh" type="button" class="text-right btn btn-danger">Kasuj</button>
+    </div>
+</div>
+<div class="row col-12 border mt-2 mx-auto">
+    <p class="col-12 text-left">Wybierz sos darmowy:</p>
+    {% for el in souse_free %}
+    <button type="button" class="btn btn-warning mx-auto sauce_free">{{el.name}}</span></button></a>
+    {% endfor %}
+</div>
+<div class="row col-12 border mt-2 mx-auto text-wrap">
+    <p class="col-12 text-left">Wybierz sos płatny:</p>
+    {% for el in souse_pay %}
+    <button type="button" data-price="{{el.price}}" class="btn btn-warning mx-auto text-center sauce_pay">{{el.name}}:
+        {{el.price}}</button></a>
+
+    {% endfor %}
+</div>
+<form class="text-left col-12 row" method="POST">
+    {% csrf_token %}
+    <div class="row col-12 border mt-2 mx-auto">
+        <div class="col-12">
+            <p class="col-12 text-left">Info</p>
+            <input class="col-12" name="info" type="textarea" max_length="256" value="">
+        </div>
+    </div>
+    <div class="row col-12 border mt-2 mx-auto">
+        <div class="col-4">
+            <p class="col-12 text-left">Rabat</p>
+            <input class="col-4" name="orderPosition" type="hidden" value="{{orderPosition.id}}">
+            <input id="discount" class="col-3 text-left" name="discount" type="number"
+                value="{{orderPosition.discount}}" min="0" max="100">
+        </div>
+        <div class="col-4">
+            <p class="col-12 text-left"></p>
+            <p class="col-12 text-left">Cena produktu <br><b>{{orderPosition.price}}</b></p>
+            <p class="col-12 text-left">Dodatki<br><span id="extra_price_edit"
+                    data-price={{orderPosition.extra_price}}><b>{{orderPosition.extra_price}}</b></span></p>
+        </div>
+        <div class="col-4">
+            <p class="col-12 text-left">Ilość</p>
+            <input id="quantity" class="col-3 mx-auto" name="quantity" type="number" min="0" max="100" value="1">
+            <button type="button" id="quantity_plus" class="col-4 mx-auto btn btn-success">+</button>
+            <button type="button" id="quantity_minus" class="col-4 mx-auto btn btn-danger">-</button>
+            <input name="productId" type="hidden" value="{{product_add.id}}">
+            <input name="orderPosition" type="hidden" value="{{orderPosition.id}}">
+            <input id="add_sauces_free" name="add_sauces_free" type="hidden" value="">
+            <input id="add_sauces_pay" name="add_sauces_pay" type="hidden" value="">
+            <input id="sauces_form" name="sauces" type="hidden" value="{{orderPosition.extra_price}}">
+            <input name="add" type="hidden" value="1">
+            <div class="col-12">
+                <button type="submit" class="col-12 mx-auto m-1 btn btn-success">Dodaj</button>
+            </div>
+</form>
+</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/main2.js" %}" type="text/javascript"></script>
+{% endblock %}
+
+<!-- 
+
+{% extends 'base.html' %}
 {% block content %}
 <div class="row col-12 border">
     <div class="col-8 row">
@@ -99,7 +208,7 @@
         </form>
     </div>
 </div>
-{% endblock %}
+{% endblock %} -->
 
 
 

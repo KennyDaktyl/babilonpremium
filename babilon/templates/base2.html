@@ -3,6 +3,7 @@
 <html lang="pl">
 
 <head>
+    <link rel="shortcut icon" href="">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
@@ -32,28 +33,23 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <form class="col-1" action="/add_new_order_local/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>LOKAL</button>
+        </form>
+        <form class="col-1 " action="/add_new_order_outside/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>WYNOS</button>
+        </form>
+        <form class="col-1 " action="/add_new_order_driver/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>DOSTAWA</button>
+        </form>
+
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
 
 
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle col-xs-12" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Zamówienia
-                    </a>
-                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item col-xs-6" href="/zamowienia/">Zamówienia</a>
-                        <a class="dropdown-item" href="/lista_produktow/">Lista produktów</a>
-                        <a class="dropdown-item" href="/lista_klientow/">Baza klienci</a>
-                        <a class="dropdown-item" href="/lista_pracownikow/">Lista pracowników</a>
-                        <!-- <a class="dropdown-item" href="/faktura_zakupu/">Faktura Vat</a>
-                        <a class="dropdown-item" href="/lista_faktur/">Lista Faktura Vat</a>
-                        <a class="dropdown-item" href="/dodaj_telefon/">Dodaj telefon</a> -->
-                    </div>
 
-                </li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -88,7 +84,7 @@
                         Produkty
                     </a>
                     <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/add_pizza_list/">Dodaj i edytuj Pizzę</a>
+                        <a class="dropdown-item" href="/add_pizza/">Dodaj i edytuj Pizzę</a>
                         <a class="dropdown-item" href="/wydatki_miesiac/">Miesięczna lista wydatków</a>
                         <a class="dropdown-item" href="/ustaw_koszty/">Lista kosztów stałych</a>
                         <a class="dropdown-item" href="/przychody_zysk/">Przychody i zysk</a>
@@ -125,14 +121,11 @@
                     </div>
                 </li>
             </ul>
-            <!-- <form class="form-inline my-2 my-lg-0" method="POST" action="/szukaj_czesci/">
-                {% csrf_token %}
-                <input name="szukaj" class=" form-control mr-sm-2" type="search" placeholder="Części"
-                    aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Części</button>
-            </form> -->
 
-            <ul class="navbar-nav ml-auto nav-flex-icons">
+            <form class="col-2 text-right" action="/local_status/">
+                <button type="submit" class="btn btn-success mx-auto col-12">Lokal<br>STATUS</button>
+            </form>
+            <ul class="navbar-nav nav-flex-icons">
 
                 <li class="nav-item dropdown">
 
@@ -159,26 +152,23 @@
         </div>
     </nav>
 
-
-
-
-    {% block content %}
+    <div class="container-fluid">
+        {% block content %}
 
 
 
 
-    {% endblock %}
+        {% endblock %}
     </div>
-    </div>
-    <div class="container-fluid mr-auto">
-        <div class="col-12 mt-2 mx-auto">
-            <div class="container text-center">
-                <footer class="footer col-12 mx-auto">
-                    <span class="copyright col-12 mx-auto">Copyright &copy; Miktel Premium 2019</span>
-                </footer>
-            </div>
+
+    <div class="container-fluid mx-auto">
+        <div class="col-12 row mx-auto">
+            <footer class="footer col-12 mx-auto text-center">
+                <span class="copyright col-12 mx-auto text-center">Copyright &copy; Miktel Premium 2019</span>
+            </footer>
         </div>
     </div>
+
 
 
 
@@ -198,7 +188,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
-    <script src="{% static "babilon/main.js" %}" type="text/javascript"></script>
+    <!-- <script src="{% static "babilon/main.js" %}" type="text/javascript"></script> -->
 </body>
 
 </html>

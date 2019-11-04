@@ -4,27 +4,42 @@
 {% block content %}
 
 
-<div class="col-12 mx-auto text-center bg-light p-1 border">
+<div id="products" class="col-12 mx-auto text-center bg-light p-1 border">
     <div class="row col-12 mt-2 mx-auto text-nowrap">
         <h4 class="text-left col-12 mt-2">Produkty</h4>
         <div class="col-12 text-wrap">
 
             <div class="row mx-auto ">
                 {% for el in products %}
-
+                {% if el.pizza_freestyle == False %}
                 <a class="mx-auto" href="/add_to_order/{{el.id}}">
                     <button type="submit"
-                        class="pizzamenu {{el.name}} {{el.size}} m-2 btn btn-primary  {{el.menu_category.name}}">
+                        class="pizzamenu {{el.name}} {{el.size}} m-2 btn btn-primary  {{el.menu_category.name}}"
+                        data-type="el.pizza_freestyle">
                         {{el.name}}<br>
                         <span class="text-center">{{el.price}}zł</span><br>
                         <span class="text-center">Rozmiar: {{el.size}}</span>
                         <span>ID: {{el.id}}</span>
                     </button></a>
+                {% else %}
+                <a class="mx-auto" href="/add_toops_freestyle/{{el.id}}">
+                    <button type="submit"
+                        class="pizzamenu {{el.name}} {{el.size}} m-2 btn btn-primary  {{el.menu_category.name}}"
+                        data-type="el.pizza_freestyle">
+                        {{el.name}}<br>
+                        <span class="text-center">{{el.price}}zł</span><br>
+                        <span class="text-center">Rozmiar: {{el.size}}</span>
+                        <span>ID: {{el.id}}</span>
+                    </button></a>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>
 
     </div>
 </div>
+
+
+
 
 {% endblock %}

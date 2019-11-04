@@ -10,11 +10,18 @@
 /* border: 1px solid grey; */
 /* background-color: grey; */
 /* } */
-
+/* 
 table {
     width: 100%;
     table-layout: fixed;
     overflow-wrap: break-word;
+    overflow-x: auto;
+    display: block;
+    margin: auto;
+} */
+
+table th {
+    text-align: center;
 }
 
 .container {

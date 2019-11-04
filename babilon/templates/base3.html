@@ -30,14 +30,14 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Babilon Premium</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-laborder="Toggle navigation">
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <form class="col-1" action="/add_new_order_local/">
             <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>LOKAL</button>
         </form>
         <form class="col-1 " action="/add_new_order_outside/">
-            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>WYNOS</button>
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>WYWÓZ</button>
         </form>
         <form class="col-1 " action="/add_new_order_driver/">
             <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>DOSTAWA</button>
@@ -56,7 +56,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         Magazyn
                     </a>
-                    <div class="dropdown-menu col-xs-6" aria-laborderledby="navbarDropdown">
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/stan_magazynu/">Stan magazynu</a>
                         <a class="dropdown-item" href="/archiwum_serwisow/">Oblicz cenę kulki</a>
                         <a class="dropdown-item" href="/lista_czesci/">Ustaw gramaturę</a>
@@ -70,7 +70,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         Kasa
                     </a>
-                    <div class="dropdown-menu col-xs-6" aria-laborderledby="navbarDropdown">
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/stan_kasy/">Stan kasy bieżący</a>
                         <a class="dropdown-item" href="/wydatki_miesiac/">Miesięczna lista wydatków</a>
                         <a class="dropdown-item" href="/ustaw_koszty/">Lista kosztów stałych</a>
@@ -83,7 +83,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         Produkty
                     </a>
-                    <div class="dropdown-menu col-xs-6" aria-laborderledby="navbarDropdown">
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/add_pizza/">Dodaj i edytuj Pizzę</a>
                         <a class="dropdown-item" href="/wydatki_miesiac/">Miesięczna lista wydatków</a>
                         <a class="dropdown-item" href="/ustaw_koszty/">Lista kosztów stałych</a>
@@ -96,7 +96,7 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Grafik
                     </a>
-                    <div class="dropdown-menu col-xs-6" aria-laborderledby="navbarDropdown">
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/grafik_miesieczny/">Grafik bieżący miesiąc</a>
                         <a class="dropdown-item" href="/ustaw_grafik_miesieczny/">Ustal grafik miesięczny</a>
                         <a class="dropdown-item" href="/wypłaty_pracownikow/">Wypłaty pracowników</a>
@@ -107,7 +107,7 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Administracja
                     </a>
-                    <div class="dropdown-menu col-xs-6" aria-laborderledby="navbarDropdown">
+                    <div class="dropdown-menu col-xs-6" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/dodaj_uzytkownika/">Dodaj użytkownika</a>
                         <a class="dropdown-item" href="/lista_uzytkownikow/">Lista pracownikow</a>
                         <a class="dropdown-item" href="/dodaj_sklep/">Dodaj sklep/magazyn</a>
@@ -141,7 +141,7 @@
                         </i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-default"
-                        aria-laborderledby="navbarDropdownMenuLink-333">
+                        aria-labelledby="navbarDropdownMenuLink-333">
                         <a class="dropdown-item" href="/profil/{{user.id}}">Mój profil</a>
                         <a class="dropdown-item" href="#">Dane adresowe</a>
                         <a class="dropdown-item" href="#">Dokumenty</a>
@@ -153,21 +153,21 @@
     </nav>
     <div class="container-fluid mr-auto flex-nowrap">
         <div class="row col-12 mt-2 mx-auto text-nowrap flex-nowrap">
-            <div class="col-2 text-center bg-light p-1 mr-1 border">
+            <!-- <div class="col-2 text-center bg-light p-1 mr-1 border">
                 <h5 class="text-left col-12">Znajdź produkt</h5>
                 <input name="search" class="text-left col-12 bg-"><br><button type="submit" class="btn btn-dark">
                     Produkty
                 </button>
                 <h4 class="text-left col-12 mt-2">Menu</h4>
                 <div class="col-12 text-wrap">
-                    {% for order in menu %}
-                    <a href="/category_list/{{order.id}}">
+                    {% for el in menu %}
+                    <a href="/category_list/{{el.id}}">
                         <button type="submit" class="menu btn btn-primary m-1 w-100 ">
-                            {{order.name}}</button></a>
+                            {{el.name}}</button></a>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="col-7 mx-auto text-center bg-light p-1 border">
+            </div> -->
+            <div class="col-9 mx-auto text-center bg-light p-1 border">
                 <div class="row col-12 mt-2 mx-auto text-nowrap">
                     {% block content %}
 
@@ -180,24 +180,28 @@
             <div class="col-3 text-center bg-light p-1 ml-1 border">
 
                 <div class="col-12 text-wrap bg-light">
-                    <h5 class="text-left mt-3"> Klient: {{order.client.phone_number}}</h5>
+                    <h5 class="text-left mt-3"> Klient: {% if order.client.phone_number.strip %}
+                        {{order.client.phone_number}}</h5>
+                    {% else %}
+                    {% endif %}
                     <h5 class="text-left">Adres: {{order.address.address}}</h5>
                 </div>
+
 
                 <div class="col-12 text-wrap bg-light">
 
 
                     <div type="submit" class="text-wrap">
 
-                        <p>{{order.total_price_order}}</p>
-                        <p class="text-left"> Numer:{{order.number}} <a href="/update_order/{{order.id}}"><span
+                        <p>{{ordertotal_price_order}}</p>
+                        <p class="text-left"> Numer:{{order.number}} <a href="/update_order/{{orderid}}"><span
                                     class="text-primary"><b>E</b></a></p>
                         <p class="text-left"> Gdzie: {{order.get_delivery_display}}</p>
                         <p class="text-left"> Produkty:
                             <ul class="text-left col-12 text-wrap">
-                                {% for prod in order.position.all %}
+                                {% for prod in orderposition.all %}
                                 {% if prod.pizza_half == False %}
-                                <li class="text-left text-wrap"> <a href="/dorderete_position_order/{{prod.id}}"><span
+                                <li class="text-left text-wrap"> <a href="/delete_position_order/{{prod.id}}"><span
                                             class="text-danger"><b>X
                                             </b></span></a><a href="/update_position_order/{{prod.id}}"><span
                                             class="text-primary"><b>E
@@ -242,7 +246,7 @@
                                     {{prod.total_price}}
                                 </li>
                                 {% else %}
-                                <li class="text-left text-wrap"> <a href="/dorderete_position_order/{{prod.id}}"><span
+                                <li class="text-left text-wrap"> <a href="/delete_position_order/{{prod.id}}"><span
                                             class="text-danger"><b>X
                                             </b></span></a><a href="/update_position_order/{{prod.id}}"><span
                                             class="text-primary"><b>E
@@ -313,7 +317,7 @@
                     </div>
                     <div class="row col-12">
                         <p class="text-left col-6"> <b>Kwota:</b></p>
-                        <h4 class="text-center col-12">{{order.total_price}}</h4>
+                        <h4 class="text-center col-12">{{ordertotal_price}}</h4>
                         <a href="/close_order/{{order.id}}" class="col-12"> <button type="submit"
                                 class="col-12 btn btn-success m-1 w-100 ">Zatwierdź</button>
                         </a>
@@ -324,24 +328,27 @@
                 <h5 class="text-left col-12 mt-4"><b>Kierowcy:</b></h5>
 
                 <div class="col-12 text-wrap bg-light">
-                    {% for order in drivers%}
+                    {% for el in drivers%}
                     <div type="submit" class="btn btn-primary">
-                        Kierowca:{{order.name}}</div>
+                        Kierowca:{{el.name}}</div>
                     {% endfor %}
                 </div>
             </div>
         </div>
-        <div class="container-fluid mr-auto">
-            <div class="col-12 mt-2 mx-auto">
-                <div class="container text-center">
-                    <footer class="footer col-12 mx-auto">
-                        <span class="copyright col-12 mx-auto">Copyright &copy; Miktorder Premium 2019</span>
-                    </footer>
-                </div>
-            </div>
-        </div>
     </div>
+
+    <div class="container-fluid mx-auto">
+
+
+
+        <footer class="footer col-12 mx-auto text-center mt-2">
+            <span class="copyright col-12 mx-auto ">Copyright &copy; Miktel Premium 2019</span>
+        </footer>
+
+
+
     </div>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js">

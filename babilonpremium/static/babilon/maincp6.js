@@ -1,752 +1,1702 @@
 $(document).ready(function () {
     //Button ze składnikami pizzy stworzonymi przez autora
-    var topps = $('button.topps')
-    //Link w buttonie Zapisz dzieki któremu przekazuje w url teks GETem do widoku dodaj pizze
-    var link = $('#link').attr('href');
-
-    var price_size_vege = $('#price_size_vege').data('vege_price');
-    // price_size_vege = price_size_vege.replace(",", ".");
-    // price_size_vege = parseFloat(price_size_vege);
-    // price_size_vege = price_size_vege.toFixed(2);
-
-
-    var price_size_beef = $('#price_size_beef').data('beef_price');
-    // price_size_beef = price_size_beef.replace(",", ".");
-    // price_size_beef = parseFloat(price_size_beef);
-    // price_size_beef = price_size_beef.toFixed(2);
-    var ctr_gr_vege = 0;
-    var ctr_gr_beef = 0;
-    // var sum_ctr_gr_beef = eval(ctr_gr_beef.join("+"))
-    // sum_ctr_gr_beef = parseInt(sum_ctr_gr_beef);
-    var ctr_gr_extra = 0;
-    // var sum_ctr_gr_extra = eval(ctr_gr_extra.join("+"));
-    // sum_ctr_gr_extra = parseInt(sum_ctr_gr_extra);
+    var topps = $('button.topps');
+    var add_topps = $('#add_topps');
+    var changes = 0;
+    var ul_del = $('#text_change_topps_del');
+    var ul_add = $('#text_change_topps_add');
+    var input_del_text = "";
+    var input_add_text = "";
+    var input_add_cake = "";
+    var input_value = $('#input_value');
+    var input_add_topps = $('#input_add_topps');
+    var input_del_topps = $('#input_del_topps');
+    var input_add_cake_text = $('#input_add_cake');
+    var add_topps_buttons = $("#add_topps > button");
 
 
-   
 
-    //Dodatki vege, beef i cheese
-    var vegetopps = $('button.vegetopps')
-    //Zmiana na czerowno ilość dodatków ponad orginalny skład pizzy podzielone ne kategorie
-    var change_vege = $('#change_vege')
+    var change_vege = $('#change_vege').data('vege_plus');
+    var vege_toops_array = [];
+    var ctr_vege_array = [];
+    var sum_ctr_vege_array = 0;
+    var price_vege_toops = ($('#price_size_vege').data('price'));
+    price_vege_toops = price_vege_toops.replace(',', ".");
+    price_vege_toops = parseFloat(price_vege_toops).toFixed(2);
+
+    var change_beef = $('#change_beef').data('beef_plus');
+    var beef_toops_array = [];
+    var ctr_beef_array = [];
+    var sum_ctr_beef_array = 0;
+    var price_beef_toops = ($('#price_size_beef').data('price'));
+    price_beef_toops = price_beef_toops.replace(',', ".");
+    price_beef_toops = parseFloat(price_beef_toops).toFixed(2);
+
+    var change_cheese = $('#change_cheese').data('cheese_plus');
+    var cheese_toops_array = [];
+    var ctr_cheese_array = [];
+    var sum_ctr_cheese_array = 0;
+    var price_cheese_toops = ($('#price_size_cheese').data('price'));
+    price_cheese_toops = price_cheese_toops.replace(',', ".");
+    price_cheese_toops = parseFloat(price_cheese_toops).toFixed(2);
+
+    var change_extra = $('#change_extra').data('extra_plus');
+    var extra_toops_array = [];
+    var ctr_extra_array = [];
+    var sum_ctr_extra_array = 0;
+    var price_extra_toops = ($('#price_size_extra').data('price'));
+    price_extra_toops = price_extra_toops.replace(',', ".");
+    price_extra_toops = parseFloat(price_extra_toops).toFixed(2);
+    var price_vege = 0;
+    var price_beef = 0;
+    var price_cheese = 0;
+    var price_extra = 0;
+    var price_cake = 0;
+    var price = 0;
+
+
+    var cheese_toops_array = [];
+    var extra_toops_array = [];
+
+    var extra_price_text = $('#extra_price');
+
+    var text_changes = $('#text_change_topps');
+    var text = " ";
+
+    var vegetopps = $('button.vegetopps');
     var beeftopps = $('button.beeftopps');
-    var change_beef = $('#change_beef');
-    var change_cake = $('#change_cake');
-
     var cheesetopps = $('button.cheesetopps');
-    var change_cheese = $('#change_cheese');
-
     var extratopps = $('button.extratopps');
-    var change_extra = $('#change_extra');
 
     var caketopps = $('button.caketopps');
     var change_cake = $('#change_cake');
 
+    var i_vege = $('#change_vege');
+    var i_beef = $('#change_beef');
+    var i_cheese = $('#change_cheese');
+    var i_extra = $('#change_extra');
+    var i_cake = $('#change_cake');
 
-    //dodatki wybrane pierwszy element
-    var add_topps = $('span.nobody');
-    var suma_vege = 0;
-    var suma_beef = 0;
-    var suma_cheese = 0;
-    var suma_extra = 0;
-    var suma_cake = 0;
-    var suma_sauce = 0;
-
-    var cake_price = 0;
-    array_extra_price = [0, ];
-    array_extra_sauce = [0, ];
-
-    //liczniki składników wykorzystuwane do funkcji i=i+1 oraz i=i-1
-    var i_vege = $('#change_vege').data('vege_plus');
-    var i_beef = $('#change_beef').data('beef_plus');
-    var i_cheese = $('#change_cheese').data('cheese_plus');
-    var i_extra = $('#change_extra').data('extra_plus');
-    var i_cake = $('#change_cake').data('cake_plus');
-
-    //span z liczbą cena za składniki wspólna dla wszystkich (pamietaj ustawione na if extra_price<1.00)
-    var extra_price = $('#extra_price');
-    var cake_topp_price = 0;
-    //tekst wysyłane GETem do widoku dodaj pizze
-    var text_changes_del = $('#text_change_topps_del');
-    var text_changes_add = $('#text_change_topps_add');
-    var cake_text_changes = $('#text_change_cake');
-    var caketext = " ";
-    var text_add = " ";
-    var text_minus = " ";
+    var url_adress = window.location.href;
 
 
 
 
-    //var span_vege = $('#price_add_vege_topp');
-
-
-    //var span_beef = $('#price_add_beef_topp');
-    beef_adds = $('#price_add_beef_topp').data('price');
-
-    //var span_cheese = $('#price_add_cheese_topp');
-    cheese_adds = $('#price_add_cheese_topp').data('price');
-
-    extra_adds = $('span.price_add_extra_topp').data('price');
-    cake_adds = $('#price_add_cake_topp').data('price');
-
-    //widok dodaj pizze bez zmian (edycja sosów,info,rabatu i ilości)
-    var sauce_free = $('button.sauce_free');
-    var sauce_pay = $('button.sauce_pay');
-    var sauce_free_text = $('#sauce_free_text');
-    var sauce_pay_text = $('#sauce_pay_text');
-    var text_sauce_free = "";
-    var text_sauce_pay = "";
-    var extra_price_edit = $('#extra_price_edit');
-    var sauces_form = $('#sauces_form');
-    var add_sauces_free = $('#add_sauces_free');
-    var add_sauces_pay = $('#add_sauces_pay');
-
-    var size_button = $('.Pizza');
-    var pizza_button = $('.product button');
-
-
-    //Składniki stworzone przez autora pizze zmienają klasę oraz mają wpływ na licznik składników
-    topps.each(function (index) {
-
-        $(this).on("click", function () {
-            //typ składnika (vege 1, beef 2, cheese 3)
-            var type = $(this).data('type');
-            if (type == 1) {
-                //jesli ma klasę danger jest na pizzy
+    topps.each(function (el) {
+        if (($(this).attr("class").split((/\s+/))[0]) == 1) {
+            vege_toops_array.push(1);
+            $(this).on("click", function () {
                 if ($(this).hasClass("btn-danger")) {
-                    //kliknięcie na niego odejmuje licznik składników w kategorii
-                    i_vege -= 1;
-                    ctr_gr_vege -= 1;
-                    //edycja tekstu dla pizzera o zmianie
-                    text_minus = text_minus.replace("b_z", "");
-                    text_minus = "-" + $(this).html() + ", " + text_minus;
-                    text_changes_del.append('<li>jdjdjd</li>');
-                    // text = text.html("<br>");
-                    //zapis do zmiennej
-                    //jeśli licznik jest większy od 0 liczy extra_price
-                    var tab = eval(array_extra_price.join("+")).toFixed(2);
+                    $(this).removeClass("btn-danger");
+                    $(this).addClass("btn-secondary");
+                    ctr_vege_array.push(-1);
+                    sum_ctr_vege_array = eval(ctr_vege_array.join("+"));
+                    sum_ctr_vege_array = parseInt(sum_ctr_vege_array);
+                    i_vege.text(sum_ctr_vege_array);
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
 
 
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
-
-
-                    if (i_vege >= 0) {
-                        //pobierz dane o cenie składnika z butttona i jedo attr data-price
-                        var vege_topp = price_size_vege.data('price');
-                        //zamien , na . (inaczej nie liczy) pamietaj w modelu zrób float!
-                        vege_adds = vege_topp.replace(',', ".");
-                        //skoro odejmujemy cenę to przed dodaniem do tabicy SUMA skłądników obracamy na liczbę ujemną
-                        p = price_size_vege * -1;
-                        //dodajemy do teblicy suma za extra_prcie
-                        array_extra_price.push(p);
-                        //liczymy sumę elementów w tablicy z 2 liczbami po przecinku
-                        var tab = eval(array_extra_price.join("+")).toFixed(2);
-                        //wklejamu tekst do spana pokazującego cena za extra składniki dla pizzy
-                        extra_price.text(tab);
-                        //warunkiem klienta jeśli róznica skłądników mniejsza od jeden to nie ustaw na 0
-
-
-
-                        if (tab < 1.0) {
-                            extra_price.text(0);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
                         }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
-                    //aktualizujemy nasz licznik składników
-                    change_vege.text(i_vege);
-                    //podmieniamy klasy buttona jako odklikniety
-                    $(this).removeClass("btn-danger")
-                    $(this).addClass("btn-secondary")
-                    //teraz mamy odznaczony składnik a więć jeśli ko znowu klikniemy
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+
+
+                    if (sum_ctr_extra_array < 0) {
+                        price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+                    if (sum_ctr_extra_array == 0) {
+                        price_extra = 0;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
                 } else {
-                    alert("Skasuj");
-
-                    //     //wjeżdza znomu na pizze i dodaje nam licznik skladników
-                    //     i_vege += 1;
-                    //     ctr_gr_vege += 1;
-                    //     //znajduje tekst o odjęciu składnika i podmienia/usówa go!
-                    //     text = text.replace(("-" + $(this).text() + ", "), "");
-
-                    //     //aktualizuje go w zmiennej
-                    //     text_changes.text(text);
-
-                    //     if (text.length == 1) {
-                    //         text = "b_z";
-                    //     }
-
-                    //     var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    //     var newlink = link + tab + "/";
-                    //     $('#link').attr("href", newlink + caketext + "/" + text + "");
-                    //     //aktualizuje licznik składników
-                    //     change_vege.text(i_vege);
-                    //     //podmienia klasy buttona poznieważ znowu jest jednak na pizzy
-                    //     $(this).removeClass("btn-secendary");
-                    //     $(this).addClass("btn-danger");
-                    //     //jeśli licznik jest ponad 0 to licz cena za skłądniki
-                    //     if (i_vege > 0) {
-                    //         //pobiera attr price z kliknietego butttona ze skłądnikiem
-                    //         var vege_topp = ($(this).data('price'));
-                    //         vege_adds = vege_topp.replace(',', ".");
-                    //         p = vege_adds * -1;
-                    //         array_extra_price.push(vege_adds);
-                    //         var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    //         extra_price.text(tab);
-                    //         if (tab < 1) {
-                    //             extra_price.text(0);
-                    //         }
-                    //     }
-                }
-
-            }
-            //tutaj jest to samo tylko kategoria 2 czyli dodatki mięsne
-            if (type == 2) {
-                if ($(this).hasClass("btn-danger")) {
-                    i_beef -= 1;
-                    ctr_gr_beef -= 1;
-                    text_minus = text_minus.replace("b_z", "");
-                    text_minus = "-" + $(this).html() + " " + text_minus;
-                    text_changes_del.text(text_minus);
-                    text_changes_add.append('<li>jdjdjd</li>');
-
-                    var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
-                    if (i_beef >= 0) {
-                        var beef_topp = ($(this).data('price'));
-                        beef_adds = beef_topp.replace(',', ".");
-                        p = beef_adds * -1;
-                        array_extra_price.push(p);
-                        var tab = eval(array_extra_price.join("+")).toFixed(2);
-                        extra_price.text(tab);
-                        if (tab < 1.0) {
-                            extra_price.text(0);
-                        }
-                    }
-                    change_beef.text(i_beef);
-                    $(this).removeClass("btn-danger")
-                    $(this).addClass("btn-secondary")
-                } else {
-                    alert("Skasuj !!!")
-                    //     i_beef += 1;
-                    //     text = text.replace(("-" + $(this).text() + ", "), "");
-                    //     text_changes.text(text);
-                    //     change_beef.text(i_beef);
-
-                    //     if (text.length == 1) {
-                    //         text = "b_z";
-                    //     }
-
-                    //     var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    //     var newlink = link + tab + "/";
-                    //     $('#link').attr("href", newlink + caketext + "/" + text + "");
-                    //     $(this).removeClass("btn-secendary");
-                    //     $(this).addClass("btn-danger");
-                    //     if (i_beef > 0) {
-                    //         var beef_topp = ($(this).data('price'));
-                    //         beef_adds = beef_topp.replace(',', ".");
-                    //         p = beef_adds * -1;
-                    //         array_extra_price.push(beef_adds);
-                    //         var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    //         extra_price.text(tab);
-                    //         if (tab < 1) {
-                    //             extra_price.text(0);
-                    //         }
-                    //     }
-                }
-            }
-            //tutaj jest to samo tylko kategoria 2 czyli dodatki mięsne
-            if (type == 3) {
-                if ($(this).hasClass("btn-danger")) {
-                    i_cheese -= 1;
-                    text_minus = text_minus.replace("b_z", "");
-                    text_minus = "-" + $(this).html() + " " + text_minus;
-                    text_changes_del.text(text_minus);
-
-                    var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
-                    if (i_cheese >= 0) {
-                        var cheese_topp = ($(this).data('price'));
-                        cheese_adds = cheese_topp.replace(',', ".");
-                        p = cheese_adds * -1;
-                        array_extra_price.push(p);
-                        var tab = eval(array_extra_price.join("+")).toFixed(2);
-                        extra_price.text(tab);
-                        if (tab < 1.0) {
-                            extra_price.text(0);
-                        }
-                    }
-                    change_cheese.text(i_cheese);
-                    $(this).removeClass("btn-danger")
-                    $(this).addClass("btn-secondary")
-                } else {
-                    // alert("Skasuj !!!")
-                    i_cheese += 1;
-                    text_add = text_add.replace(("-" + $(this).text() + ", "), "");
-                    text_changes_add.text(text_add);
-
-                    change_cheese.text(i_cheese);
-
-                    if (text.length == 1) {
-                        text = "b_z";
-                    }
-
-                    var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
-
-                    $(this).removeClass("btn-secendary");
+                    $(this).removeClass("btn-secondary");
                     $(this).addClass("btn-danger");
-                    if (i_cheese > 0) {
-                        var cheese_topp = ($(this).data('price'));
-                        cheese_adds = cheese_topp.replace(',', ".");
-                        p = cheese_adds * -1;
-                        array_extra_price.push(cheese_adds);
-                        var tab = eval(array_extra_price.join("+")).toFixed(2);
-                        extra_price.text(tab);
-                        if (tab < 1) {
-                            extra_price.text(0);
+                    ctr_vege_array.push(1);
+                    sum_ctr_vege_array = eval(ctr_vege_array.join("+"));
+                    sum_ctr_vege_array = parseInt(sum_ctr_vege_array);
+                    i_vege.text(sum_ctr_vege_array);
+                    $('#text_change_topps_del li:contains(' + $(this).text() + ')').remove();
+                    text_del = "-" + $(this).text() + ", ";
+                    input_del_text = input_del_text.replace(text_del, "");
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
                         }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+
+
+                    if (sum_ctr_extra_array < 0) {
+                        price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_extra = 0;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+
                 }
-
-            }
-            if (type == 4) {
-                //jesli ma klasę danger jest na pizzy
+            });
+        }
+        if (($(this).attr("class").split((/\s+/))[0]) == 2) {
+            beef_toops_array.push(1);
+            $(this).on("click", function () {
                 if ($(this).hasClass("btn-danger")) {
-                    //kliknięcie na niego odejmuje licznik składników w kategorii
-                    i_extra -= 1;
-                    ctr_gr_extra -= 1;
-
-
-                    text_minus = text_minus.replace("b_z", "");
-                    text_minus = "-" + $(this).html() + " " + text_minus;
-                    text_changes_del.text(text_minus);
-                    //jeśli licznik jest większy od 0 liczy extra_price
-                    if (i_extra >= 0) {
-                        //pobierz dane o cenie składnika z butttona i jedo attr data-price
-                        var extra_topp = ($(this).data('price'));
-                        //zamien , na . (inaczej nie liczy) pamietaj w modelu zrób float!
-                        extra_adds = extra_topp.replace(',', ".");
-                        //skoro odejmujemy cenę to przed dodaniem do tabicy SUMA skłądników obracamy na liczbę ujemną
-                        p = extra_adds * -1;
-                        //dodajemy do teblicy suma za extra_prcie
-                        array_extra_price.push(p);
-                        //liczymy sumę elementów w tablicy z 2 liczbami po przecinku
-                        var tab = eval(array_extra_price.join("+")).toFixed(2);
-                        //wklejamu tekst do spana pokazującego cena za extra składniki dla pizzy
-                        extra_price.text(tab);
-                        //waruken klienta jeśli róznica skłądników mniejsza od jeden to nie ustaw na 0
-                        if (tab < 1.0) {
-                            extra_price.text(0);
+                    changes -= 1;
+                    $(this).removeClass("btn-danger");
+                    $(this).addClass("btn-secondary");
+                    ctr_beef_array.push(-1);
+                    sum_ctr_beef_array = eval(ctr_beef_array.join("+"));
+                    sum_ctr_beef_array = parseInt(sum_ctr_beef_array);
+                    i_beef.text(sum_ctr_beef_array);
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
                         }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
-                    //aktualizujemy nasz licznik składników
-                    change_extra.text(i_extra);
-                    //podmieniamy klasy buttona jako odklikniety
-                    $(this).removeClass("btn-danger")
-                    $(this).addClass("btn-secondary")
-                    //teraz mamy odznaczony składnik a więć jeśli ko znowu klikniemy
-                } else {
-                    alert("Skasuj !!!");
-                    // ctr_gr_extra += 1;
-
-
-                    // text = text.replace("b_z", "");
-                    // //wjeżdza znomu na pizze i dodaje nam licznik skladników
-                    // i_extra += 1;
-                    // //znajduje tekst o odjęciu składnika i podmienia/usówa go!
-                    // text = text.replace(("-" + $(this).text() + ", "), "");
-                    // //aktualizuje go w zmiennej
-                    // text_changes.text(text);
-                    // //aktualizuje licznik składników
-                    // change_extra.text(i_extra);
-
-                    // var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    // var newlink = link + tab + "/";
-                    // $('#link').attr("href", newlink + caketext + "/" + text + "");
-                    // //podmienia klasy buttona poznieważ znowu jest jednak na pizzy
-                    // $(this).removeClass("btn-secendary");
-                    // $(this).addClass("btn-danger");
-                    // //jeśli licznik jest ponad 0 to licz cena za skłądniki
-                    // if (i_extra > 0) {
-                    //     //pobiera attr price z kliknietego butttona ze skłądnikiem
-                    //     var extra_topp = ($(this).data('price'));
-                    //     extra_adds = extra_topp.replace(',', ".");
-                    //     p = extra_adds * -1;
-                    //     array_extra_price.push(extra_adds);
-                    //     var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    //     extra_price.text(tab);
-                    //     if (tab < 1) {
-                    //         extra_price.text(0);
-                    //     }
-                    // }
-                }
-
-            }
-            if (type == 5) {
-                //jesli ma klasę danger jest na pizzy
-                if ($(this).hasClass("btn-danger")) {
-                    //kliknięcie na niego odejmuje licznik składników w kategorii
-                    i_cake -= 1;
-                    text_minus = text_minus.replace("b_z", "");
-                    //edycja tekstu dla pizzera o zmianie
-                    text_minus = "-" + $(this).text() + ", " + text_minus + text_add;
-                    //zapis do zmiennej
-                    text_changes_del.text(text_minus);
-                    //jeśli licznik jest większy od 0 liczy extra_price
-                    if (i_cake >= 0) {
-                        //pobierz dane o cenie składnika z butttona i jedo attr data-price
-                        var cake_topp = ($(this).data('price'));
-                        //zamien , na . (inaczej nie liczy) pamietaj w modelu zrób float!
-                        cake_adds = cake_topp.replace(',', ".");
-                        //skoro odejmujemy cenę to przed dodaniem do tabicy SUMA skłądników obracamy na liczbę ujemną
-                        p = cake_adds * -1;
-                        //dodajemy do teblicy suma za extra_prcie
-                        array_extra_price.push(p);
-                        //liczymy sumę elementów w tablicy z 2 liczbami po przecinku
-                        var tab = eval(array_extra_price.join("+")).toFixed(2);
-                        //wklejamu tekst do spana pokazującego cena za extra składniki dla pizzy
-                        extra_price.text(tab);
-                        //waruken klienta jeśli róznica skłądników mniejsza od jeden to nie ustaw na 0
-                        if (tab < 1.0) {
-                            cake_price.text(0);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
                         }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
-                    //aktualizujemy nasz licznik składników
-                    change_cake.text(i_cake);
-                    //podmieniamy klasy buttona jako odklikniety
-                    $(this).removeClass("btn-danger")
-                    $(this).addClass("btn-secondary")
-                    //teraz mamy odznaczony składnik a więć jeśli ko znowu klikniemy
-                } else {
-                    //wjeżdza znomu na pizze i dodaje nam licznik skladników
-                    i_cake += 1;
-                    //znajduje tekst o odjęciu składnika i podmienia/usówa go!
-                    text = text.replace(("-" + $(this).text() + ", "), "");
-                    //aktualizuje go w zmiennej
-                    text_changes_add.text(text);
-                    //aktualizuje licznik składników
-                    change_cake.text(i_cake);
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
 
-                    var tab = eval(array_extra_price.join("+")).toFixed(2);
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text + "");
-                    //podmienia klasy buttona poznieważ znowu jest jednak na pizzy
-                    $(this).removeClass("btn-secendary");
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+
+
+                    if (sum_ctr_extra_array < 0) {
+                        price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_extra = 0;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+
+                } else {
+                    changes += 1;
+                    $(this).removeClass("btn-secondary");
                     $(this).addClass("btn-danger");
-                    //jeśli licznik jest ponad 0 to licz cena za skłądniki
-                    if (i_cake > 0) {
-                        //pobiera attr price z kliknietego butttona ze skłądnikiem
-                        var cake_topp = ($(this).data('price'));
-                        cake_adds = cake_topp.replace(',', ".");
-                        p = cake_adds * -1;
-                        array_extra_price.push(cake_adds);
-                        var tab = eval(array_extra_price.join("+")).toFixed(2);
-                        extra_price.text(tab);
-                        if (tab < 1) {
-                            extra_price.text(0);
+                    ctr_beef_array.push(1);
+                    sum_ctr_beef_array = eval(ctr_beef_array.join("+"));
+                    sum_ctr_beef_array = parseInt(sum_ctr_beef_array);
+                    i_beef.text(sum_ctr_beef_array);
+                    $('#text_change_topps_del li:contains(' + $(this).text() + ')').remove();
+                    text_del = "-" + $(this).text() + ", ";
+                    input_del_text = input_del_text.replace(text_del, "");
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
                         }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                     }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+
+
+                    if (sum_ctr_extra_array < 0) {
+                        price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_extra = 0;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
                 }
+            });
+        }
+        if (($(this).attr("class").split((/\s+/))[0]) == 3) {
+            cheese_toops_array.push(1);
+            $(this).on("click", function () {
+                if ($(this).hasClass("btn-danger")) {
+                    changes -= 1;
+                    $(this).removeClass("btn-danger");
+                    $(this).addClass("btn-secondary");
+                    ctr_cheese_array.push(-1);
+                    sum_ctr_cheese_array = eval(ctr_cheese_array.join("+"));
+                    sum_ctr_cheese_array = parseInt(sum_ctr_cheese_array);
+                    i_cheese.text(sum_ctr_cheese_array);
+                    price_cheese = sum_ctr_cheese_array * price_cheese_toops;
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
+                    if (price_cheese < 0) {
+                        price_cheese = 0;
+                    }
+                    extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                } else {
+                    changes += 1;
+                    $(this).removeClass("btn-secondary");
+                    $(this).addClass("btn-danger");
+                    ctr_cheese_array.push(1);
+                    sum_ctr_cheese_array = eval(ctr_cheese_array.join("+"));
+                    sum_ctr_cheese_array = parseInt(sum_ctr_cheese_array);
+                    i_cheese.text(sum_ctr_cheese_array);
+                    price_cheese = sum_ctr_cheese_array * price_cheese_toops;
+                    $('#text_change_topps_del li:contains(' + $(this).text() + ')').remove();
+                    text_del = "-" + $(this).text() + ", ";
+                    input_del_text = input_del_text.replace(text_del, "");
+                    input_del_topps.attr('value', input_del_text);
+                    if (price_cheese < 0) {
+                        price_cheese = 0;
+                    }
+                    extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                }
+            })
+        }
 
-            }
+        if (($(this).attr("class").split((/\s+/))[0]) == 4) {
+            extra_toops_array.push(1);
+            $(this).on("click", function () {
+                if ($(this).hasClass("btn-danger")) {
+                    changes -= 1;
+                    $(this).removeClass("btn-danger");
+                    $(this).addClass("btn-secondary");
+                    ctr_extra_array.push(-1);
+                    sum_ctr_extra_array = eval(ctr_extra_array.join("+"));
+                    sum_ctr_extra_array = parseInt(sum_ctr_extra_array);
+                    i_extra.text(sum_ctr_extra_array);
+                    text_del = "-" + $(this).text() + ", ";
+                    ul_del.append('<li>' + text_del + '</li>');
+                    input_del_text += text_del
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
 
 
-        });
+
+                    if (sum_ctr_extra_array < 0) {
+                        price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_extra = 0;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+
+                } else {
+                    changes += 1;
+                    $(this).removeClass("btn-secondary");
+                    $(this).addClass("btn-danger");
+                    ctr_extra_array.push(1);
+                    sum_ctr_extra_array = eval(ctr_extra_array.join("+"));
+                    sum_ctr_extra_array = parseInt(sum_ctr_extra_array);
+                    i_extra.text(sum_ctr_extra_array);
+                    $('#text_change_topps_del li:contains(' + $(this).text() + ')').remove();
+                    text_del = "-" + $(this).text() + ", ";
+                    input_del_text = input_del_text.replace(text_del, "");
+                    input_del_topps.attr('value', input_del_text);
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                        price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        eextra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+                    if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = (sum_ctr_vege_array * price_vege_toops);
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                        price_vege = sum_ctr_vege_array * price_vege_toops;
+                        if ((price_vege) < 0) {
+                            price_vege = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+
+
+
+                    if (sum_ctr_extra_array < 0) {
+                        price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_beef = sum_ctr_beef_array * price_beef_toops;
+                        if ((price_beef) < 0) {
+                            price_beef = 0;
+                        }
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array > 0) {
+                        price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    if (sum_ctr_extra_array == 0) {
+                        price_extra = 0;
+
+                        extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+                    }
+                    input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+
+                }
+            });
+        }
+
     });
 
-
-    //lista z bazy wszystkich dodatków mięsnych, vege itd
     vegetopps.each(function (index) {
-
         $(this).on("click", function () {
-            //sprawdzam długóść tekst ze zmianą skłądników
-            var len = text_changes_add.text().length;
-            if (i_extra < 0) {
-                i_vege -= 1;
-                i_extra += 1;
+            ctr_vege_array.push(1);
+            sum_ctr_vege_array = eval(ctr_vege_array.join("+"));
+            sum_ctr_vege_array = parseInt(sum_ctr_vege_array);
+            i_vege.text(sum_ctr_vege_array);
+            new_button = $(this).clone();
+            new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li class="align-top">' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            // var add_topps_buttons = $("#add_topps > button");
+
+            // add_topps_buttons.each(function (index) {
+            //     $(this).on("click", function () {
+            //         $(this).text();
+            //     });
+            // })
+            $.ajax({
+                url: url_adress,
+                type: "POST",
+                data: {
+                    add_topps: $(this).data('id'),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: "json"
+            }).done(function (result) {}).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
+
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
-            if (i_beef < 0) {
-                i_vege -= 1;
-                i_beef += 1;
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
-            if (len < 240) {
-                //dodanie skłądnika z list dodaje nam licznik skłądników plus 1
-                i_vege += 1;
+            if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = (sum_ctr_vege_array * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
 
-                //edycja zmiennej licznika
-                change_vege.text(i_vege)
-                //przed dodaniem buttona na listę dodanych skłądników Klonujemy go
-                new_button = $(this).clone();
-                //dodajemu do ADD_TOPPS miejsce na dodane skłądniki
-                new_button.appendTo(add_topps);
-                //pobieramy cenę skłądnika z attr data-price
-                var vege_topp = ($(this).data('vegeprice'));
-                vege_topp = vege_topp.replace(',', ".");
-                //do zmiennej suma VEGE dodajemy jego cenę sparsowaną na float
-                suma_vege += parseFloat(vege_topp);
-                //edytujemy tekst dla pizzera
-                text_add += "+" + $(this).text() + ", ";
-                text_changes_add.text(text_add);
-                // if (sum_ctr_gr_extra < 0) {
-                //     if ((sum_ctr_gr_extra + i_vege) == 0) {
+            if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                price_vege = (sum_ctr_vege_array * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
 
-                //         extra_price.text(0);
-                //     }
-                // }
-                if (i_vege > 0) {
 
-                    var p = parseFloat(vege_topp);
-                    array_extra_price.push(p);
-                    var tab = eval(array_extra_price.join("+"))
-                    tab += cake_price;
-                    extra_price.text(tab.toFixed(2));
 
-                    //tutaj jest ciekawie!! edytuję attr href w linku a
-                    //w jego href przekazuję cenę za dodatki oraz tekst o zmienach składników
-                    //dlatego że w widoku dodaj pizze POSTy wykorzystuję do czego innego
-                    //więć do tego widoku musi wjechac GETem
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
-
+            if (sum_ctr_extra_array < 0) {
+                price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
                 }
 
-            } else {
-                //powyzej 240 znaków blokada edytowania skłądników
-                alert("Za dużo zmian");
-                suma_vege = parseFloat(vege_topp);
-                text_changes_add.text(text_add);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
+            if (sum_ctr_extra_array == 0) {
+                price_beef = sum_ctr_beef_array * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array > 0) {
+                price_beef = sum_ctr_beef_array * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array > 0) {
+                price_extra = sum_ctr_extra_array * price_extra_toops;
 
-            // var a = ($('#change_vege').data('vege_plus') + i_vege);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array == 0) {
+                price_extra = 0;
 
-            //jeśli licznik składników ponad jeden to licz cenę
-
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
         });
-
-
     });
+
     beeftopps.each(function (index) {
-
         $(this).on("click", function () {
-            var len = text_changes_add.text().length;
-            if (i_extra < 0) {
-                i_beef -= 1;
-                i_extra += 1;
+
+            ctr_beef_array.push(1);
+            sum_ctr_beef_array = eval(ctr_beef_array.join("+"));
+            sum_ctr_beef_array = parseInt(sum_ctr_beef_array);
+            i_beef.text(sum_ctr_beef_array);
+            new_button = $(this).clone();
+            new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            $.ajax({
+                url: url_adress,
+                type: "POST",
+                data: {
+                    add_topps: $(this).data('id'),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: "json"
+            }).done(function (result) {}).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                eextra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = (sum_ctr_vege_array * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
-            if (len < 240) {
-                i_beef += 1;
-                change_beef.text(i_beef)
-                new_button = $(this).clone();
-                new_button.appendTo(add_topps);
-                var beef_topp = ($(this).data('beefprice'));
-                beef_topp = beef_topp.replace(',', ".");
-                suma_beef += parseFloat(beef_topp);
-                var b = ($('#change_beef').data('beef_plus') + i_beef);
-                text_add += "+" + $(this).text() + ", ";
-                text_changes_add.text(text_add);
-                if (i_beef > 0) {
-                    var p = parseFloat(beef_topp);
-                    array_extra_price.push(p);
-                    var tab = eval(array_extra_price.join("+"))
-                    tab += cake_price;
-                    tab = tab.toFixed(2)
-                    extra_price.text(tab);
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
+            if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
                 }
-            } else {
-                alert("Za dużo zmian");
-                var beef_topp = ($(this).data('beefprice'));
-                beef_topp = beef_topp.replace(',', ".");
-                suma_beef = parseFloat(beef_topp);
-                text_changes.text(text);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
-        });
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                price_vege = (sum_ctr_vege_array * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+
+
+
+            if (sum_ctr_extra_array < 0) {
+                price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array == 0) {
+                price_beef = sum_ctr_beef_array * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array > 0) {
+                price_beef = sum_ctr_beef_array * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array > 0) {
+                price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array == 0) {
+                price_extra = 0;
+
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+
+        })
     });
     cheesetopps.each(function (index) {
-
         $(this).on("click", function () {
-            var len = text_changes_add.text().length;
-            if (len < 120) {
-                i_cheese += 1;
-                change_cheese.text(i_cheese)
-                new_button = $(this).clone();
-                new_button.appendTo(add_topps);
-                var cheese_topp = ($(this).data('cheeseprice'));
-                cheese_topp = cheese_topp.replace(',', ".");
-                suma_cheese += parseFloat(cheese_topp);
-                var c = ($('#change_cheese').data('cheese_plus') + i_cheese);
-                text_add += "+" + $(this).text() + ", ";
-                text_changes_add.text(text_add);
-                if (i_cheese > 0) {
-                    cheese_adds = cheese_topp.replace(',', ".");
-                    var p = parseFloat(cheese_adds);
-                    array_extra_price.push(p);
-                    var tab = eval(array_extra_price.join("+"))
-                    tab += cake_price;
-                    extra_price.text(tab.toFixed(2));
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
-                }
-            } else {
-                alert("Za dużo zmian");
-                text_changes.text(text);
+            ctr_cheese_array.push(1);
+            sum_ctr_cheese_array = eval(ctr_cheese_array.join("+"));
+            sum_ctr_cheese_array = parseInt(sum_ctr_cheese_array);
+            i_cheese.text(sum_ctr_cheese_array);
+            new_button = $(this).clone();
+            new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            price_cheese = sum_ctr_cheese_array * price_cheese_toops;
+
+            if (price_cheese < 0) {
+                price_cheese = 0;
             }
+            extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
         });
     });
+
 
     extratopps.each(function (index) {
-
         $(this).on("click", function () {
-            var len = text_changes_add.text().length;
-            if (len < 120) {
-                i_extra += 1;
-                change_extra.text(i_extra)
-                new_button = $(this).clone();
-                new_button.appendTo(add_topps);
-                var extra_topp = ($(this).data('extraprice'));
-                extra_topp = extra_topp.replace(',', ".");
-                suma_extra += parseFloat(extra_topp);
-                var c = ($('#change_extra').data('extra_plus') + i_extra);
-                text_add += "+" + $(this).text() + ", ";
-                text_changes_add.text(text_add);
-                if (i_extra > 0) {
-                    extra_adds = extra_topp.replace(',', ".");
-                    var p = parseFloat(extra_adds);
-                    array_extra_price.push(p);
-                    var tab = eval(array_extra_price.join("+"))
-                    tab += cake_price;
-                    extra_price.text(tab.toFixed(2));
-                    var newlink = link + tab + "/";
-                    $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "");
+            ctr_extra_array.push(1);
+            sum_ctr_extra_array = eval(ctr_extra_array.join("+"));
+            sum_ctr_extra_array = parseInt(sum_ctr_extra_array);
+            i_extra.text(sum_ctr_extra_array);
+            new_button = $(this).clone();
+            new_button.appendTo(add_topps);
+            text_add = "+" + $(this).text() + ", ";
+            ul_add.append('<li>' + text_add + '</li>');
+            input_add_text += text_add
+            input_add_topps.attr('value', input_add_text);
+            $.ajax({
+                url: url_adress,
+                type: "POST",
+                data: {
+                    add_topps: $(this).data('id'),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: "json"
+            }).done(function (result) {}).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
                 }
-            } else {
-                alert("Za dużo zmian");
-                text_changes.text(text);
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+                price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+                price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = (sum_ctr_vege_array * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
             }
 
-        });
-    });
+            if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+                price_vege = (sum_ctr_vege_array * price_vege_toops);
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+                price_vege = sum_ctr_vege_array * price_vege_toops;
+                if ((price_vege) < 0) {
+                    price_vege = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
 
+
+
+            if (sum_ctr_extra_array < 0) {
+                price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array == 0) {
+                price_beef = sum_ctr_beef_array * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array > 0) {
+                price_beef = sum_ctr_beef_array * price_beef_toops;
+                if ((price_beef) < 0) {
+                    price_beef = 0;
+                }
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array > 0) {
+                price_extra = sum_ctr_extra_array * price_extra_toops;
+
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            if (sum_ctr_extra_array == 0) {
+                price_extra = 0;
+
+                extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            }
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+
+        })
+    });
+    var url_adress = window.location.href;
     caketopps.each(function (index) {
         $(this).on("click", function () {
-            i_cake += 1;
             caketopps.removeClass("btn-success");
             caketopps.addClass("btn-warning");
             $(this).removeClass("btn-warning");
             $(this).addClass("btn-success");
             change_cake.text(i_cake);
-            // new_button = $(this).clone();
-            // new_button.appendTo(add_topps);
-
-            // var c = ($('#change_cake').data('cake_plus') + i_cake);
-            caketext = " +" + $(this).text() + ", ";
-            cake_text_changes.text(caketext);
             cake_topp_price = ($(this).data('cakeprice'));
             cake_topp = cake_topp_price.replace(',', ".");
-            cake_price = parseFloat(cake_topp);
-            // array_extra_price.push(cake_price);
-            var tab = eval(array_extra_price.join("+"))
-            tab += cake_price;
-            extra_price.text(tab.toFixed(2));
-            var newlink = link + tab + "/";
-            $('#link').attr("href", newlink + caketext + "/" + text_minus + text_add + "/");
+            price_cake = parseFloat(cake_topp);
+            extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+            text_add_cake = $(this).text();
+            // ul_add.append('<li>' + text_add + '</li>');
+            input_add_cake = text_add_cake
+            input_add_cake_text.attr('value', input_add_cake);
+            input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
 
         });
     });
-
-
-
-
-
-    qplus.each(function (index) {
-
-        $(this).on("click", function () {
-            var q = parseInt(quantity.val());
-            q += 1;
-            quantity.val(q);
-        });
-    });
-    qminus.each(function (index) {
-
-        $(this).on("click", function () {
-            var q = parseInt(quantity.val());
-            if (q > 1) {
-                q -= 1;
-                quantity.val(q);
-            }
-        });
-    });
-
-    sauce_free.each(function (index) {
-        $(this).on("click", function () {
-
-            var len_sauces_free = sauce_free_text.text().length;
-            if (len_sauces_free < 120) {
-                text_sauce_free += " +" + $(this).text() + ", ";
-                sauce_free_text.text(text_sauce_free);
-                add_sauces_free = add_sauces_free.attr('value', text_sauce_free);
-
-            } else {
-                alert("Za dużo zmian");
-            }
-        });
-    });
-
-    sauce_pay.each(function (index) {
-
-        $(this).on("click", function () {
-            var len_sauces_pay = sauce_pay_text.text().length;
-
-            if (len_sauces_pay < 120) {
-                text_sauce_pay += " +" + $(this).text() + ", ";
-                sauce_pay_text.text(text_sauce_pay);
-                var sauce_price = $(this).data('price');
-                sauce_price = sauce_price.replace(',', ".");
-                sauce_price = parseFloat(sauce_price);
-                // suma_sauce += sauce_price;
-                sauce_price = sauce_price.toFixed(2);
-                array_extra_sauce.push(sauce_price);
-                var tab = eval(array_extra_sauce.join("+"))
-
-                price_sauce_edit = extra_price_edit.data('price');
-                price_sauce_edit = price_sauce_edit.replace(',', ".");
-                price_sauce_edit = parseFloat(price_sauce_edit);
-
-                price_sauce_edit += tab;
-                price_sauce_edit = price_sauce_edit.toFixed(2);
-
-                extra_price_edit.html("<b>" + price_sauce_edit + "</b>");
-                sauces_form.attr('value', price_sauce_edit);
-                sauce_pay_text.text(text_sauce_pay);
-                add_sauces_pay = add_sauces_pay.attr('value', text_sauce_pay);
-
-            } else {
-                alert("Za dużo zmian");
-                sauces_text.attr('value', text_sauce_pay);
-            }
-
-        });
-    });
-    size_button.each(function (index) {
-        $(this).on("click", function () {
-            var size_class = ($(this).attr("class").split((/\s+/))[0]);
-            // pizza_button.hide();
-            pizza_button.each(function (el) {
-                if (($(this).hasClass(size_class))) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                };
-            });
-
-        });
-
-    })
-
 
 })
+
+// $(document).on('click', "#add_topps > button", function () {
+//     var topps = $('button.topps');
+//     var add_topps = $('#add_topps');
+//     var changes = 0;
+//     var ul_del = $('#text_change_topps_del');
+//     var ul_add = $('#text_change_topps_add');
+//     var input_del_text = "";
+//     var input_add_text = "";
+//     var input_value = $('#input_value');
+//     var input_add_topps = $('#input_add_topps');
+//     var input_del_topps = $('#input_del_topps');
+//     var add_topps_buttons = $("#add_topps > button");
+
+
+
+//     var change_vege = $('#change_vege').data('vege_plus');
+//     var vege_toops_array = [];
+//     var ctr_vege_array = [];
+//     var sum_ctr_vege_array = 0;
+//     var price_vege_toops = ($('#price_size_vege').data('price'));
+//     price_vege_toops = price_vege_toops.replace(',', ".");
+//     price_vege_toops = parseFloat(price_vege_toops).toFixed(2);
+
+//     var change_beef = $('#change_beef').data('beef_plus');
+//     var beef_toops_array = [];
+//     var ctr_beef_array = [];
+//     var sum_ctr_beef_array = 0;
+//     var price_beef_toops = ($('#price_size_beef').data('price'));
+//     price_beef_toops = price_beef_toops.replace(',', ".");
+//     price_beef_toops = parseFloat(price_beef_toops).toFixed(2);
+
+//     var change_cheese = $('#change_cheese').data('cheese_plus');
+//     var cheese_toops_array = [];
+//     var ctr_cheese_array = [];
+//     var sum_ctr_cheese_array = 0;
+//     var price_cheese_toops = ($('#price_size_cheese').data('price'));
+//     price_cheese_toops = price_cheese_toops.replace(',', ".");
+//     price_cheese_toops = parseFloat(price_cheese_toops).toFixed(2);
+
+//     var change_extra = $('#change_extra').data('extra_plus');
+//     var extra_toops_array = [];
+//     var ctr_extra_array = [];
+//     var sum_ctr_extra_array = 0;
+//     var price_extra_toops = ($('#price_size_extra').data('price'));
+//     price_extra_toops = price_extra_toops.replace(',', ".");
+//     price_extra_toops = parseFloat(price_extra_toops).toFixed(2);
+//     var price_vege = 0;
+//     var price_beef = 0;
+//     var price_cheese = 0;
+//     var price_extra = 0;
+//     var price_cake = 0;
+//     var price = 0;
+
+
+//     var cheese_toops_array = [];
+//     var extra_toops_array = [];
+
+//     var extra_price_text = $('#extra_price');
+
+//     var text_changes = $('#text_change_topps');
+//     var text = " ";
+
+//     var vegetopps = $('button.vegetopps');
+//     var beeftopps = $('button.beeftopps');
+//     var cheesetopps = $('button.cheesetopps');
+//     var extratopps = $('button.extratopps');
+
+//     var caketopps = $('button.caketopps');
+//     var change_cake = $('#change_cake');
+
+//     var i_vege = $('#change_vege');
+//     var i_beef = $('#change_beef');
+//     var i_cheese = $('#change_cheese');
+//     var i_extra = $('#change_extra');
+//     var i_cake = $('#change_cake');
+
+
+
+//     if (($(this).attr("class").split((/\s+/))[0]) == "vegetopps") {
+//         $(this).hide();
+//         ctr_vege_array.push(-1);
+//         sum_ctr_vege_array = eval(ctr_vege_array.join("+"));
+//         sum_ctr_vege_array = parseInt(sum_ctr_vege_array);
+//         i_vege.text(sum_ctr_vege_array);
+//         text_del = "-" + $(this).text() + ", ";
+//         ul_del.append('<li>' + text_del + '</li>');
+//         input_del_text += text_del
+//         input_del_topps.attr('value', input_del_text);
+//         if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array < 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+//             price_vege = sum_ctr_vege_array * price_vege_toops;
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0) && (sum_ctr_beef_array + sum_ctr_extra_array) == 0) {
+//             price_vege = sum_ctr_vege_array * price_vege_toops;
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+
+//         if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array < 0)) {
+//             price_vege = (sum_ctr_vege_array + (sum_ctr_beef_array + sum_ctr_extra_array)) * price_vege_toops;
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array < 0)) {
+//             price_vege = (sum_ctr_vege_array + (sum_ctr_extra_array)) * price_vege_toops;
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array == 0)) {
+//             price_vege = (sum_ctr_vege_array * price_vege_toops);
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+
+//         if ((sum_ctr_beef_array < 0) && (sum_ctr_extra_array == 0)) {
+//             price_vege = ((sum_ctr_vege_array + sum_ctr_beef_array) * price_vege_toops);
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if ((sum_ctr_beef_array > 0) && (sum_ctr_extra_array > 0)) {
+//             price_vege = (sum_ctr_vege_array * price_vege_toops);
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array == 0)) {
+//             price_vege = sum_ctr_vege_array * price_vege_toops;
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if ((sum_ctr_beef_array == 0) && (sum_ctr_extra_array > 0)) {
+//             price_vege = sum_ctr_vege_array * price_vege_toops;
+//             if ((price_vege) < 0) {
+//                 price_vege = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+
+
+
+//         if (sum_ctr_extra_array < 0) {
+//             price_beef = (sum_ctr_beef_array + sum_ctr_extra_array) * price_beef_toops;
+//             if ((price_beef) < 0) {
+//                 price_beef = 0;
+//             }
+
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if (sum_ctr_extra_array == 0) {
+//             price_beef = sum_ctr_beef_array * price_beef_toops;
+//             if ((price_beef) < 0) {
+//                 price_beef = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if (sum_ctr_extra_array > 0) {
+//             price_beef = sum_ctr_beef_array * price_beef_toops;
+//             if ((price_beef) < 0) {
+//                 price_beef = 0;
+//             }
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         if (sum_ctr_extra_array > 0) {
+//             price_extra = sum_ctr_extra_array * price_extra_toops;
+
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+
+//         if (sum_ctr_extra_array == 0) {
+//             price_extra = 0;
+
+//             extra_price_text = extra_price_text.text((price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//         }
+//         input_value.attr('value', (price_vege + price_beef + price_cheese + price_extra + price_cake).toFixed(2));
+//     }
+//     if (($(this).attr("class").split((/\s+/))[0]) == "beeftopps") {
+//         alert("beef");
+//     }
+//     if (($(this).attr("class").split((/\s+/))[0]) == "cheesetopps") {
+//         alert("cheese");
+//     }
+//     if (($(this).attr("class").split((/\s+/))[0]) == "extratopps") {
+//         alert("extra");
+//     }
+// })
+
+// $(document).on('click', "#add_topps > button", function () {
+//     $(this).each(function (el) {
+//         $(this).on("click", function () {
+//             $(this).hide();
+
+//         });
+//     })
+// })
+
+
+// // /**
+// //  * Created by Jacek on 2016-01-12.
+// //  */
+// // // document.addEventListener('DOMContentLoaded', function () {
+// // var active_forms = document.querySelectorAll('div.show');
+// // var zakup = document.querySelectorAll('#zakup');
+
+// // var select = document.querySelector('#rodzaj');
+
+// // // $(document).ready(function () {
+// // //     $("div.show").click(function () {
+// // //         $("div").hide();
+// // //     });
+// // // });
+
+
+// // //Wyłącz wszystkei img
+// // active_forms.forEach((el) => {
+// //     el.style.display = 'None'
+// // });
+
+// // //Włącz pierwszy img dla option domyślnej
+// // active_forms[0].style.display = 'block'
+
+// // //zmiana img dla option selected
+// // select.addEventListener("change", function () {
+// //     var currentOpt = select.options[select.selectedIndex];
+// //     value = currentOpt.innerHTML
+
+// //     if (value == 'Telefon zakup') {
+// //         zakup.style.display = 'block'
+// //     } else {
+// //         zakup.style.display = 'none'
+// //     };
+// // });
+// // $("#usluga").show();
+// // $("#sprzedaz").hide();
+// // $("#zakup").hide();
+
+// // $(function () {
+// //     $("#rodzaj").change(function () {
+// //         var val = $(this).val();
+// //         if (val == 7) {
+// //             $("#zakup").show();
+// //             $("#usluga").hide();
+// //             $("#sprzedaz").hide();
+// //         } else if (val == 9) {
+// //             $("#sprzedaz").show();
+// //             $("#zakup").hide();
+// //             $("#usluga").hide();
+// //         } else {
+// //             $("#usluga").show();
+// //             $("#sprzedaz").hide();
+// //             $("#zakup").hide();
+// //         }
+// //     });
+// // });
+
+// // });
+
+// $(document).ready(function () {
+
+//     $('#search').keyup(function () {
+//         //pole szukaj
+//         var text = $(this).val();
+
+
+//         //na dziendobry ukryj wszystko po nacisnieciu klawisza
+//         $('.lista').hide();
+
+//         //lecz nastepnie pokaż pasujące frary
+//         $('.lista:contains("' + text + '")').show();
+
+//     });
+// });
+
+// $(document).ready(function () {
+//     $('#search2').change(function () {
+//         //pole szukaj
+//         var text = $(this).val();
+
+//         //na dziendobry ukryj wszystko po nacisnieciu klawisza
+//         $('.lista').hide();
+
+//         //lecz nastepnie pokaż pasujące frary
+//         $('.lista:contains("' + text + '")').show();
+
+//     });
+
+//     var skladniki = $(".skladniki").hide()
+//     $('#wielosklad').click(function () {
+//         //pole szukaj
+//         $('#wielosklad').hide();
+//         select = $(".skladniki").show();
+//     });
+
+//     $("#zapisz").click(function () {
+
+//         select = $(".skladniki").hide();
+//         $('#wielosklad').show();
+//     });
+// });
+
+
+
+
+// $(document).ready(function () {
+
+//     var wybierz = $('#wybierz').css({
+//         "color": "red"
+//     });
+//     var button = $('#ready_button').hide();
+
+//     $('#wybierz_serwis').change(function () {
+
+//         if ($(this).val() != "") {
+//             wybierz.html("OK").css({
+//                 "color": "green"
+//             });
+//             button.show();
+
+//         } else {
+//             wybierz.html("Nie wybrano").css({
+//                 "color": "red"
+//             });
+//             button.hide();
+//         };
+//     });
+// });
+
+
+// $(document).ready(function () {
+
+//     var ilosc = $('#ilosc').css({
+//         "color": "red"
+//     });
+//     var plus = $('#plus');
+//     var minus = $('#minus');
+//     var i = 0;
+
+//     plus.click(function () {
+//         ilosc.val(i);
+//         i++;
+//     });
+//     minus.click(function () {
+//         ilosc.val(i);
+//         i--;
+
+//     });
+// });
+
+// $(function () {
+//     $('select').selectpicker();
+// });
+
+
+// $(document).ready(function () {
+//     var products = $('button.pizzamenu')
+//     var size = $('div.Pizza').hide()
+//     var cena = $('span.cena')
+
+//     var menu = $('.menu').click(function () {
+//         show_menu = ($(this).attr('class').split(/\s+/))[1];
+//         products = $('button.pizzamenu').hide()
+//         size = $('div.Pizza').hide()
+//         products = ($(this).attr('class').split(/\s+/))[1];
+//         $('.' + show_menu).show();
+//     });
+
+//     // size.click(function () {
+//     //     size = ($(this).attr('class').split(/\s+/))[0];
+//     //     $(this).children().removeClass('btn-primary');
+//     //     $(this).children().addClass('btn-warning');
+//     //     products = $('div.pizzamenu').hide()
+//     //     $('.' + size).show();
+//     // });
+//     var listaMenu = $('.orders')
+
+//     $('button.pizzamenu').each(function () {
+
+//         $(this).on("click", function () {
+//             $('button.pizzamenu').removeClass('btn-warning');
+//             $(this).addClass('btn-warning');
+//             $("#zamowienie ul li:last").append("<li>Hello</li>");
+//         });
+//     });
+//     size.each(function (index) {
+
+//         $(this).on("click", function () {
+//             $('div.Pizza').children().removeClass('btn-warning');
+//             $(this).children().addClass('btn-warning');
+//             console.log(this)
+//             size = ($(this).attr('class').split(/\s+/))[0];
+//             products = $('button.pizzamenu').hide()
+//             $('.' + size).show();
+//         });
+//     });
+
+// });
+
+// $(document).ready(function () {
+//     var topps = $('button.topps')
+//     var vegetopps = $('button.vegetopps')
+//     var beeftopps = $('button.beeftopps')
+//     var cheesetopps = $('button.cheesetopps')
+//     var changes = $('span.change')
+//     topps.each(function (index) {
+
+//         $(this).on("click", function () {
+//             $(this).hide()
+//             text = $(this).text()
+//             changes = "- " + changes.text(text)
+//         });
+//     });
+
+//     vegetopps.each(function (index) {
+
+//         $(this).on("click", function () {
+//             $(this).hide()
+//             text = $(this).text()
+//             changes = changes.text(text)
+//         });
+//     });
+//     beeftopps.each(function (index) {
+
+//         $(this).on("click", function () {
+//             $(this).hide()
+//         });
+//     });
+//     cheesetopps.each(function (index) {
+
+//         $(this).on("click", function () {
+//             $(this).hide()
+//         });
+//     });
+// });

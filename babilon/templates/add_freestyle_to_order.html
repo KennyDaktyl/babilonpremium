@@ -7,9 +7,7 @@
         <h5 class="col-3 text-left p-auto">Rozmiar: {{product_add.size}}</h5>
     </div>
     <div class="col-1">
-        <form action="/half_pizza/{{product_add.id}}/{{orderPosition.id}}">
-            <button type="submit" class="btn btn-success mx-auto">1/2</button>
-        </form>
+
     </div>
     <div class="col-3">
         <h5 class="col-8 text-right mx-auto">{{product_add.price}}zł</h5>
@@ -17,7 +15,7 @@
 </div>
 <div class="row col-12 border mt-2 mx-auto">
     {% for el in otherSize %}
-    <a class="text-center mx-auto" href="/add_to_order/{{el.id}}">
+    <a class="text-center mx-auto" href="/add_toops_freestyle/{{el.id}}">
         <button type="submit" class="w-100 mx-auto btn btn-primary size">Rozmiar{{el.size}}
             <br><span clas="text-center">Cena: {{el.price}}</span>
         </button>
@@ -31,9 +29,10 @@
         {% endif %}
     </p>
     <p class="col-10 text-left"><b>Składniki pizzy:</b></p>
-    <a href="/change_topps/{{product_add.id}}/{{orderPosition.id}}">
-        <button type="submit" class=" col-1btn btn-success mx-auto">Zmień składniki</button></a>
+    <a href="/add_toops_freestyle/{{product_add.id}}/">
+        <button type="submit" class=" col-1btn btn-success mx-auto">Ustaw składniki</button></a>
     </a>
+
     <p class="col-10 text-left">{{orderPosition.change_topps}}</p>
     {% for el in product_add.pizza_componets.all %} <b>
         <form class="mx-auto" method="POST" action="/delete_from_pizza/">
@@ -99,6 +98,7 @@
             <input id="add_sauces_free" name="add_sauces_free" type="hidden" value="">
             <input id="add_sauces_pay" name="add_sauces_pay" type="hidden" value="">
             <input id="sauces_form" name="sauces" type="hidden" value="{{orderPosition.extra_price}}">
+            <input id="extra_price" name="extra_price" type="hidden" value="{{orderPosition.extra_price}}">
             <input name="add" type="hidden" value="1">
             <div class="col-12">
                 <button type="submit" class="col-12 mx-auto m-1 btn btn-success">Dodaj</button>

@@ -47,6 +47,186 @@ miesiac = datetime.now().month
 
 class MainView(View):
     def get(self, request):
+        orders = Orders.objects.all()
+        ctx = {'orders': orders}
+        return TemplateResponse(request, "zamowienia.html", ctx)
+
+class LocalStatusView(View):
+    def get(self, request):
+        clients=Clients.objects.all()
+        ctx={'clients':clients}
+        return TemplateResponse(request, "mainview.html",ctx)
+
+# class AddClientView(CreateView):
+#     model = Clients
+#     fields = '__all__'
+#     success_url = reverse_lazy("main_view")
+
+class AddNewOrderLocalCashView(View):
+    def get(self, request):
+        try:
+            newOrder_LocalCash=Orders.objects.get(active=True)
+        
+            pizzeria_id=1
+            pizzeria=Pizzeria.objects.get(pk=pizzeria_id)
+            # newOrder_LocalCash.number=new_number(pizzeria_id)
+            newOrder_LocalCash.delivery=1
+            newOrder_LocalCash.pizzeria=pizzeria
+            newOrder_LocalCash.save()
+        except ObjectDoesNotExist:
+            newOrder_LocalCash=Orders()
+            pizzeria_id=1
+            pizzeria=Pizzeria.objects.get(pk=pizzeria_id)
+            newOrder_LocalCash.number=new_number(pizzeria_id)
+            newOrder_LocalCash.delivery=1
+            newOrder_LocalCash.pizzeria=pizzeria
+            newOrder_LocalCash.active=True
+            newOrder_LocalCash.save()
+        
+        return redirect('products')
+
+
+class ProductsView(View):
+    def get(self, request):
+        products=Products.objects.all()
+
+        ctx={'products':products}
+        return TemplateResponse(request, "pizza_menu.html",ctx)
+
+class AddNewOrderOutsideView(View):
+    def get(self, request):
+        try:
+            newOrder_Outside=Orders.objects.get(active=True)   
+
+            pizzeria_id=1
+            pizzeria=Pizzeria.objects.get(pk=pizzeria_id)
+            newOrder_Outside.delivery=2
+            newOrder_Outside.pizzeria=pizzeria
+            newOrder_Outside.save()
+        except ObjectDoesNotExist:
+            newOrder_Outside=Orders()
+            pizzeria_id=1
+            pizzeria=Pizzeria.objects.get(pk=pizzeria_id)
+            newOrder_Outside.number=new_number(pizzeria_id)
+            newOrder_Outside.delivery=2
+            newOrder_Outside.pizzeria=pizzeria
+            newOrder_Outside.active=True
+            newOrder_Outside.save()
+        return redirect('clients')
+
+class AddNewOrderOutsideDriverView(View):
+    def get(self, request):
+        try:
+            newOrder_Driver=Orders.objects.get(active=True)  
+            pizzeria_id=1
+            pizzeria=Pizzeria.objects.get(pk=pizzeria_id)
+            newOrder_Driver.delivery=3
+            newOrder_Driver.pizzeria=pizzeria
+            newOrder_Driver.save() 
+
+        except ObjectDoesNotExist: 
+            newOrder_Driver=Orders()
+            pizzeria_id=1
+            pizzeria=Pizzeria.objects.get(pk=pizzeria_id)
+            newOrder_Driver.number=new_number(pizzeria_id)
+            newOrder_Driver.delivery=3
+            newOrder_Driver.pizzeria=pizzeria
+            newOrder_Driver.active=True
+            newOrder_Driver.save() 
+        return redirect('clients')
+        
+class EditAddressView(UpdateView):   
+    model = Address
+    fields = ['address',]
+    template_name_suffix = ('_update_form')
+    success_url = ('/clients/' ) 
+
+    
+
+class ClientsView(View):
+    def get(self, request):
+        
+        clients=Clients.objects.all()
+        ctx={'clients':clients}
+        return TemplateResponse(request, "clients.html",ctx)
+
+class ClientView(View):
+    def get(self, request,pk):
+        
+        client=Clients.objects.get(pk=pk)
+        ctx={'client':client}
+        return TemplateResponse(request, "client.html",ctx)
+
+class AddClientView(View):
+    def get(self, request):
+        
+        form=CleintForm()
+        ctx={'form':form}
+        return TemplateResponse(request, "addclient.html",ctx)
+    
+    def post(self, request):
+        form = CleintForm(request.POST)
+        if form.is_valid():
+            phone_number= form.cleaned_data['phone_number']
+            adres_1= form.cleaned_data['adres_1']
+            
+            new_address=Address()
+            new_address.address=adres_1
+            new_address.save()
+            
+            new_client=Clients()
+            new_client.phone_number=phone_number
+            new_client.save()
+
+            new_client.adrress.add(new_address)
+            new_client.save()
+            
+            return redirect('client',pk=new_client.id)
+
+class AddClientNewAddressView(View):
+    def get(self, request,pk):
+        
+        form=CleintNewAddressForm()
+        ctx={'form':form}
+        return TemplateResponse(request, "addclientnewaddress.html",ctx)
+    
+    def post(self, request,pk):
+        form = CleintNewAddressForm(request.POST)
+        if form.is_valid():
+            client=Clients.objects.get(pk=pk)
+
+            new_address_form= form.cleaned_data['new_address']
+            
+            new_address=Address()
+            new_address.address=new_address_form
+            new_address.save()
+            
+            client.adrress.add(new_address)
+            client.save()
+
+            
+            return redirect('client', pk=client.id)
+
+class DelAddressView(DeleteView):
+    model = Address
+    fields = '__all__'
+    template_name_suffix = ('_confirm_delete')
+    success_url = ('/clients/')
+
+
+
+
+class AddClientToOrder(View):
+    def get(self, request,pk, address):
+
+        order=Orders.objects.get(active=True)
+        client=Clients.objects.get(pk=pk)
+        address=Address.objects.get(pk=address)
+        print(address)
+
+        order.client=client
+        order.address=address
+        order.save()
 
         return TemplateResponse(request, "product_list.html")
 
@@ -115,6 +295,8 @@ class AddToOrdersView(View):
         products = Products.objects.all()
         souse_pay = Products.objects.filter(component="6")
         souse_free = Products.objects.filter(component="7")
+        # print(quantity)
+        print("jestemTuatj")
         ctx = {
             'orderPosition': orderPosition,
             'product_add': product_add,
@@ -146,7 +328,7 @@ class AddToOrdersView(View):
                 orderPosition.save()
 
         if discount != 0:
-            print(discount)
+            # print(discount)
             orderPosition.discount = int(discount)
             orderPosition.save()
         if sauces != None:
@@ -175,7 +357,7 @@ class AddToOrdersView(View):
         souse_free = Products.objects.filter(component="7")
         if add != None:
             new_positionOrder(orderPosition)
-            return redirect('main_view')
+            return redirect('products')
         ctx = {
             'orderPosition': orderPosition,
             'product_add': product_add,
@@ -206,7 +388,6 @@ class AddModyfiProduct(View):
             orderPosition.extra_price = 0
             orderPosition.save()
         changes = changes.replace("  ", '')
-        print(orderPosition.extra_price)
         orderPosition.change_topps = cake + changes
         orderPosition.save()
         vege_components = Products.objects.filter(component="1")
@@ -215,6 +396,8 @@ class AddModyfiProduct(View):
         products = Products.objects.all()
         souse_pay = Products.objects.filter(component="6")
         souse_free = Products.objects.filter(component="7")
+        # print(quantity)
+        print("jestemTuatj")
         ctx = {
             'orderPosition': orderPosition,
             'product_add': product_add,
@@ -232,6 +415,7 @@ class AddModyfiProduct(View):
         productId = request.POST.get('productId')
         add = request.POST.get('add')
         quantity = request.POST.get('quantity')
+
         sauces = request.POST.get('sauces')
         info = request.POST.get('info')
         add_sauces_free = request.POST.get('add_sauces_free')
@@ -247,7 +431,6 @@ class AddModyfiProduct(View):
             orderPosition.discount = int(discount)
             orderPosition.save()
         orderPosition.extra_price = float(sauces.replace(",", "."))
-        print(orderPosition.extra_price)
         orderPosition.save()
         if info != "":
             orderPosition.info = info
@@ -269,7 +452,7 @@ class AddModyfiProduct(View):
         souse_free = Products.objects.filter(component="7")
         if add != None:
             new_positionOrder(orderPosition)
-            return redirect('main_view')
+            return redirect('products')
         ctx = {
             'orderPosition': orderPosition,
             'product_add': product_add,
@@ -288,11 +471,20 @@ class AddModyfiProduct(View):
 class AddModyfiProductWithOut(View):
     def get(self, request, pk, modyfi):
         product_add = Products.objects.get(id=pk)
-
+        changeToppsAdd = request.GET.get('input_add_topps')
+        changeToppsDel = request.GET.get('input_del_topps')
+        input_add_cake = request.GET.get('input_add_cake')
+        changeTopps = changeToppsDel + changeToppsAdd
         otherSize = Products.objects.filter(
             name=product_add.name).order_by('size')
 
         orderPosition = PositionOrder.objects.get(pk=modyfi)
+        orderPosition.cake_info = input_add_cake
+        orderPosition.save()
+        if len(changeTopps) < 512:
+            orderPosition.change_topps = changeTopps
+            orderPosition.save()
+            print(len(changeTopps))
         extra_price = request.GET.get('extra_price')
         if extra_price != "":
             orderPosition.extra_price = float(extra_price)
@@ -300,8 +492,7 @@ class AddModyfiProductWithOut(View):
         else:
             orderPosition.extra_price = 0
             orderPosition.save()
-        orderPosition.change_topps = ""
-        orderPosition.save()
+
         vege_components = Products.objects.filter(component="1")
         beef_components = Products.objects.filter(component="2")
         sizes = ProductSize.objects.filter(pizza=True)
@@ -323,13 +514,42 @@ class AddModyfiProductWithOut(View):
 
     def post(self, request, pk, modyfi):
         add = request.POST.get('add')
+        quantity = request.POST.get('quantity')
+        sauces = request.POST.get('sauces')
+        info = request.POST.get('info')
+        add_sauces_free = request.POST.get('add_sauces_free')
+        add_sauces_pay = request.POST.get('add_sauces_pay')
+
         productId = request.POST.get('productId')
-        # orderPositionId = request.POST.get('orderPosition')
-        orderPosition = PositionOrder.objects.get(pk=modyfi)
+        orderPositionId = request.POST.get('orderPosition')
+        orderPosition = PositionOrder.objects.get(pk=orderPositionId)
+        discount = request.POST.get('discount')
+        if quantity != None:
+            if int(quantity) > 0:
+                orderPosition.quantity = int(quantity)
+                orderPosition.save()
+
+        if discount != 0:
+            # print(discount)
+            orderPosition.discount = int(discount)
+            orderPosition.save()
+        if sauces != None:
+            orderPosition.extra_price = float(sauces.replace(",", "."))
+            orderPosition.save()
+        else:
+            orderPosition.extra_price = orderPosition.extra_price
+            orderPosition.save()
+        if info != "":
+            orderPosition.info = info
+            orderPosition.save()
+        if add_sauces_free != "":
+            orderPosition.add_sauces_free = add_sauces_free
+            orderPosition.save()
+        if add_sauces_pay != "":
+            orderPosition.add_sauces_pay = add_sauces_pay
+            orderPosition.save()
         product_add = Products.objects.get(id=pk)
         changeTopps = request.POST.get('changeTopps')
-        product_add = Products.objects.get(id=pk)
-        # new_positionOrder(orderPositionAdd)
         otherSize = Products.objects.filter(
             name=product_add.name).order_by('size')
         vege_components = Products.objects.filter(component="1")
@@ -337,10 +557,9 @@ class AddModyfiProductWithOut(View):
         sizes = ProductSize.objects.filter(pizza=True)
         souse_pay = Products.objects.filter(component="6")
         souse_free = Products.objects.filter(component="7")
-
         if add != None:
             new_positionOrder(orderPosition)
-            return redirect('main_view')
+            return redirect('products')
         ctx = {
             'orderPosition': orderPosition,
             'product_add': product_add,
@@ -355,6 +574,710 @@ class AddModyfiProductWithOut(View):
 
         return TemplateResponse(request, "add_product_to_order.html", ctx)
 
+
+class AddToppsFreeStyleView(View):
+    def get(self, request, pk):
+        product_add = Products.objects.get(id=pk)
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+
+        vegetopps = Products.objects.filter(component="1")
+        beeftopps = Products.objects.filter(component="2")
+        cheesetopps = Products.objects.filter(component="3")
+        extratopps = Products.objects.filter(component="4")
+        cake = Products.objects.filter(component="5")
+        sizes = ProductSize.objects.filter(pizza=True)
+        products = Products.objects.all()
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        change_topps_vege = 0
+        change_topps_beef = 0
+        change_topps_cheese = 0
+        change_topps_extra = 0
+        change_topps_cake = 0
+        ctx = {
+            # 'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vegetopps': vegetopps,
+            'beeftopps': beeftopps,
+            'cheesetopps': cheesetopps,
+            'extratopps': extratopps,
+            'cake': cake,
+            'sizes': sizes,
+            'products': products,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free,
+            'change_topps_vege': change_topps_vege,
+            'change_topps_beef': change_topps_beef,
+            'change_topps_cheese': change_topps_cheese,
+            'change_topps_extra': change_topps_extra,
+            'change_topps_cake': change_topps_cake,
+        }
+        return TemplateResponse(request, "add_freestyle_topps.html", ctx)
+
+
+class AddToOrderFreeStyleView(View):
+    def get(self, request, pk):
+        product_add = Products.objects.get(id=pk)
+        orderPosition = add_position_to_order(product_add)
+        add = request.GET.get('add')
+        topps = request.GET.get('topps')
+        input_topps_free = request.GET.get('input_topps_free')
+        input_topps_pay = request.GET.get('input_topps_pay')
+        extra_price = request.GET.get('extra_price')
+        input_cake_info = request.GET.get('input_cake_info')
+        print(input_cake_info)
+        set_topps = input_topps_free + input_topps_pay
+        orderPosition.change_topps = set_topps
+        orderPosition.cake_info = input_cake_info
+        orderPosition.save()
+        if extra_price != "":
+            orderPosition.extra_price = extra_price
+            orderPosition.save()
+
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+
+        vegetopps = Products.objects.filter(component="1")
+        beeftopps = Products.objects.filter(component="2")
+        cheesetopps = Products.objects.filter(component="3")
+        extratopps = Products.objects.filter(component="4")
+        cake = Products.objects.filter(component="5")
+        sizes = ProductSize.objects.filter(pizza=True)
+        products = Products.objects.all()
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vegetopps': vegetopps,
+            'beeftopps': beeftopps,
+            'cheesetopps': cheesetopps,
+            'extratopps': extratopps,
+            'cake': cake,
+            'sizes': sizes,
+            'products': products,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
+
+        return TemplateResponse(request, "add_freestyle_to_order.html", ctx)
+
+    def post(self, request, pk):
+        add = request.POST.get('add')
+        quantity = request.POST.get('quantity')
+        sauces = request.POST.get('sauces')
+        info = request.POST.get('info')
+        add_sauces_free = request.POST.get('add_sauces_free')
+        add_sauces_pay = request.POST.get('add_sauces_pay')
+
+        productId = request.POST.get('productId')
+        orderPositionId = request.POST.get('orderPosition')
+        orderPosition = PositionOrder.objects.get(pk=orderPositionId)
+        discount = request.POST.get('discount')
+        if quantity != None:
+            if int(quantity) > 0:
+                orderPosition.quantity = int(quantity)
+                orderPosition.save()
+
+        if discount != 0:
+            # print(discount)
+            orderPosition.discount = int(discount)
+            orderPosition.save()
+        if sauces != None:
+            orderPosition.extra_price = float(sauces.replace(",", "."))
+            orderPosition.save()
+        else:
+            orderPosition.extra_price = orderPosition.extra_price
+            orderPosition.save()
+        if info != "":
+            orderPosition.info = info
+            orderPosition.save()
+        if add_sauces_free != "":
+            orderPosition.add_sauces_free = add_sauces_free
+            orderPosition.save()
+        if add_sauces_pay != "":
+            orderPosition.add_sauces_pay = add_sauces_pay
+            orderPosition.save()
+
+        product_add = Products.objects.get(id=pk)
+        changeTopps = request.POST.get('changeTopps')
+        otherSize = Products.objects.filter(
+            name=product_add.name).order_by('size')
+        vege_components = Products.objects.filter(component="1")
+        beef_components = Products.objects.filter(component="2")
+        sizes = ProductSize.objects.filter(pizza=True)
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        if add != None:
+            new_positionOrder(orderPosition)
+            return redirect('products')
+        ctx = {
+            'orderPosition': orderPosition,
+            'product_add': product_add,
+            'otherSize': otherSize,
+            'vege_components': vege_components,
+            'beef_components': beef_components,
+            'sizes': sizes,
+            'products': product_add,
+            'souse_pay': souse_pay,
+            'souse_free': souse_free
+        }
+
+        return TemplateResponse(request, "add_freestyle_topps.html", ctx)
+
+
+class Secend_Half_Pizza_SearchView(View):
+    def get(self, request, pk, modyfi):
+        product = Products.objects.get(id=pk)
+        orderPosition = PositionOrder.objects.get(pk=modyfi)
+        size_search = product.size.id
+
+        pizza_search = Products.objects.filter(size=size_search).filter(
+            pizza_freestyle=False).filter(menu_category=1)
+        ctx = {
+            'products_search_secendhalf': pizza_search,
+            'orderPosition': orderPosition.id,
+            
+        }
+        return TemplateResponse(request, "pizza_filter_for_secendhalf.html",
+                                ctx)
+    def post(self, request, pk, modyfi):
+        orderPosition_1_2 = PositionOrder.objects.get(pk=modyfi)
+        id_secend_part_halfpizza = request.POST.get('secend_part_halfpizza')
+        product = Products.objects.get(id=id_secend_part_halfpizza)
+        orderPosition_2_2 = add_position_to_order(product)
+
+        return redirect('first_and_secend_halfpizza',first_part=orderPosition_1_2.id,secend_part=orderPosition_2_2.id)
+        
+
+
+class Firts_And_Secend_Half_PizzaView(View):
+    def get(self, request, first_part, secend_part):
+        orderPosition_1_2 = PositionOrder.objects.get(pk=first_part)
+        orderPosition_2_2 = PositionOrder.objects.get(pk=secend_part)
+        product_id=orderPosition_1_2.position.id
+        pizza_oryg=Products.objects.get(pk=product_id)
+      
+        
+        cake = Products.objects.filter(component="5").order_by('name')
+        souse_pay = Products.objects.filter(component="6")
+        souse_free = Products.objects.filter(component="7")
+        if orderPosition_1_2.price <= orderPosition_2_2.price:
+            halfpizza_price=orderPosition_2_2.price
+        else:
+            halfpizza_price=orderPosition_1_2.price
+        
+        add_topps_part1=[]
+        add_topps_part2=[]
+        for el in orderPosition_1_2.toppings.all():
+            add_topps_part1.append(el.id)
+        for el in orderPosition_2_2.toppings.all():
+            add_topps_part2.append(el.id)
+        common_topps=list(set(add_topps_part1).intersection(add_topps_part2))
+        
+        common_price=0
+
+        for el in common_topps:
+            comm_topp=Products.objects.get(pk=el)
+            if comm_topp.component==1:
+                price_comm_topp=pizza_oryg.size.vege_topps_price
+            if comm_topp.component==2:
+                price_comm_topp=pizza_oryg.size.beef_topps_price
+            if comm_topp.component==3:
+                price_comm_topp=pizza_oryg.size.cheese_topps_price
+            if comm_topp.component==4:
+                price_comm_topp=pizza_oryg.size.extra_topps_price 
+            common_price+=price_comm_topp
+      
+        if orderPosition_1_2.extra_price>=orderPosition_2_2.extra_price:    
+            extra_price=(orderPosition_1_2.extra_price+orderPosition_2_2.extra_price)-common_price
+        else:
+            extra_price=(orderPosition_2_2.extra_price+orderPosition_1_2.extra_price)-common_price
+        if len(add_topps_part1)==0 :
+            extra_price=orderPosition_2_2.extra_price
+        if len(add_topps_part2)==0 :
+                extra_price=orderPosition_1_2.extra_price
+        if len(common_topps)==0:
+            extra_price=orderPosition_1_2.extra_price+orderPosition_2_2.extra_price
+        extra_price=round(extra_price,2)
+       
+        ctx = {
+            'orderPosition_1_2': orderPosition_1_2,
+            'orderPosition_2_2': orderPosition_2_2,
+            'souse_free': souse_free,
+            'souse_pay': souse_pay,
+            'cake':cake,
+            'halfpizza_price':halfpizza_price,
+            'extra_price':extra_price
+        }
+        return TemplateResponse(request, "add_secendhalf_to_order.html", ctx)
+    def post(self, request, first_part, secend_part):
+        orderPosition_1_2 = PositionOrder.objects.get(pk=first_part)
+        orderPosition_2_2 = PositionOrder.objects.get(pk=secend_part)
+        product_id=orderPosition_1_2.position.id
+        pizza_oryg=Products.objects.get(pk=product_id)
+        productId = request.POST.get('productId')
+        add = request.POST.get('add')
+        quantity = request.POST.get('quantity')
+        halfpizza_price=request.POST.get('halfpizza_price')
+        sauces = request.POST.get('sauces')
+        info = request.POST.get('info')
+        add_sauces_free = request.POST.get('add_sauces_free')
+        add_sauces_pay = request.POST.get('add_sauces_pay')
+        discount = request.POST.get('discount')
+        input_add_cake = request.POST.get('input_add_cake')
+        sauces=sauces.replace(",",".")
+
+        print(input_add_cake)
+
+        newOrderPosition_pizzahals=PositionOrder()
+        newOrderPosition_pizzahals.halfpizza_name="Lewa:" +orderPosition_1_2.position.name+","+" Prawa:" +orderPosition_2_2.position.name
+        
+        if orderPosition_1_2.price >= orderPosition_2_2.price:
+            newOrderPosition_pizzahals.price=float(orderPosition_1_2.price)
+        else:
+            newOrderPosition_pizzahals.price=float(orderPosition_2_2.price)
+        
+        newOrderPosition_pizzahals.extra_price=float(sauces)
+        newOrderPosition_pizzahals.change_topps=orderPosition_1_2.change_topps
+        newOrderPosition_pizzahals.change_topps_on_right=orderPosition_2_2.change_topps
+        newOrderPosition_pizzahals.add_sauces_free=add_sauces_free
+        newOrderPosition_pizzahals.add_sauces_pay=add_sauces_pay
+        newOrderPosition_pizzahals.cake_info=input_add_cake
+        newOrderPosition_pizzahals.discount=discount
+        newOrderPosition_pizzahals.pizza_half=True
+        newOrderPosition_pizzahals.save()
+
+       
+        if quantity != None:
+            if int(quantity) > 0:
+                newOrderPosition_pizzahals.quantity = int(quantity)
+                newOrderPosition_pizzahals.save()
+               
+        if discount != 0:
+            newOrderPosition_pizzahals.discount = int(discount)
+            newOrderPosition_pizzahals.save()
+            
+        if info != "":
+            newOrderPosition_pizzahals.info = info
+            newOrderPosition_pizzahals.save()
+            
+        if add_sauces_free != "":
+            
+            newOrderPosition_pizzahals.add_sauces_free = add_sauces_free
+            newOrderPosition_pizzahals.save()
+        if add_sauces_pay != "":
+            
+            newOrderPosition_pizzahals.add_sauces_pay = add_sauces_pay
+            newOrderPosition_pizzahals.save()
+        new_positionOrder(newOrderPosition_pizzahals)
+            
+        return redirect('products')
+       
+
+class ChangeToppsHalfPizzaView(View):
+    def get(self, request,part):
+        orderPosition = PositionOrder.objects.get(pk=part)
+
+        orderPosition.toppings.clear()
+        orderPosition.change_toppings=""
+        orderPosition.extra_price=0
+        orderPosition.save()
+
+        vegetopps = Products.objects.filter(component="1").order_by('name')
+        beeftopps = Products.objects.filter(component="2").order_by('name')
+        cheesetopps = Products.objects.filter(component="3").order_by('name')
+        extratopps = Products.objects.filter(component="4").order_by('name')
+        cake = Products.objects.filter(component="5").order_by('name')
+
+        toppings = []
+        for el in orderPosition.position.toppings.all():
+            toppings.append(el)
+        vegecounter = 0
+        beefcounter = 0
+        cheesecounter = 0
+        extracounter = 0
+        cakecounter = 0
+        for el in toppings:
+            if el.component == 1:
+                vegecounter += 1
+
+            if el.component == 2:
+                beefcounter += 1
+            if el.component == 3:
+                cheesecounter += 1
+            if el.component == 4:
+                extracounter += 1
+            if el.component == 5:
+                cakecounter += 1
+        addvege_pay_control = vegecounter
+        beef_pay_control = beefcounter
+        cheese_pay_control = cheesecounter
+        extra_pay_control = extracounter
+        cake_pay_control = cakecounter
+        vege_pay = vegecounter
+        beef_pay = beefcounter
+        cheese_pay = cheesecounter
+        extra_pay = extracounter
+        cake_pay = cakecounter
+        change_topps_vege = 0
+        change_topps_beef = 0
+        change_topps_cheese = 0
+        change_topps_extra = 0
+        change_topps_cake = 0
+
+        ctx = {
+            'product': orderPosition.position,
+            'product_modyfi': orderPosition,
+            'toppings': toppings,
+            'vegetopps': vegetopps,
+            'beeftopps': beeftopps,
+            'cheesetopps': cheesetopps,
+            'extratopps': extratopps,
+            'cake': cake,
+            'vegecounter': vegecounter,
+            'beefcounter': beefcounter,
+            'cheesecounter': cheesecounter,
+            'extracounter': extracounter,
+            'cakecounter': cakecounter,
+            'addvege_pay_control': addvege_pay_control,
+            'beef_pay_control': beef_pay_control,
+            'cheese_pay_control': cheese_pay_control,
+            'extra_pay_control': extra_pay_control,
+            'cake_pay_control': cake_pay_control,
+            'vege_pay': vege_pay,
+            'beef_pay': beef_pay,
+            'cheese_pay': cheese_pay,
+            'extra_pay': extra_pay,
+            'cake_pay': cake_pay,
+            'change_topps_vege': change_topps_vege,
+            'change_topps_beef': change_topps_beef,
+            'change_topps_cheese': change_topps_cheese,
+            'change_topps_extra': change_topps_extra,
+            'change_topps_cake': change_topps_cake,
+        }
+        return TemplateResponse(request, "change_topps_half_pizza.html", ctx)
+
+    def post(self, request,part):
+        
+        
+        orderPosition = PositionOrder.objects.get(pk=part)
+        product =orderPosition.position 
+
+        if request.is_ajax():
+            add_topps = request.POST.get('add_topps')
+            add_topp=Products.objects.get(pk=add_topps)
+            orderPosition.toppings.add(add_topp)
+            orderPosition.save()
+
+             # return redirect('first_and_secend_halfpizza',first_part=int(orderPosition.id)-1,secend_part=orderPosition.id,)
+            vegetopps = Products.objects.filter(component="1").order_by('name')
+            beeftopps = Products.objects.filter(component="2").order_by('name')
+            cheesetopps = Products.objects.filter(component="3").order_by('name')
+            extratopps = Products.objects.filter(component="4").order_by('name')
+            cake = Products.objects.filter(component="5").order_by('name')
+
+            toppings = []
+            for el in orderPosition.position.toppings.all():
+                toppings.append(el)
+            vegecounter = 0
+            beefcounter = 0
+            cheesecounter = 0
+            extracounter = 0
+            cakecounter = 0
+            for el in toppings:
+                if el.component == 1:
+                    vegecounter += 1
+
+                if el.component == 2:
+                    beefcounter += 1
+                if el.component == 3:
+                    cheesecounter += 1
+                if el.component == 4:
+                    extracounter += 1
+                if el.component == 5:
+                    cakecounter += 1
+            addvege_pay_control = vegecounter
+            beef_pay_control = beefcounter
+            cheese_pay_control = cheesecounter
+            extra_pay_control = extracounter
+            cake_pay_control = cakecounter
+            vege_pay = vegecounter
+            beef_pay = beefcounter
+            cheese_pay = cheesecounter
+            extra_pay = extracounter
+            cake_pay = cakecounter
+            change_topps_vege = 0
+            change_topps_beef = 0
+            change_topps_cheese = 0
+            change_topps_extra = 0
+            change_topps_cake = 0
+
+            ctx = {
+                'product': orderPosition.position,
+                'product_modyfi': orderPosition,
+                'toppings': toppings,
+                'vegetopps': vegetopps,
+                'beeftopps': beeftopps,
+                'cheesetopps': cheesetopps,
+                'extratopps': extratopps,
+                'cake': cake,
+                'vegecounter': vegecounter,
+                'beefcounter': beefcounter,
+                'cheesecounter': cheesecounter,
+                'extracounter': extracounter,
+                'cakecounter': cakecounter,
+                'addvege_pay_control': addvege_pay_control,
+                'beef_pay_control': beef_pay_control,
+                'cheese_pay_control': cheese_pay_control,
+                'extra_pay_control': extra_pay_control,
+                'cake_pay_control': cake_pay_control,
+                'vege_pay': vege_pay,
+                'beef_pay': beef_pay,
+                'cheese_pay': cheese_pay,
+                'extra_pay': extra_pay,
+                'cake_pay': cake_pay,
+                'change_topps_vege': change_topps_vege,
+                'change_topps_beef': change_topps_beef,
+                'change_topps_cheese': change_topps_cheese,
+                'change_topps_extra': change_topps_extra,
+                'change_topps_cake': change_topps_cake,
+            }
+            return TemplateResponse(request, "change_topps_half_pizza.html", ctx)
+        
+        
+        
+        
+        
+        
+        else:
+            extra_price = request.POST.get('extra_price')
+            input_add_topps = request.POST.get('input_add_topps')
+            input_del_topps = request.POST.get('input_del_topps')
+            cake = request.POST.get('input_add_cake')
+            
+
+            changes=input_del_topps+input_add_topps
+
+            if extra_price != "":
+                orderPosition.extra_price = float(extra_price)
+                orderPosition.save()
+            else:
+                orderPosition.extra_price = 0
+                orderPosition.save()
+            changes = changes.replace("  ", '')
+            orderPosition.change_topps = cake + changes
+            if extra_price!="":
+                orderPosition.extra_price=extra_price
+            else:
+                orderPosition.extra_price=0.00
+            orderPosition.save()
+
+            return redirect('first_and_secend_halfpizza',first_part=orderPosition.id,secend_part=int(orderPosition.id)+1)
+      
+
+
+
+class ChangeToppsHalfPizza_Part2View(View):
+    def get(self, request,part):
+        orderPosition = PositionOrder.objects.get(pk=part)
+
+        orderPosition.toppings.clear()
+        orderPosition.change_toppings=""
+        orderPosition.extra_price=0
+        orderPosition.save()
+
+
+        vegetopps = Products.objects.filter(component="1").order_by('name')
+        beeftopps = Products.objects.filter(component="2").order_by('name')
+        cheesetopps = Products.objects.filter(component="3").order_by('name')
+        extratopps = Products.objects.filter(component="4").order_by('name')
+        cake = Products.objects.filter(component="5").order_by('name')
+
+        toppings = []
+        for el in orderPosition.position.toppings.all():
+            toppings.append(el)
+        vegecounter = 0
+        beefcounter = 0
+        cheesecounter = 0
+        extracounter = 0
+        cakecounter = 0
+        for el in toppings:
+            if el.component == 1:
+                vegecounter += 1
+
+            if el.component == 2:
+                beefcounter += 1
+            if el.component == 3:
+                cheesecounter += 1
+            if el.component == 4:
+                extracounter += 1
+            if el.component == 5:
+                cakecounter += 1
+        addvege_pay_control = vegecounter
+        beef_pay_control = beefcounter
+        cheese_pay_control = cheesecounter
+        extra_pay_control = extracounter
+        cake_pay_control = cakecounter
+        vege_pay = vegecounter
+        beef_pay = beefcounter
+        cheese_pay = cheesecounter
+        extra_pay = extracounter
+        cake_pay = cakecounter
+        change_topps_vege = 0
+        change_topps_beef = 0
+        change_topps_cheese = 0
+        change_topps_extra = 0
+        change_topps_cake = 0
+
+        ctx = {
+            'product': orderPosition.position,
+            'product_modyfi': orderPosition,
+            'toppings': toppings,
+            'vegetopps': vegetopps,
+            'beeftopps': beeftopps,
+            'cheesetopps': cheesetopps,
+            'extratopps': extratopps,
+            'cake': cake,
+            'vegecounter': vegecounter,
+            'beefcounter': beefcounter,
+            'cheesecounter': cheesecounter,
+            'extracounter': extracounter,
+            'cakecounter': cakecounter,
+            'addvege_pay_control': addvege_pay_control,
+            'beef_pay_control': beef_pay_control,
+            'cheese_pay_control': cheese_pay_control,
+            'extra_pay_control': extra_pay_control,
+            'cake_pay_control': cake_pay_control,
+            'vege_pay': vege_pay,
+            'beef_pay': beef_pay,
+            'cheese_pay': cheese_pay,
+            'extra_pay': extra_pay,
+            'cake_pay': cake_pay,
+            'change_topps_vege': change_topps_vege,
+            'change_topps_beef': change_topps_beef,
+            'change_topps_cheese': change_topps_cheese,
+            'change_topps_extra': change_topps_extra,
+            'change_topps_cake': change_topps_cake,
+        }
+        return TemplateResponse(request, "change_topps_half_pizza_right.html", ctx)
+
+    def post(self, request,part):
+        
+        
+        orderPosition = PositionOrder.objects.get(pk=part)
+        product =orderPosition.position 
+
+        if request.is_ajax():
+            add_topps = request.POST.get('add_topps')
+            add_topp=Products.objects.get(pk=add_topps)
+            orderPosition.toppings.add(add_topp)
+            orderPosition.save()
+
+            vegetopps = Products.objects.filter(component="1").order_by('name')
+            beeftopps = Products.objects.filter(component="2").order_by('name')
+            cheesetopps = Products.objects.filter(component="3").order_by('name')
+            extratopps = Products.objects.filter(component="4").order_by('name')
+            cake = Products.objects.filter(component="5").order_by('name')
+
+            toppings = []
+            for el in orderPosition.position.toppings.all():
+                toppings.append(el)
+            vegecounter = 0
+            beefcounter = 0
+            cheesecounter = 0
+            extracounter = 0
+            cakecounter = 0
+            for el in toppings:
+                if el.component == 1:
+                    vegecounter += 1
+
+                if el.component == 2:
+                    beefcounter += 1
+                if el.component == 3:
+                    cheesecounter += 1
+                if el.component == 4:
+                    extracounter += 1
+                if el.component == 5:
+                    cakecounter += 1
+            addvege_pay_control = vegecounter
+            beef_pay_control = beefcounter
+            cheese_pay_control = cheesecounter
+            extra_pay_control = extracounter
+            cake_pay_control = cakecounter
+            vege_pay = vegecounter
+            beef_pay = beefcounter
+            cheese_pay = cheesecounter
+            extra_pay = extracounter
+            cake_pay = cakecounter
+            change_topps_vege = 0
+            change_topps_beef = 0
+            change_topps_cheese = 0
+            change_topps_extra = 0
+            change_topps_cake = 0
+
+            ctx = {
+                'product': orderPosition.position,
+                'product_modyfi': orderPosition,
+                'toppings': toppings,
+                'vegetopps': vegetopps,
+                'beeftopps': beeftopps,
+                'cheesetopps': cheesetopps,
+                'extratopps': extratopps,
+                'cake': cake,
+                'vegecounter': vegecounter,
+                'beefcounter': beefcounter,
+                'cheesecounter': cheesecounter,
+                'extracounter': extracounter,
+                'cakecounter': cakecounter,
+                'addvege_pay_control': addvege_pay_control,
+                'beef_pay_control': beef_pay_control,
+                'cheese_pay_control': cheese_pay_control,
+                'extra_pay_control': extra_pay_control,
+                'cake_pay_control': cake_pay_control,
+                'vege_pay': vege_pay,
+                'beef_pay': beef_pay,
+                'cheese_pay': cheese_pay,
+                'extra_pay': extra_pay,
+                'cake_pay': cake_pay,
+                'change_topps_vege': change_topps_vege,
+                'change_topps_beef': change_topps_beef,
+                'change_topps_cheese': change_topps_cheese,
+                'change_topps_extra': change_topps_extra,
+                'change_topps_cake': change_topps_cake,
+            }
+            return TemplateResponse(request, "change_topps_half_pizza_right.html", ctx)
+            
+
+
+
+
+           
+        else:
+            extra_price = request.POST.get('extra_price')
+            input_add_topps = request.POST.get('input_add_topps')
+            input_del_topps = request.POST.get('input_del_topps')
+            cake = request.POST.get('input_add_cake')
+            
+
+            changes=input_del_topps+input_add_topps
+
+            if extra_price != "":
+                orderPosition.extra_price = float(extra_price)
+                orderPosition.save()
+            else:
+                orderPosition.extra_price = 0
+                orderPosition.save()
+            changes = changes.replace("  ", '')
+            orderPosition.change_topps = cake + changes
+            orderPosition.save()
+
+            return redirect('first_and_secend_halfpizza',first_part=int(orderPosition.id)-1,secend_part=int(orderPosition.id))
+      
 
 class AddPositionToOrder(View):
     def post(self, request):
@@ -600,6 +1523,7 @@ class ChangeToppsView(View):
 
 class CloseOrderView(View):
     def get(self, request, pk):
+        
         order = Orders.objects.get(pk=pk)
         order.active = False
         order.status = "2"
@@ -609,24 +1533,23 @@ class CloseOrderView(View):
             el.quantity = 1
             el.change_info = ""
             el.save()
+        
+        return redirect('/')
+
+class CloseOrderNoneView(View):
+    def get(self, request):
+        
         return TemplateResponse(request, "product_list.html")
 
 
 class OrdersView(View):
-    def get(self, request):
-        orders = Orders.objects.all()
-        ctx = {'orders': orders}
-        return TemplateResponse(request, "zamowienia.html", ctx)
+    pass
 
 
-class ProductsView(View):
-    def get(self, request):
-        return TemplateResponse(request, "produkty.html")
 
 
-class ClientsView(View):
-    def get(self, request):
-        return TemplateResponse(request, "klienci.html")
+
+
 
 
 class EmployesView(View):
@@ -789,9 +1712,9 @@ class CategoryListView(View):
         products = Products.objects.filter(menu_category=pk)
         if pk == 1:
             otherSize = ProductSize.objects.filter(menu=1)
-            ctx = {'product': products, 'otherSize': otherSize}
+            ctx = {'products': products, 'otherSize': otherSize}
         else:
-            ctx = {'product': products}
+            ctx = {'products': products}
         return TemplateResponse(request, "pizza_menu.html", ctx)
 
 

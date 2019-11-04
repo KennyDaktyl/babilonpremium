@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
 
@@ -16,19 +16,36 @@
                 {% endfor %}
             </div>
             <div class="col-12 text-wrap product">
-                {% for el in product %}
-                <a class="col-12 text-center mx-auto" href="/add_to_order/{{el.id}}">
-                    <button type="button" class="col-2 mx-auto btn btn-primary m-1 {{el.menu_category}} {{el.size}}">
+                {% for el in products %}
+                {% if el.pizza_freestyle == False %}
+                <a class="mx-auto" href="/add_to_order/{{el.id}}">
+                    <button type="submit"
+                        class="pizzamenu {{el.name}} {{el.size}} m-2 btn btn-primary  {{el.menu_category.name}}"
+                        data-type="el.pizza_freestyle">
                         {{el.name}}<br>
                         <span class="text-center">{{el.price}}zł</span><br>
                         <span class="text-center">Rozmiar: {{el.size}}</span>
                         <span>ID: {{el.id}}</span>
-                    </button>
-                </a>
+                    </button></a>
+                {% else %}
+                <a class="mx-auto" href="/add_toops_freestyle/{{el.id}}">
+                    <button type="submit"
+                        class="pizzamenu {{el.name}} {{el.size}} m-2 btn btn-primary  {{el.menu_category.name}}"
+                        data-type="el.pizza_freestyle">
+                        {{el.name}}<br>
+                        <span class="text-center">{{el.price}}zł</span><br>
+                        <span class="text-center">Rozmiar: {{el.size}}</span>
+                        <span>ID: {{el.id}}</span>
+                    </button></a>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/main3.js" %}" type="text/javascript"></script>
 {% endblock %}

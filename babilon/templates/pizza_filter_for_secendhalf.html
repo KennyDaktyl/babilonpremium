@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="col-12 mx-auto text-center bg-light p-1 border">
+    <div class="row col-12 mt-2 mx-auto text-nowrap">
+        <h4 class="text-left col-12 mt-2">Produkty</h4>
+        <div class="col-12 row text-wrap">
+
+
+            {% for el in products_search_secendhalf %}
+            <form method="POST" class="text-wrap product mx-auto">
+                {% csrf_token %}
+                <input name="secend_part_halfpizza" type="hidden" value="{{el.id}}">
+                <button type="submit"
+                    class="pizzamenu {{el.name}} {{el.size}} m-2 btn btn-primary  {{el.menu_category.name}}">
+                    {{el.name}}<br>
+                    <span class="text-center">{{el.price}}zł</span><br>
+                    <span class="text-center">Rozmiar: {{el.size}}</span>
+                    <span>ID: {{el.id}}</span>
+                </button>
+            </form>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/main3.js" %}" type="text/javascript"></script>
+{% endblock %}

@@ -24,6 +24,13 @@ $(document).ready(function () {
     var text_sauce_free = "";
     var text_sauce_pay = "";
     var extra_price_edit = $('#extra_price_edit');
+    // extra_price_edit = extra_price_edit.data('price');
+    // extra_price_edit = extra_price_edit.replace(',', ".");
+    // extra_price_edit = parseFloat(extra_price_edit)
+    // extra_price_edit = extra_price_edit.toFixed(2)
+    // console.log(typeof (extra_price_edit));
+
+
     var sauces_form = $('#sauces_form');
     var add_sauces_free = $('#add_sauces_free');
     var add_sauces_pay = $('#add_sauces_pay');
@@ -33,7 +40,6 @@ $(document).ready(function () {
 
     array_extra_price = [0, ];
     array_extra_sauce = [0, ];
-
 
 
     var refresh = $('#refresh');
@@ -95,18 +101,20 @@ $(document).ready(function () {
                 price_sauce_edit = extra_price_edit.data('price');
                 price_sauce_edit = price_sauce_edit.replace(',', ".");
                 price_sauce_edit = parseFloat(price_sauce_edit);
+                console.log(price_sauce_edit);
+                console.log(tab);
 
-                price_sauce_edit += tab;
-                price_sauce_edit = price_sauce_edit.toFixed(2);
+                price_sauce_edit = parseFloat(price_sauce_edit) + parseFloat(tab);
+                // price_sauce_edit = price_sauce_edit.toFixed(2);
 
-                extra_price_edit.html("<b>" + price_sauce_edit + "</b>");
+                extra_price_edit.html("<b>" + price_sauce_edit.toFixed(2) + "</b>");
                 sauces_form.attr('value', price_sauce_edit);
                 sauce_pay_text.text(text_sauce_pay);
                 add_sauces_pay = add_sauces_pay.attr('value', text_sauce_pay);
 
             } else {
                 alert("Za dużo zmian");
-                sauces_text.attr('value', text_sauce_pay);
+                add_sauces_pay = add_sauces_pay.attr('value', text_sauce_pay);
             }
 
         });
@@ -126,5 +134,4 @@ $(document).ready(function () {
         });
 
     })
-
 });

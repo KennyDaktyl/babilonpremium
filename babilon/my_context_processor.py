@@ -1,5 +1,9 @@
 from babilon.models import MainMenu, ProductSize, Products, Orders
 
+from django.core.exceptions import ObjectDoesNotExist
+
+from .function import *
+
 
 def menu(request):
     menu = MainMenu.objects.all()
@@ -20,7 +24,16 @@ def products(request):
 
 
 def order(request):
-    order = Orders.objects.filter(active=True)
+
+    try:
+        order = Orders.objects.get(active=True)
+
+    except ObjectDoesNotExist:
+        order = Orders()
+        order.active = True
+        order.number = new_number(1)
+        order.save()
+
     ctx = {
         "order": order,
         "version": "1.0",

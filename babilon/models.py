@@ -40,7 +40,7 @@ class MyUser(AbstractUser):
                                       null=True,
                                       blank=True,
                                       verbose_name="Miejsce pracy dzisiaj")
-    adress = models.ForeignKey("Adress",
+    adress = models.ForeignKey("Address",
                                null=True,
                                blank=True,
                                on_delete=models.CASCADE)
@@ -52,36 +52,46 @@ class MyUser(AbstractUser):
 
 
 class Clients(models.Model):
-    firstname = models.CharField(verbose_name="Imie", max_length=128)
-    lastname = models.CharField(verbose_name="Nazwisko", max_length=128)
+
+    firstlastname = models.CharField(verbose_name="Imię Nazwisko",
+                                     max_length=64,
+                                     null=True,
+                                     blank=True)
     phone_number = models.CharField(verbose_name="Numer telefonu",
-                                    max_length=128)
-    adress = models.ManyToManyField("Adress",
-                                    verbose_name="Adres klienta",
-                                    related_name="Adresy_klienta")
+                                    max_length=9)
+    adrress = models.ManyToManyField("Address",
+                                     verbose_name="Adres klienta",
+                                     related_name="Adresy_klienta")
     status = models.IntegerField(verbose_name="Status klienta",
                                  choices=STATUS_KLIENTA,
                                  null=True,
                                  blank=True)
-    info = models.CharField(verbose_name="Info", max_length=128)
+    info = models.CharField(verbose_name="Info",
+                            max_length=128,
+                            null=True,
+                            blank=True)
 
     def __str__(self):
-        return str(self.lastname) + ", " + str(self.phone_number) + ", " + str(
-            self.adress) + ", " + str(self.status) + ", " + str(self.info)
+        return str(self.firstlastname) + ", " + str(
+            self.phone_number) + ", " + str(self.adrress) + ", " + str(
+                self.status)
 
 
-class Adress(models.Model):
-    street = models.CharField(verbose_name="Ulica", max_length=128)
-    city = models.CharField(verbose_name="Miasto", max_length=128)
-    code = models.CharField(verbose_name="Kod pocztowy", max_length=128)
+class Address(models.Model):
+    address = models.CharField(verbose_name="Adres", max_length=128)
+
+    quantity = models.IntegerField(verbose_name="Licznik wyboru", default=1)
+
+    class Meta:
+        ordering = ("quantity", )
 
     def __str__(self):
-        return str(self.street) + ", " + str(self.city)
+        return str(self.id) + "," + str(self.address)
 
 
 class Pizzeria(models.Model):
     name = models.CharField(verbose_name="Nazwa pizzerii", max_length=128)
-    adress = models.ForeignKey("Adress",
+    adress = models.ForeignKey("Address",
                                null=True,
                                blank=True,
                                on_delete=models.CASCADE)
@@ -204,8 +214,8 @@ class Products(models.Model):
                                     null=True,
                                     blank=True)
     pizza_freestyle = models.BooleanField(verbose_name="Pizza freestyle",
-                                          null=True,
-                                          blank=True)
+                                          default=False)
+
     cake = models.BooleanField(verbose_name="Składnik do ciasta?",
                                null=True,
                                blank=True)
@@ -313,10 +323,11 @@ class Orders(models.Model):
                                verbose_name="Klient",
                                null=True,
                                blank=True)
-    adress = models.CharField(verbose_name="Adress",
-                              max_length=128,
-                              null=True,
-                              blank=True)
+    address = models.ForeignKey('Address',
+                                on_delete=models.CASCADE,
+                                verbose_name="Adres",
+                                null=True,
+                                blank=True)
     position = models.ManyToManyField('PositionOrder',
                                       verbose_name="Pozycja zamowienia",
                                       blank=True,
@@ -340,7 +351,7 @@ class Orders(models.Model):
                                null=True)
 
     class Meta:
-        ordering = ("-number", )
+        ordering = ("-data", )
 
     @property
     def total_price(self):
@@ -351,7 +362,7 @@ class Orders(models.Model):
         return round(sum(total), 2)
 
     def __str__(self):
-        return str(self.id) + " " + str(self.number)
+        return str(self.number)
 
 
 class PositionOrder(models.Model):
@@ -361,15 +372,39 @@ class PositionOrder(models.Model):
                               null=True,
                               blank=True)
     quantity = models.IntegerField(verbose_name="Ilosc", default=1)
-    position = models.ForeignKey('Products',
-                                 on_delete=models.CASCADE,
-                                 verbose_name="Pozycja zamówienia")
+    halfpizza_name = models.CharField(verbose_name="Lewa lub prawa",
+                                      max_length=126,
+                                      null=True,
+                                      blank=True,
+                                      default="")
+    position = models.ForeignKey(
+        'Products',
+        on_delete=models.CASCADE,
+        verbose_name="Pozycja zamówienia",
+        null=True,
+        blank=True,
+    )
+    toppings = models.ManyToManyField("Products",
+                                      verbose_name="Dodatki",
+                                      related_name="pizza_extra_toppings",
+                                      blank=True)
 
     change_topps = models.CharField(verbose_name="Zmiany składników",
                                     max_length=512,
                                     null=True,
                                     blank=True,
                                     default="")
+    change_topps_on_right = models.CharField(
+        verbose_name="Zmiany składników na prawej",
+        max_length=512,
+        null=True,
+        blank=True,
+        default="")
+    cake_info = models.CharField(verbose_name="Zmiany ciasta",
+                                 max_length=128,
+                                 null=True,
+                                 blank=True,
+                                 default="")
     add_sauces_free = models.CharField(verbose_name="Sosy darmowe",
                                        max_length=256,
                                        null=True,
@@ -394,13 +429,20 @@ class PositionOrder(models.Model):
                                    null=True,
                                    blank=True,
                                    default=0)
+    pizza_half = models.BooleanField(verbose_name="Pizza pol_na_pol",
+                                     default=False)
+
+    class Meta:
+        ordering = ("-id", )
 
     @property
     def total_price(self):
         if self.discount > 0:
             return round(
-                float(self.price) - +(float(self.price)) *
-                (float(self.discount) * 0.01) + float(self.extra_price), 2)
+                float(
+                    ((self.price) - +(float(self.price)) *
+                     (float(self.discount) * 0.01) + float(self.extra_price)) *
+                    int(self.quantity)), 2)
         if self.discount > 0 and self.extra_price == 0:
             return round(
                 float(self.price) - ((float(self.price) *

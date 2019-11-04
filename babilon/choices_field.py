@@ -13,7 +13,7 @@ RODZAJ_SKŁADNIKA = (
     (7, "Sosy darmowe"),
 )
 
-STATUS_KLIENTA = ((1, "Vip"), (1, "Normal"), (2, "Podejrzany"))
+STATUS_KLIENTA = ((0, "Vip"), (1, "Normal"), (2, "Podejrzany"))
 
 STATUS_ZAMOWIENIA = (
     (1, "Aktywne"),
@@ -28,9 +28,8 @@ STATUS_ZAMOWIENIA = (
 
 RODZAJ_DOSTAWY = (
     (1, "Lokal"),
-    (2, "Dostawa"),
-    (3, "On-line lokal"),
-    (4, "On-line dostawa"),
+    (2, "Wynos"),
+    (3, "Dostawa"),
 )
 
 PŁATNOŚĆ = (

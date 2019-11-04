@@ -11,7 +11,7 @@ from babilon.models import *
 admin.site.register(MyUser)
 admin.site.register(Products)
 admin.site.register(ProductSize)
-admin.site.register(Adress)
+admin.site.register(Address)
 admin.site.register(Pizzeria)
 admin.site.register(EmployeePosition)
 admin.site.register(Clients)

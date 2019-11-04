@@ -1,10 +1,11 @@
-from babilon.models import *
+from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 
 from datetime import datetime
 
 year = datetime.now().year
 month = datetime.now().month
+day = datetime.now().day
 
 
 def add_position_to_order(product_add):
@@ -20,52 +21,63 @@ def add_position_to_order(product_add):
 def new_number(pizzeria_id):
 
     try:
-        last_number = Orders.objects.filter(pizzeria=pizzeria_id).last()
+        last_number = Orders.objects.filter(pizzeria=pizzeria_id).first()
+        print(last_number)
         if last_number != None:
             last_number = last_number
-            number_indx = int(last_number.number[:4]) + int(1)
-            ln_month = last_number.data.month
-            if ln_month != month:
+            number_indx = int(last_number.number[:3]) + 1
+
+            ln_day = last_number.data.day
+
+            if ln_day != day:
                 number_indx = 1
-            number = (str(number_indx), "/", str(month), "/", str(year))
+                print(ln_day)
+                print(day)
+            # number = (str(number_indx), "/", str(day), "/", str(month), "/",
+            #           str(year))
             if number_indx < 10:
-                number_format = f"000{number_indx}/{month}/{year}"
+                if day > 9:
+                    number_format = f"00{number_indx}/{day}/{month}/{year}"
+                else:
+                    number_format = f"00{number_indx}/0{day}/{month}/{year}"
+
             if 100 > number_indx > 9:
-                number_format = f"00{number_indx}/{month}/{year}"
+                if day > 9:
+                    number_format = f"0{number_indx}/{day}/{month}/{year}"
+                else:
+                    number_format = f"0{number_indx}/0{day}/{month}/{year}"
             if 999 > number_indx > 99:
-                number_format = f"0{number_indx}/{month}/{year}"
+                if day > 9:
+                    number_format = f"{number_indx}/{day}/{month}/{year}"
+                else:
+                    number_format = f"{number_indx}/0{day}/{month}/{year}"
             if number_indx > 999:
-                number_format = f"{number_indx}/{month}/{year}"
+                if day > 9:
+                    number_format = f"{number_indx}/{day}/{month}/{year}"
+                else:
+                    number_format = f"{number_indx}/0{day}/{month}/{year}"
+            return number_format
         else:
-            number_format = f"0001/{month}/{year}"
-        return number_format
+            print("jestem tutaj")
+            number_format = f"001/{day}/{month}/{year}"
+            return number_format
 
     except ObjectDoesNotExist:
-        print("jestem tutaj")
-        number_indx = 1
-        number = (str(number_indx), "/", str(month), "/", str(year))
-        if number_indx < 10:
-            number_format = f"000{number_indx}/{month}/{year}"
-        if 100 > number_indx > 9:
-            number_format = f"00{number_indx}/{month}/{year}"
-        if 999 > number_indx > 99:
-            number_format = f"0{number_indx}/{month}/{year}"
-        if number_indx > 999:
-            number_format = f"{number_indx}/{month}/{year}"
-        return number_format
-
-        return number_format
+        pass
+        # number_format = f"001/{month}/{year}"
+        # return number_format
 
 
 def new_positionOrder(product_add):
     orderPosition = product_add
 
-    print(orderPosition)
+    # print(orderPosition)
     pizzeria = Pizzeria.objects.get(pk=1)
 
     try:
         order = Orders.objects.get(active=True)
         order.position.add(orderPosition)
+        order.pizzeria = pizzeria
         order.save()
     except ObjectDoesNotExist:
         order = Orders()
@@ -73,6 +85,7 @@ def new_positionOrder(product_add):
         orderId = order.id
         order.pizzeria = pizzeria
         order.number = new_number(1)
+        # print(order.number)
         order.save()
         order.position.add(orderPosition)
         order.save()
