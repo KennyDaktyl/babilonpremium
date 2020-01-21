@@ -1,0 +1,52 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <form method="POST" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Dodaj danie</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="col-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nazwa dania</th>
+                        <th scope="col">Cena</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dish in dishes %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td class="h5">{{dish.product_name}}<br>
+                            (
+                            {% for topp in dish.toppings.all %}
+                            <span class="topps h6">{{topp}}, </span>
+                            {% endfor %}
+                            )
+                        </td>
+                        <td>{{dish.price}}<br><a href="/change_product/{{dish.id}}"><br>ustaw cenę</a>
+                        </td>
+                        <td><a href="/edit_product/{{dish.id}}">Edycja pro</a>
+                            <br><a href="/del_product/{{dish.id}}">Usuń danie</a><br>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}

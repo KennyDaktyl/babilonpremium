@@ -1,0 +1,215 @@
+{% extends 'base_orders.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row col-12 border mt-2 mx-auto topps">
+    <p class="col-12 text-left topps">Składniki pizzy: <b>{{pizza.product_name}}</b>, rozmiar
+        <b>{{pizza.product_size}}</b> Cena produktu: <span class=""><b>{{pizza.price}}</b></span></p>
+    {% for el in pizza.toppings.all %}
+    <form class="mx-auto " method="POST">
+        {% csrf_token %}
+        <button type="button" class="{{el.type_of_ingredient}} topps btn btn-danger in"
+            data-type="{{el.type_of_ingredient}}" data-vege_price="{{pizza.product_size.vege_topps_price}}"
+            data-beef_price="{{pizza.product_size.beef_topps_price}}"
+            data-cheese_price="{{pizza.product_size.cheese_topps_price}}"
+            data-extra_price="{{pizza.product_size.extra_topps_price}}"
+            data-extra_1_price="{{pizza.product_size.extra_1_topps_price}}"
+            data-extra_2_price="{{pizza.product_size.extra_2_topps_price}}"
+            data-extra_3_price="{{pizza.product_size.extra_3_topps_price}}"
+            data-extra_4_price="{{pizza.product_size.extra_4_topps_price}}" data-id="{{el.id}}">{{el.product_name}}
+        </button>
+    </form>{% endfor %}
+</div>
+<div class="row col-12 border mt-2 mx-auto text-center text-wrap add_topps_plus">
+    <p id="add_topps" class="col-12 text-left add_topps">Dodatki wybrane:</p>
+</div>
+<div class="row col-12 border mt-2 mx-auto">
+    <p id="price_size_vege" class="col-2 text-left" data-price="{{pizza.product_size.vege_topps_price}}">Dodatki
+        warzywne:</p>
+    <div class="col-10 row">
+        {% for el in vegetopps %}
+        <button type="button" class="vegetopps col-1 btn btn-success m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-vege_price="
+            {{pizza.product_size.vege_topps_price}}">{{el.product_name}}
+            <span id="price_add_vege_topp" data-price="{{pizza.product_size.vege_topps_price}}"></span></button>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row col-12 border mt-2 mx-auto">
+    <p id="price_size_beef" class="col-2 text-left" data-price="{{pizza.product_size.beef_topps_price}}">Dodatki
+        mięsne:
+    </p>
+    {% for el in beeftopps %}
+    <button type="button" class="beeftopps btn btn-warning m-1 mx-auto {{el.type_of_ingredient}}"
+        data-beef_price="{{pizza.product_size.beef_topps_price}}" data-id="{{el.id}}">{{el.product_name}}
+        <span></button></a>
+    {% endfor %}
+</div>
+
+<div class=" row col-12 border mt-2 mx-auto">
+    <p id="price_size_cheese" class="col-2 text-left" data-price="{{pizza.product_size.cheese_topps_price}}">Dodatki
+        serowe:
+    </p>
+    {% for el in cheesetopps %}
+    <button type="button" class="cheesetopps btn btn-success m-1 mx-auto {{el.type_of_ingredient}}"
+        data-cheese_price="{{pizza.product_size.cheese_topps_price}}" data-id="{{el.id}}">{{el.product_name}} <span
+            id="price_add_cheese_topp" data-price="{{pizza.product_size.cheese_topps_price}}"></button></a>
+    {% endfor %}
+</div>
+
+<div class=" row col-12 border mt-2 mx-auto">
+    <p id="price_size_extra" class="col-2 text-left" data-price="{{pizza.product_size.extra_topps_price}}">Dodatki
+        extra:
+    </p>
+    {% for el in extratopps %}
+    {% if el.type_of_ingredient == 4 %}
+    <button type="button" class="extratopps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
+        data-extra_price="{{pizza.product_size.extra_topps_price}}" data-price="{{el.price}}"
+        data-id="{{el.id}}">{{el.product_name}}
+        <span class=" price_add_extra_topp" data-price="{{pizza.product_size.extra_topps_price}}"></button></a>
+    {% endif %}
+    {% if el.type_of_ingredient == 8 %}
+    <button type="button" class="extra_1_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
+        data-extra_price="{{pizza.product_size.extra_1_topps_price}}"
+        data-price="{{pizza.product_size.extra_1_topps_price}}" data-id="{{el.id}}">{{el.product_name}}
+        <span class=" price_add_extra_topp" data-price="{{pizza.product_size.extra_1_topps_price}}"></button></a>
+    {% endif %}
+    {% if el.type_of_ingredient == 9 %}
+    <button type="button" class="extra_2_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
+        data-extra_price="{{pizza.product_size.extra_2_topps_price}}"
+        data-price="{{pizza.product_size.extra_2_topps_price}}" data-id="{{el.id}}">{{el.product_name}}
+        <span class=" price_add_extra_topp" data-price="{{pizza.product_size.extra_2_topps_price}}"></button></a>
+    {% endif %}
+    {% if el.type_of_ingredient == 10 %}
+    <button type="button" class="extra_3_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
+        data-extra_price="{{pizza.product_size.extra_3_topps_price}}"
+        data-price="{{pizza.product_size.extra_3_topps_price}}" data-id="{{el.id}}">{{el.product_name}}
+        <span class=" price_add_extra_3_topp" data-price="{{pizza.product_size.extra_topps_price}}"></button></a>
+    {% endif %}
+    {% if el.type_of_ingredient == 11 %}
+    <button type="button" class="extra_4_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
+        data-extra_price="{{pizza.product_size.extra_4_topps_price}}"
+        data-price="{{pizza.product_size.extra_4_topps_price}}" data-id="{{el.id}}">{{el.product_name}}
+        <span class=" price_add_extra_4_topp" data-price="{{pizza.product_size.extra_4_topps_price}}"></button></a>
+    {% endif %}
+    {% endfor %}
+</div>
+
+<div class="row container-fluid border p-0 m-0 flex-nowrap">
+    <div class="mx-auto col-1 row p-0 m-0">
+        <span class="col-12 text-center p-0 m-0">
+            Vege: {{addvege_pay_control}},
+        </span>
+        <span id="change_vege" class="p-0 m-0 text-danger col-12 text-center" data-vegectrl="{{addvege_pay_control}}"
+            data-vege_plus="{{change_topps_vege}}">
+            {{change_topps_vege}}</span>
+    </div>
+    <div class="mx-auto col-1 row p-0 m-0">
+        <span class="text-center col-12 p-0 m-0">
+            Mięsne: {{beef_pay_control}},</span>
+        <span id="change_beef" class="p-0 m-0 change_beef text-danger text-center col-12"
+            data-beefctrl="{{beef_pay_control}}" data-beef_plus="{{change_topps_beef}}">
+            {{change_topps_beef}},</span>
+    </div>
+    <div class="mx-auto col-1 row p-0 m-0">
+        <span class="text-center col-12">
+            Serowe:
+            {{cheese_pay_control}}, </span>
+        <span id="change_cheese" class="change_cheese text-danger text-center col-12"
+            data-cheesectrl="{{cheese_pay_control}}" data-cheese_plus="{{change_topps_cheese}}">
+            {{change_topps_cheese}}
+        </span>
+    </div>
+    <div class="col-1 row mx-auto p-0 m-0">
+        <span class="text-center col-12">
+            Extra:
+            {{extra_pay_control}}, </span> <span id="change_extra" class="change_extra text-danger text-center col-12"
+            data-extractrl="{{extra_pay_control}}" data-extra_plus="{{change_topps_extra}}">
+            {{change_topps_extra}}
+        </span>
+    </div>
+    <div class="col-1 row mx-auto p-0 m-0">
+        <span class="text-center col-12">
+            Extra_1:
+            {{extra_1_pay_control}} <span id="change_extra_1" class="change_extra text-danger text-center col-12"
+                data-extra_1_ctrl="{{extra_1_pay_control}}"
+                data-extra_plus="{{change_topps_extra_1}}">{{change_topps_extra_1}}</span>
+        </span>
+        <span id="price_size_extra_1" data-price="{{pizza.product_size.extra_1_topps_price}}"></span>
+    </div>
+    <div class="col-1 row mx-auto p-0 m-0">
+        <span class="text-center col-12">
+            Extra_2:
+            {{extra_2_pay_control}}</span> <span id="change_extra_2" class="change_extra text-danger text-center col-12"
+            data-extra_2_ctrl="{{extra_2_pay_control}}"
+            data-extra_plus="{{change_topps_extra_2}}">{{change_topps_extra_2}}</span>
+        <span id="price_size_extra_2" data-price="{{pizza.product_size.extra_2_topps_price}}"></span>
+
+    </div>
+    <div class="col-1 row mx-auto p-0 m-0">
+        <span class="text-center col-12">
+            Extra_3:
+            {{extra_3_pay_control}}</span>
+        <span id="change_extra_3" class="change_extra text-danger col-12 text-center"
+            data-extra_3_ctrl="{{extra_3_pay_control}}"
+            data-extra_plus="{{change_topps_extra_3}}">{{change_topps_extra_3}}</span>
+        <span id="price_size_extra_3" data-price="{{pizza.product_size.extra_3_topps_price}}"></span>
+        </span>
+    </div>
+    <div class="col-1 row mx-auto p-0 m-0">
+        <span class="text-center col-12 text-center">
+            Extra_4:
+            {{extra_4_pay_control}}</span>
+        <span id="change_extra_4" class="change_extra text-danger col-12 text-center"
+            data-extra_4_ctrl="{{extra_4_pay_control}}"
+            data-extra_plus="{{change_topps_extra_4}}">{{change_topps_extra_4}}</span>
+        <span id="price_size_extra_4" data-price="{{pizza.product_size.extra_4_topps_price}}"></span>
+    </div>
+</div>
+<div class="row col-12 text-wrap text-right align-top">
+    <h6 class="col-6 text-left text-wrap text-right">Składniki minus: </h6><br>
+
+
+    <h6 class="col-6 text-left text-wrap">Składniki plus: </h6><br>
+
+</div>
+<div class="col-6">
+    <ul id="text_change_topps_del" class="change col-12 text-right align-top"></ul>
+</div>
+<div class="col-6">
+    <ul id="text_change_topps_add" class="change col-12 align-top"></ul>
+</div>
+<div class="row col-12 mx-auto">
+    <form class="col-12 row text-center mx-auto" method="POST">
+        {% csrf_token %}
+        <div class="col-3 text-left">
+            <h6 class="col-12 text-left">Dopłata dodatki: <span id="extra_price"
+                    class="h3 text-danger">{{pizza.extra_price}}</span></h6>
+            <input class="col-7 text-left" name="extra_price" id="input_value" value="0.00" type="number" step="0.01">
+        </div>
+
+        <div class="col-6 text-center row mx-auto">
+            <a href="/change_topps/{{order.id}}/{{pizza.id}}" class="col-6 text-center mx-auto">
+                <button type="button" class="text-center mx-auto btn btn-danger col-12">Kasuj
+                    zmiany</button></a>
+        </div>
+
+        <div class="col-3 text-right row">
+            <p class="col-12 text-rigth">Cena produktu: <span class="text-danger h3 text-rigth">{{pizza.price}}</span>
+            </p>
+        </div>
+        <input name="position_order" type="hidden" value="{{new_position.id}}">
+        <input name="input_add_topps" id="input_add_topps" type="hidden" value="">
+        <input name="input_del_topps" id="input_del_topps" type="hidden" value="">
+        <input name="input_add_cake" id="input_add_cake" type="hidden" value="">
+
+        <button type="submit" class="col-12 m-2 mx-auto btn btn-success">Zapisz {{pos.}}</button>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static "babilon/change_topps_pizza_half.js" %}" type="text/javascript"></script>
+{% endblock %}

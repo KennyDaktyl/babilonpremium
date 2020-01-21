@@ -1,0 +1,18 @@
+{% extends 'base_orders.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container-fluid row mx-auto">
+    <div class="row col-10 m-3 mx-auto">
+
+        <form method="POST" enctype="multipart/form-data" class="col-12 text-left">
+            {% csrf_token %}
+            {{ form.as_ul }}
+            <button class="text-right btn btn-success"><input class="text-right btn btn-success" type="submit"
+                    value="dodaj"></button>
+        </form>
+    </div>
+    <a href="/clients/" class="col-2 text-right"><button class="text-right btn btn-danger">Powrót</button></a>
+</div>
+{% endblock %}

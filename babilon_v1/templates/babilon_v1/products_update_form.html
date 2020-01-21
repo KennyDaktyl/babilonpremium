@@ -1,0 +1,18 @@
+{% extends 'base_owner.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="row col-12">
+
+    <form method="POST" enctype="multipart/form-data" class="col-10 m-3 mx-auto">
+        {% csrf_token %}
+        <p><b>{{ object }}</b></p>
+        {{ form.as_p }}
+
+        <input type="submit" value="Edytuj">
+    </form>
+    <a class="col-10" href="/local_status/"><button class="btn-danger col-1 mx-auto m-3">Cofnij</button></a>
+</div>
+
+{% endblock %}

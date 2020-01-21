@@ -1,0 +1,188 @@
+{% extends 'base_owner.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <span class="col-12">{{error_info}}</span>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-warning" id="add_driver_button">Zakup towaru</button>
+            </div>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-danger" id="close_driver_button">Cofnij</button>
+            </div>
+            <form method="POST" class="col-12" id="add_driver">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-success">Dodaj</button>
+                    </div>
+                </div>
+            </form>
+            {% if form.errors %}
+            <ul>
+                {% for field in form %}
+                <li>
+                    {{ field.name }}: {{ field.errors }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif%}
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-warning" id="add_reward_button">Wypłata pracownikowi</button>
+            </div>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-danger" id="close_add_reward_button">Cofnij</button>
+            </div>
+            <form method="POST" class="col-12" id="add_reward">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ formReward.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-success">Dodaj</button>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-warning" id="add_tax_button">Podatki / Zus</button>
+            </div>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-danger" id="close_add_tax_button">Cofnij</button>
+            </div>
+            <form method="POST" class="col-12" id="add_tax">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ formTax.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-success">Dodaj</button>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-warning" id="add_const_button">Koszta stałe</button>
+            </div>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-danger" id="close_add_const_button">Cofnij</button>
+            </div>
+            <form method="POST" class="col-12" id="add_const">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ formConst.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-success">Dodaj</button>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-warning" id="add_other_button">Inne koszta</button>
+            </div>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-danger" id="close_add_other_button">Cofnij</button>
+            </div>
+            <form method="POST" class="col-12" id="add_other">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ formOther.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-success">Dodaj</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-9">
+            <div class="col-12 row mx-auto p-0 m-0">
+                {% if pk == 0 %}
+                <a href="/purchases/0" class="col-2 text-center "><button
+                        class="btn-primary col-12 text-center">Zakupy<br><span>{{total}}</span></button></a>
+                {% else %}
+                <a href="/purchases/0" class="col-2 text-center "><button
+                        class="btn-warning col-12 text-center">Zakupy<br></button></a>
+                {% endif %}
+                {% if pk == 1 %}
+                <a href="/purchases/1" class="col-2 text-center"><button
+                        class="btn-primary col-12 text-center">Wypłaty<br><span>{{total}}</span></button></a>
+                {% else %}
+                <a href="/purchases/1" class="col-2 text-center"><button
+                        class="btn-warning col-12 text-center">Wypłaty</button></a>
+                {% endif %}
+                {% if pk == 2 %}
+                <a href="/purchases/2" class="col-2 text-center "><button
+                        class="btn-primary col-12 text-center">Podatki/Zus<br><span>{{total}}</span></button></a>
+                {% else %}
+                <a href="/purchases/2" class="col-2 text-center "><button
+                        class="btn-warning col-12 text-center">Podatki/Zus</button></a>
+                {% endif %}
+                {% if pk == 3 %}
+                <a href="/purchases/3" class="col-2 text-center"><button class="btn-primary col-12 text-center">Koszta
+                        stałe<br><span>{{total}}</span></button></a>
+                {% else %}
+                <a href="/purchases/3" class="col-2 text-center "><button class="btn-warning col-12 text-center">Koszta
+                        stałe</button></a>
+                {% endif %}
+                {% if pk == 4 %}
+                <a href="/purchases/4" class="col-2 text-center "><button class="btn-primary col-12 text-center">Inne
+                        wydatki<br><span>{{total}}</span></button></a>
+                {% else %}
+                <a href="/purchases/4" class="col-2 text-center "><button class="btn-warning col-12 text-center">Inne
+                        wydatki</button></a>
+                {% endif %}
+                {% if pk or pk == 0%}
+                <a href="/purchases/" class="col-2 text-center"><button class="btn-warning col-12 text-center">Wszystkie
+                        wydatki</button></a>
+                {% else %}
+                <a href="/purchases/" class="col-2 text-center"><button class="btn-primary col-12 text-center">Wszystkie
+                        wydatki<br><span>{{total}}</span></button></a>
+                {% endif %}
+                <a href="{% static 'media/path_to_file.xlsx' %}" class="btn btn-secondary px-4 py-2 btn-sm">Download
+                    Excel</a>
+
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Nazwa</th>
+                        <th scope="col">Wprowadził</th>
+                        <th scope="col">Płatność</th>
+                        <th scope="col">Rodzaj</th>
+                        <th scope="col">Koszt</th>
+                        <th scope="col">Info</th>
+                        <th scope="col">Edycja</th>
+                        <th scope="col">Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchaese in purchaeses %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td class="h7">{{purchaese.date}}</td>
+                        <td class="h7">{{purchaese.purchase_name}}</td>
+                        <td class="h7">{{purchaese.barman_id.username}}</td>
+                        <td class="h7">{{purchaese.get_type_purchases_display}}</td>
+                        <td class="h7">{{purchaese.get_pay_method_display}}</td>
+                        <td class="h7">{{purchaese.price}}</td>
+                        <td class="h7">
+                            {% if purchaese.info.strip %}
+                            {{purchaese.info}}
+                            {% else %}
+                            {% endif %}
+                        </td>
+                        <td class="h7"><a href="/edit_purchase/{{purchaese.id}}"><i class="fas fa-edit"></i></a></td>
+                        <td class="h7"><a href="/del_purchase/{{purchaese.id}}"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/purchases.js" %}" type="text/javascript"></script>
+{% endblock %}

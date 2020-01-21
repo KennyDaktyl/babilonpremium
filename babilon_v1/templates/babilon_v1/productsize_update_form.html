@@ -1,0 +1,15 @@
+{% extends 'base_orders.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <p class="col-3 h5 mt-2 m-2">Rozmiar pizzy {{ object }}</p>
+    <div class="row col-12 mt-2">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Edytuj">
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base_owner.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <span class="col-12">{{error_info}}</span>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-dark" id="add_driver_button">Dodaj kierowcę</button>
+            </div>
+            <div class="form-group row col-12 mt-2">
+                <button type="submit" class="btn btn-dark" id="close_driver_button">Zamknij formularz</button>
+            </div>
+            <form method="POST" class="col-12" id="add_driver">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-success">Dodaj kierowcę</button>
+                    </div>
+                </div>
+            </form>
+            {% if form.login.errors %}
+            <ul>
+                {% for field in form %}
+                <li>
+                    {{ field.name }}: {{ field.errors }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif%}
+        </div>
+        <div class="col-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Aktywny?</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Rozliczenie</th>
+                        <th scope="col">UserName</th>
+                        <th scope="col">Imię</th>
+                        <th scope="col">Nazwisko</th>
+                        <th scope="col">Telefon</th>
+                        <th scope="col">Stawka za kurs</th>
+                        <th scope="col">Wyjazdy</th>
+                        <th scope="col">Zamówienia</th>
+                        <th scope="col">Gotówka</th>
+                        <th scope="col">Karta</th>
+                        <th scope="col">Miejsce pracy</th>
+                        <th scope="col">Info</th>
+                        <th scope="col">Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in drivers %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        {% if driver.active == False %}
+                        <td class="h7 text-danger">
+                            {{driver.active}}<br><a href="/set_driver_active/{{driver.id}}">Zmień</a></td>
+                        <td class="h7">N/d<br>
+                            {% else %}
+                        <td class="h7 text-success">
+                            {{driver.active}}<br><a href="/set_driver_active/{{driver.id}}">Zmień</a></td>
+                        <td class="h7">{{driver.get_driver_status_display}}<br>
+                            {% endif %}
+
+                        <td class="h7"><a href="">Rozlicz</a><br>
+                        <td class="h7">{{driver.username}}<br>
+                        <td class="h7">{{driver.first_name}}<br>
+                        <td class="h7">{{driver.last_name}}<br>
+                        <td class="h7">{{driver.phone_number}}<br>
+                        <td class="h7">{{driver.rate_per_drive}}<br>
+                        <td class="h7">później</td>
+                        <td class="h7">później</td>
+                        <td class="h7">później</td>
+                        <td class="h7">później</td>
+                        <td class="h7">{% for place in driver.work_place.all %}
+                            <span>{{place.workplace_name}}, </span>
+                            {% endfor %}
+                        </td>
+                        <td class="h7">{{driver.info}}<br>
+                        <td class="h7"><a href="/del_worker/{{driver.id}}"><span class="text-danger">Usuń</span></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/drivers.js" %}" type="text/javascript"></script>
+{% endblock %}

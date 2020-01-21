@@ -1,0 +1,42 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <form method="POST" action="/set_session_today_date/" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ formT.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Dzień</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-3 ">
+            <form method="POST" action="/set_session_month_date/" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ formM.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Miesiąc</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-3 ">
+            <form method="POST" action="/set_session_period_date/" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ formD.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Okres (min. 2-dni)</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}

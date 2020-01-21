@@ -1,1 +1,1 @@
-web: gunicorn babilonpremium.wsgi --log-file -
+web: gunicorn pizzeria.wsgi --log-file -

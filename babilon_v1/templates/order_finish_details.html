@@ -1,0 +1,541 @@
+{% extends 'base_orders.html' %}
+{% load tz %}
+{% load static %}
+{% block content %}
+
+<div class="col-2 p-0 mt-2 mx-auto border text-left">
+    {% for cat in categorys %}
+    {% if order.status != 4 and order.status != 5 and order.closed == False %}
+    <a href="/products_category/{{cat.id}}" class="col-12 p-0 mt-3 mx-auto text-left border">
+        <button type=" submit" class="col-12 p-0 btn btn-light mt-3 mx-auto text-center">{{cat.category_name}}</button>
+    </a>
+    {% endif %}
+    {% endfor %}
+
+</div>
+<div class="row col-10 p-0 mx-auto bg-white mt-2">
+    <div class="row col-12 p-0">
+        <div class="col-6 p-0 row mx-auto">
+            <div class="col-12">
+                <p class="text-left col-12">Numer zamówienia: <button class="btn-warning">{{order.number}}</button> </p>
+                <p class="text-left col-12">Lokal: <b>{{order.workplace_id}}</b> </p>
+                <p class="text-left col-12">Umówiony czas: <span id="time_zero_info"><b>{{order.time_zero}}</b></span>
+                </p>
+                {% if order.address %}
+                <p class="text-left col-12">Dane klienta: <b>{{order.address.client_id.client_name}}</b> </p>
+                {% endif %}
+                {% if order.address.client_id.phone_number.strip %}
+                <p class="text-left col-12">Numer telefonu: <b>{{order.address.client_id.phone_number}} </b></p>
+                {% endif %}
+                {% if order.address.client_id.info.strip %}
+                <p class="text-left col-12">Klient info: <b>{{order.address.client_id.info}} </b></p>
+                {% endif %}
+                {% if order.address %}
+                <p class="text-left col-12">Adres: <b>{{order.address.street}}</b> </p>
+                {% endif %}
+                {% if order.address.street.strip %}
+                <button type="button" class="btn btn-warning text-left ml-2" data-toggle="modal"
+                    data-target="#exampleModal">
+                    Mapa google
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-12  m-1">
+
+                                    <iframe width="100%" height="100%" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBk0Dboowhbnm55MHLjSFtZVWOo5h5aA58
+                        &q={{order.address.street}} kraków" allowfullscreen>
+                                    </iframe>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+
+
+        </div>
+
+        <div class="col-6 p-0">
+            <div class="col-12 row m-1">
+                {% if order.status != 4 and order.status != 5 and order.closed == False %}
+                <p class="col-12 text-center">Rodzaj dostawy</p>
+                {% if order.type_of_order == 1 %}
+                <button data-delivery="1" class="btn-primary col-4 m-1 text-center mx-auto delivery"><i
+                        class="fas fa-home"></i><br>Lokal</button>
+                {% else %}
+                <button data-delivery="1" class="btn-secendary col-4 m-1 text-center mx-auto delivery"><i
+                        class="fas fa-home"></i><br>Lokal</button>
+                {% endif %}
+                {% if order.type_of_order == 2 %}
+                <button data-delivery="2" class="btn-primary col-4 m-1 text-center mx-auto delivery"><i
+                        class="fas fa-sign-out-alt"></i><br>Wynos</button>
+                {% else %}
+                <button data-delivery="2" class="btn-secendary col-4 m-1 text-center mx-auto delivery"><i
+                        class="fas fa-sign-out-alt"></i><br>Wynos</button>
+                {% endif %}
+                {% if order.type_of_order == 3 %}
+                <a href="/clients/" class="col-4 p-0"><button data-type_of_order="3"
+                        class="btn-primary col-12 m-1 text-center mx-auto delivery"><i
+                            class="fas fa-motorcycle"></i><br>Dostawa</button></a>
+
+                {% else %}
+                <a href="/clients/" class="col-4 p-0"><button data-type_of_order="3"
+                        class="btn-secendary col-12 m-1 text-center mx-auto delivery"><i
+                            class="fas fa-motorcycle"></i><br>Dostawa</button></a>
+                {% endif %}
+            </div>
+            <div class="col-12 p-0 row m-1 mt-3 pay_method">
+                <p class="col-12 text-center">Rodzaj płatności</p>
+
+                {% if order.pay_method == 1 %}
+                <button data-pay_method="1" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                        class="fas fa-money-bill-wave"></i><br>Gotówka</button>
+                {% else %}
+                <button data-pay_method="1" data-order_id={{order.id}}
+                    class="btn-secendary col-2  mx-auto pay_method"><i
+                        class="fas fa-money-bill-wave"></i><br>Gotówka</button>
+                {% endif %}
+
+                {% if order.pay_method == 2 %}
+                <button data-pay_method="2" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                        class="fas fa-credit-card"></i><br>Karta</button>
+                {% else %}
+                <button data-pay_method="2" data-order_id={{order.id}}
+                    class="btn-secendary col-2  mx-auto pay_method"><i class="fas fa-credit-card"></i><br>Karta</button>
+                {% endif %}
+
+                {% if order.pay_method == 3 %}
+                <button data-pay_method="3" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_1</button>
+                {% else %}
+                <button data-pay_method="3" data-order_id={{order.id}}
+                    class="btn-secendary col-2  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_1</button>
+                {% endif %}
+                {% if order.pay_method == 4 %}
+                <button data-pay_method="4" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_2</button>
+                {% else %}
+                <button data-pay_method="4" data-order_id={{order.id}}
+                    class="btn-secendary col-2  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_2</button>
+                {% endif %}
+                {% if order.pay_method == 5 %}
+                <button data-pay_method="5" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_3</button>
+                {% else %}
+                <button data-pay_method="5" data-order_id={{order.id}}
+                    class="btn-secendary col-2  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_3</button>
+                {% endif %}
+                {% else %}
+                <p class="col-12 text-center">Rodzaj dostawy</p>
+                {% if order.type_of_order == 1 %}
+                <button class="btn-primary col-4 m-1 text-center mx-auto"><i class="fas fa-home"></i><br>Lokal</button>
+                {% else %}
+                <button class="btn-secendary col-4 m-1 text-center mx-auto"><i
+                        class="fas fa-home"></i><br>Lokal</button>
+                {% endif %}
+                {% if order.type_of_order == 2 %}
+                <button class="btn-primary col-4 m-1 text-center mx-auto "><i
+                        class="fas fa-sign-out-alt"></i><br>Wynos</button>
+                {% else %}
+                <button class="btn-secendary col-4 m-1 text-center mx-auto"><i
+                        class="fas fa-sign-out-alt"></i><br>Wynos</button>
+                {% endif %}
+                {% if order.type_of_order == 3 %}
+                <a href="" class="col-4 p-0"><button class="btn-primary col-12 m-1 text-center mx-auto"><i
+                            class="fas fa-motorcycle"></i><br>Dostawa</button></a>
+
+                {% else %}
+                <a href="" class="col-4 p-0"><button class="btn-secendary col-12 m-1 text-center mx-auto"><i
+                            class="fas fa-motorcycle"></i><br>Dostawa</button></a>
+                {% endif %}
+            </div>
+            <div class="col-12 p-0 row m-1 mt-3 pay_method">
+                <p class="col-12 text-center">Rodzaj płatności</p>
+
+                {% if order.pay_method == 1 %}
+                <button class="btn-primary col-2  mx-auto"><i class="fas fa-money-bill-wave"></i><br>Gotówka</button>
+                {% else %}
+                <button class="btn-secendary col-2  mx-auto"><i class="fas fa-money-bill-wave"></i><br>Gotówka</button>
+                {% endif %}
+
+                {% if order.pay_method == 2 %}
+                <button class="btn-primary col-2  mx-auto"><i class="fas fa-credit-card"></i><br>Karta</button>
+                {% else %}
+                <button class="btn-secendary col-2 mx-auto"><i class="fas fa-credit-card"></i><br>Karta</button>
+                {% endif %}
+
+                {% if order.pay_method == 3 %}
+                <button class="btn-primary col-2  mx-auto"><i class="fab fa-cc-amazon-pay"></i><br>On-line_1</button>
+                {% else %}
+                <button class="btn-secendary col-2  mx-auto"><i class="fab fa-cc-amazon-pay"></i><br>On-line_1</button>
+                {% endif %}
+                {% if order.pay_method == 4 %}
+                <button class="btn-primary col-2  mx-auto"><i class="fab fa-cc-amazon-pay"></i><br>On-line_2</button>
+                {% else %}
+                <button class="btn-secendary col-2  mx-auto"><i class="fab fa-cc-amazon-pay"></i><br>On-line_2</button>
+                {% endif %}
+                {% if order.pay_method == 5 %}
+                <button class="btn-primary col-2  mx-auto"><i class="fab fa-cc-amazon-pay"></i><br>On-line_3</button>
+                {% else %}
+                <button class="btn-secendary col-2  mx-auto"><i class="fab fa-cc-amazon-pay"></i><br>On-line_3</button>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row col-12 p-0 mx-auto my-2">
+        {% if order.status != 4 and order.status != 5 and order.closed == False %}
+        <div class="col-12 mt-2 row mx-auto time_zero border">
+            <div class="row col-8 mx-auto flex-row">
+                <form method="GET" action="/order_details/{{order.id}}"
+                    class="col-2 mx-auto p-0 d-flex align-items-stretch">
+                    <input name="time_zero_manual" type="hidden" class="col-4" value="15">
+                    <button type="submit" data-time="15"
+                        class="btn-light col-12 time_realisation text-center p-0">15</button>
+                </form>
+                <form method="GET" action="/order_details/{{order.id}}"
+                    class="col-2 mx-auto p-0 d-flex align-items-stretch">
+                    <input name="time_zero_manual" type="hidden" class="col-4" value="30">
+                    <button type="submit" data-time="30" class="btn-light col-12 time_realisation p-0 ">30</button>
+                </form>
+                <form method="GET" action="/order_details/{{order.id}}"
+                    class="col-2 mx-auto p-0 d-flex align-items-stretch">
+                    <input name="time_zero_manual" type="hidden" class="col-4" value="40">
+                    <button type="submit" data-time="40" class="btn-light col-12 time_realisation p-0">40</button>
+                </form>
+                <form method="GET" action="/order_details/{{order.id}}"
+                    class="col-2 mx-auto p-0 d-flex align-items-stretch">
+                    <input name="time_zero_manual" type="hidden" class="col-4" value="50">
+                    <button type="submit" data-time="50" class="btn-light col-12 time_realisation p-0">50</button>
+                </form>
+                <form method="GET" action="/order_details/{{order.id}}"
+                    class="col-2 mx-auto p-0 d-flex align-items-stretch">
+                    <input name="time_zero_manual" type="hidden" class="col-4" value="60">
+                    <button type="submit" data-time="60" class="btn-light col-12 time_realisation p-0">60</button>
+                </form>
+                <form method="GET" action="/order_details/{{order.id}}"
+                    class="col-2 mx-auto p-0 d-flex align-items-stretch">
+                    <input name="time_zero_manual" type="hidden" class="col-4" value="90">
+                    <button type="submit" data-time="90" class="btn-light col-12 time_realisation p-0">90</button>
+                </form>
+            </div>
+            <div class="col-4 row mx-auto p-0">
+                <form method="GET" action="/order_details/{{order.id}}" class="col-6 row mx-auto p-0">
+                    {% csrf_token %}
+                    <input name="time_zero_manual" type="number" class="col-5" min="0">
+                    <button id="set_time_zero_manual" type="submit" class="btn-light col-7  mx-auto"><i
+                            class="fas fa-hourglass-start"></i><br>Minuty
+                    </button>
+                </form>
+                <form method="GET" action="/order_details/{{order.id}}" class="col-6 row mx-auto p-0">
+                    {% csrf_token %}
+                    <input name="time_from_details" type="time" class="col-6">
+                    <button id="set_time_zero" type="submit" class="btn-light col-6  mx-auto"><i
+                            class="far fa-clock"></i><br>Godzina
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-12 mt-3 mx-auto text-center border">
+            <table class="table mx-auto col-12 border mt-2">
+                <thead class="mx-auto col-12">
+                    <tr>
+                        <th scope="col w-auto">#</th>
+                        <th scope="col w-auto">Edycja</th>
+                        <th scope="col w-auto">Usuń</th>
+                        <th scope="col w-auto">Danie</th>
+                        <th scope="col w-auto">Rozmiar</th>
+                        <th scope="col w-auto">Dodatki</th>
+                        <th scope="col w-auto">Ciasto</th>
+                        <th scope="col w-auto">Sosy</th>
+                        <th scope="col w-auto">Sosy płatne</th>
+                        <th scope="col w-auto">ilość</th>
+                        <th scope="col w-auto">Cena podst.</th>
+                        <th scope="col w-auto">Cena promo.</th>
+                        <th scope="col w-auto">Ustaw cenę</th>
+                        <th scope="col w-auto">Dodatki cena</th>
+                        <th scope="col w-auto">rabat</th>
+                        <th scope="col w-auto">Razem</th>
+                        <th scope="col w-auto">Info</th>
+                    </tr>
+                </thead>
+                <tbody class="w-100 mx-auto">
+                    {% for el in positions_on_order %}
+                    {% if el.pizza_half == False %}
+                    <tr class="col-12">
+                        <th scope="row">{{forloop.counter}}</th>
+                        {% if el.product_id.category.category_number == 1 or el.product_id.category.category_number == 2 %}
+                        {% if el.product_id.is_pizza_freestyle == False %}
+                        <td><a href="/update_pizza_to_order/{{order.id}}/{{el.id}}"><span class="text-primary"><b>
+                                        {% if order.closed == False %}
+                                        <i class="fas fa-edit"></i>{% endif %}
+                                    </b>
+                                </span></a></td>
+                        {% else %}
+                        <td><a href="/modyfi_pizza_freestyle_to_order/{{order.id}}/{{el.id}}"><span
+                                    class="text-primary"><b>
+                                        {% if order.closed == False %}
+                                        <i class="fas fa-edit"></i>{% endif %}
+                                    </b></span></a></td>
+                        {% endif %}
+                        {% else %}
+
+                        <td><a href="/update_product_to_order/{{order.id}}/{{el.id}}"><span class="text-primary"><b>
+                                        {% if order.closed == False %}<i class="fas fa-edit"></i>{% endif %}
+                                    </b>
+                                </span></a></td>
+                        {% endif %}
+                        <td> <a href="/delete_position_order/{{el.id}}"><span class="text-danger">
+                                    {% if order.closed == False %}<i class="fas fa-trash"></i>{% endif %}</a></td>
+                        <td class="col-5 w-auto"><span>
+                                <b> {{el.product_id.product_name}}</b></span></td>
+                        <td>
+                            {% if el.size_id %}
+                            <span>{{el.size_id}}</span>
+                            {% else %}
+                            <span>b/z</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if el.change_topps_info %}
+                            <span>Zmiany:
+                                {{el.change_topps_info}}</span>
+                            {% else %}
+                            <span>b/z</span>
+                            {% endif %}</td>
+                        <td>
+                            {% if el.cake_info %}
+                            Ciasto:
+                            {{el.cake_info}}</td>
+                        {% else %}
+                        <span>b/z</span>
+                        {% endif %}</td>
+                        <td>
+                            {% if el.sauces_free %}
+                            <span>Sosy: {{el.sauces_free}}</span>
+                            {% else %}
+                            <span>b/z</span>
+                            {% endif %}</td>
+                        <td>
+                            {% if el.sauces_pay %}
+                            <span>Sosy płatne:
+                                {{el.sauces_pay}}</span>
+                            {% else %}
+                            <span>b/z</span>
+                            {% endif %}</td>
+                        <td><span>{{el.quantity}}</span></td>
+                        <td><span>{{el.product_id.price}}</span></td>
+                        <td>
+                            <span class="text-danger">
+                                {% if el.product_id.price != el.price %}
+                                {{el.price}}</span>
+                            {% endif %}
+                        </td>
+                        <td>{% if order.closed == False %}
+                            <form method="POST" action="">
+                                {% csrf_token %}
+                                <div>
+                                    <input type="hidden" name="order_id" value="{{order.id}}">
+                                    <input type="hidden" name="pos_id" value="{{el.id}}">
+                                    <input class="text-center" name="new_price" type="number" value="0.00" step="any"
+                                        min="0" max="1000">
+                                    <button name="set_price" class="btn-warning">Ustaw cenę</button>
+                                </div>
+                            </form>
+                            {% else %}
+                            {% endif %}
+                        </td>
+                        <td><span>{{el.extra_price}}</span></td>
+                        <td>
+                            <span class="text-danger">
+                                {{el.discount}}%</span></td>
+                        <td><b>{{el.total_price}}</b></span></td>
+                        <td>{{el.info}}</span></td>
+                        <td>{{order.discount_finish}}</td>
+                    </tr>
+                    {% else %}
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td scope="row"> <a href="/update_halfpizza_to_order/{{order.id}}/{{el.id}}"><span
+                                class="text-primary"><b>
+                                    {% if order.closed == False %}
+                                    <i class="fas fa-edit"></i>
+                                    {% endif %}
+                                </b>
+                            </span></a></td>
+                    <td> <a href="/delete_position_order/{{el.id}}"><span
+                                class="text-danger">{% if order.closed == False %}<i
+                                    class="fas fa-trash"></i>{% endif %}</a></td>
+                    <td class="col-5 w-auto"><span>
+                            <b> {{el.halfpizza_name}}</b></span></td>
+                    <td>
+                        {% if el.size_id %}
+                        <span>{{el.size_id}}</span>
+                        {% else %}
+                        <span>b/z</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if el.change_topps_info %}
+                        <span>Zmiany lewa:
+                            {{el.change_topps_info}}</span><br>
+                        {% if el.change_topps_info_other_side %}
+                        <span>Zmiany prawa: {{el.change_topps_info_other_side}}</span>
+                        {% endif %}
+                        {% else %}
+                        <span>b/z</span>
+                        {% endif %}</td>
+                    <td>
+                        {% if el.cake_info %}
+                        Ciasto:
+                        {{el.cake_info}}</td>
+                    {% else %}
+                    <span>b/z</span>
+                    {% endif %}</td>
+                    <td>
+                        {% if el.sauces_free %}
+                        <span>Sosy: {{el.sauces_free}}</span>
+                        {% else %}
+                        <span>b/z</span>
+                        {% endif %}</td>
+                    <td>
+                        {% if el.sauces_pay %}
+                        <span>Sosy płatne:
+                            {{el.sauces_pay}}</span>
+                        {% else %}
+                        <span>b/z</span>
+                        {% endif %}</td>
+                    <td><span>{{el.quantity}}</span></td>
+                    <td><span class="text-danger">
+                            {% if el.product_id.price > el.product_id_pizza_right.price %}
+                            {{el.product_id.price}}
+                            {% else %}
+                            {{el.product_id_pizza_right.price}}
+                            {% endif %}</span></td>
+                    <td>
+                        <span class="text-danger">
+                            {% if el.product_id.price > el.product_id_pizza_right.price and el.product_id.price != el.price %}
+                            {{el.price}}</span>
+                        {% if el.product_id_pizza_right.price and el.product_id.price != el.price %}
+                        L: {{el.price}}<br>
+                        P: {{el.product_id_pizza_right.price}}
+                        {% endif %}
+                        {% endif %}
+                        {% if el.product_id_pizza_right.price and el.product_id.price != el.price %}
+                        L: {{el.price}}<br>
+                        P: {{el.product_id_pizza_right.price}}
+
+                        {% endif %}
+                    </td>
+                    <td>{% if order.closed == False %}
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{order.id}}">
+                            <input type="hidden" name="pos_id" value="{{el.id}}">
+                            <input name="new_price" type="number" value="0.00" step="any" min="0" max="1000">
+                            <button name="set_price" class="btn-warning">Ustaw cenę</button>
+                        </form>
+                        {% else %}
+                        {% endif %}
+                    </td>
+                    <td><span>{{el.extra_price}}</span></td>
+                    <td>
+                        <span class="text-danger">
+                            {{el.discount}}%</span></td>
+                    <td><b>{{el.total_price}}</b></span></td>
+                    <td>{{el.info}}</span></td>
+                    <td>{{order.discount_finish}}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <form method="POST" class="col-12 row mx-auto">
+            {% csrf_token %}
+            <div class="col-12 row mt-3 ">
+
+                <div class="col-2 row align-self-start mx-auto">
+                    <input name="order_id" type="hidden" min="1" max="100" value="{{order.id}}">
+                    {% if order.closed == False %}
+                    <input id="discount" class="col-7 text-left" name="discount" type="number"
+                        value="{{order.discount}}" min="0" max="100">
+                    <p class="col-4 text-left">Rabat</p>
+                    {% else %}
+                    <input id="discount" class="col-7 text-left" name="discount" type="hidden"
+                        value="{{order.discount}}" min="0" max="100">
+                    <p class="col-12 text-left">Rabat: {{order.discount}}</p>
+                    {% endif %}
+
+                </div>
+                <div class="col-8 row">
+                    {% if order.closed == False %}
+                    <input class="col-11" name="info" type="textarea" max_length="256" value="{{order.info}}">
+                    <p class="col-1 text-left">Info</p>
+                    {% else %}
+                    <input class="col-11" name="info" type="hidden" max_length="256" value="{{order.info}}">
+                    <p class="col-11">Info: {{order.info}}</p>
+                    {% endif %}
+                </div>
+                <div class="col-2 text-right">
+                    Razem: <span class="h2 text-right">{{order.order_total_price2}}</span><br>
+                </div>
+            </div>
+
+            <div class="col-12 row mx-auto">
+                <button id="enter" type="submit" name="print"
+                    class=" col-12 btn btn-primary m-1 w-100 confirm">Zatwierdź i
+                    drukuj</button>
+                <button type="submit" name="not_print"
+                    class="col-5 btn btn-success m-1 w-100 confirm mx-auto">Zatwierdź</button>
+                <a href="/create_pdf_order/{{order.id}}" class="col-5 mx-auto"><button type="button"
+                        class="col-12 btn btn-warning m-1 w-100 confirm">PDF</button> </a>
+
+            </div>
+        </form>
+    </div>
+
+</div> {% endblock %} {% block script %}
+<!-- <script language='VBScript'>
+        Sub Print()
+        OLECMDID_PRINT = 6
+        OLECMDEXECOPT_DONTPROMPTUSER = 2
+        OLECMDEXECOPT_PROMPTUSER = 1
+        call WB.ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, 1)
+        End Sub
+        document.write "<object ID='WB' WIDTH=0 HEIGHT=0 CLASSID='CLSID:8856F961-340A-11D0-A96B-00C04FD705A2'></object>"
+        </script> -->
+<!-- <script>
+    window.onload = function () {
+        var img = window.open("/create_pdf_order/{{order.id}}");
+        img.print();
+    }
+</script> -->
+<!-- <script src="print.js"></script> -->
+<script src="{% static "babilon/order_finish.js" %}" type="text/javascript"></script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk0Dboowhbnm55MHLjSFtZVWOo5h5aA58&callback=initMap">
+</script>
+{% endblock %}

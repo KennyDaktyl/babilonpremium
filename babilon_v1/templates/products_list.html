@@ -1,0 +1,65 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-1 row mx-auto">
+            <a class="col-12 mx-auto" href="/local_status/"><button class="col-12 btn-danger m-2">Cofnij</button></a>
+        </div>
+        <div class="col-11 mx-auto">
+            {% for cat in categorys %}
+            <table class="table"><b>{{cat.category_name}}</b>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Numer</th>
+                        <th scope="col">Nazwa produktu</th>
+                        <th scope="col">Kategoria</th>
+                        <th scope="col">Rozmiar</th>
+                        <th scope="col text-center">Cena</th>
+                        <th scope="col">EdycjaPro</th>
+                        <th scope="col">Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prod in products %}
+                    {% if prod.category.id == cat.id %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{prod.pizza_number}}</td>
+                        <td>{% if prod.pizza_number != 0 %}
+                            {% endif %}
+                            {{prod.product_name}}
+                            <br>(
+                            {% for topp in prod.toppings.all %}
+                            {{topp.product_name}},
+                            {% endfor %}
+                            )
+                        </td>
+                        <td>{{prod.category.category_name}}</td>
+                        <td>{{prod.product_size.size_name}}</td>
+                        {% if prod.price != 0 %}
+                        <td class="text-center">{{prod.price}}</td>
+                        <td><a href="/change_product/{{prod.id}}">Zmień</a></td>
+                        {% else %}
+                        {% for size in prices_by_size %}
+                        {% if size.product_id.id == prod.id %}
+                        <td class="text-center"> {{size.size_id.size_name}} <br>
+                            {{size.price_by_size}}<br><a href="/set_price_by_size/{{size.id}}">ustaw</a>
+                        </td>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+
+                        <td><a href="/del_product/{{prod.id}}">Usuń</a></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

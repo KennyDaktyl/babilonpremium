@@ -1,0 +1,233 @@
+{% extends 'base_owner.html' %}
+{% load static %}
+{% block content %}
+<div class="col-1 mt-2 pl-1 p-0 m-0">
+    <a href="/add_topp/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz dodatek <br>do pizzy</button>
+    </a>
+    <a href="/set_topp_price_by_size/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Ceny dodatków <br>w/g rozmiaru</button>
+    </a>
+    <a href="/add_sauce/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Sosy</button>
+    </a>
+    <a href="/add_pizza/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz pizzę</button>
+    </a>
+    <a href="/add_pizza_premium/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz pizzę<br>premium</button>
+    </a>
+    <a href="/add_dish/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz danie</button>
+    </a>
+    <a href="/add_topp_dish/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz dodatki do dań</button>
+    </a>
+    <a href="/add_category/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz pozycję w menu</button>
+    </a>
+    <a href="/products_list/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto">Lista produktów</button>
+    </a>
+</div>
+<section id="main" class="row col-10 mt-2 mx-auto d-flex align-items-baseline">
+    <div class="row col-12 d-block d-lg-none mx-auto d-flex align-items-baseline">
+        <form class="col-3 d-block d-lg-none mx-auto d-flex align-items-baseline" action="/add_new_order_local/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>LOKAL</button>
+        </form>
+
+        <form class="col-3 d-block d-lg-none mx-auto d-flex align-items-start" action="/add_new_order_outside/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>WYNOS</button>
+        </form>
+        <form class="col-3 d-block d-lg-none mx-auto d-flex align-items-start" action="/add_new_order_driver/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>DOSTAWA</button>
+        </form>
+    </div>
+
+    <div class="row col-12  mx-auto m-0 p-0">
+        {% if pizzeria_active %}
+        <div class="col-3 mx-auto mt-1 row">
+            <p class="col-12 mx-auto text-center"><b>Lokal:<br> </b>{{pizzeria_active.workplace_name}}</p>
+            <a class="col-12 mx-auto text-center" href="/set_session_pizzeria/">Zmień</a>
+        </div>
+        {% else %}
+        <form class="col-3 mx-auto mt-1" method="POST">
+            {% csrf_token %}
+            <label for="exampleFormControlSelect1">Pizzeria</label>
+            <select class="col-12 selectpicker" name="pizzeria" id="myselect" onchange="this.form.submit()">
+                <option class="col-12" value="0">--wybierz--</option>
+                {% for pizzeria in pizzerias %}
+                <option class="col-12" value="{{pizzeria.id}}">{{pizzeria.workplace_name}}</option>
+                {% endfor %}
+            </select>
+        </form>
+        {% endif %}
+        {% if setdate %}
+        <div class="col-5 mx-auto m-1 row">
+            <p class="col-12  mx-auto text-center"> <b>Dane z okresu:<br> </b>{{setdate}}</p>
+            <a class="col-12 mx-auto text-center" href="/set_session_date/">Zmień</a>
+        </div>
+        {% else %}
+        <div class="col-5 mx-auto mt-1 d-flex align-items-start">
+            <form method="POST" class="col-12 row container-fluid mx-auto align-text-top d-flex align-items-start">
+                {% csrf_token %}
+                <span class="active_form col-8 p-0 align-text-top">
+                    {{ form.as_p }}
+                </span>
+                <span class="col-3 p-0">
+                    <button type="submit"
+                        class="btn btn-dark col-12 p-0 align-text-top d-flex align-items-start">Pokaż</button>
+                </span>
+            </form>
+        </div>
+        {% endif %}
+        <div class="col-4 row mx-auto  m-1">
+            <div class="col-6 mx-auto">
+                <p class="col-12 text-center"><b>Gotówka</b></p>
+                <p class="col-12 text-center"><b>{{cash}}</b></p>
+            </div>
+            <div class="col-6 mx-auto">
+                <p class="col-12 text-center"><b>Karta</b></p>
+                <p class="col-12 text-center"><b>{{cards}}</b></p>
+            </div>
+
+        </div>
+        <div class="row col-12 border mt-2 mx-auto">
+            <div class="col-4 row mx-auto mt-2">
+                <div class="col-6 mx-auto">
+                    <p class="col-12 text-center"><b>Zamówienia</b></p>
+                    <p class="col-12 text-center"><b>{{total_orders}}</b></p>
+                </div>
+                <div class="col-6 mx-auto">
+                    <p class="col-12 text-center"><b>Przychód</b></p>
+                    <p class="col-12 text-center"><b>{{income_sum}}</b></p>
+                </div>
+            </div>
+            <div class="col-4 row mx-auto  mt-2">
+                <div class="col-6 mx-auto">
+                    <p class="col-12 text-center"><b>Wydatki</b></p>
+                    <p class="col-12 text-center"><b>{{purhases_sum}}</b></p>
+                </div>
+                <div class="col-6 mx-auto">
+                    <p class="col-12 text-center"><b>Wyjazdy</b></p>
+                    <p class="col-12 text-center"><b>{{income_trips}}</b></p>
+                </div>
+            </div>
+            <div class="col-4 row mx-auto  mt-2">
+                <div class="col-4 mx-auto">
+                    <p class="col-12 text-center"><span><b>Online_1</b></span>
+                    </p>
+                    <p class="col-12 text-center"><span><b>{{income_online_1}}</span><br>
+                        <span>({{online_1}})</span></b></p>
+                </div>
+                <div class="col-4 mx-auto">
+                    <p class="col-12 text-center"><b><span class="text-center mx-auto">Online_2</b></span></p>
+                    <p class="col-12 text-center"><b><span class="col-12 text-center mx-auto">{{income_online_2}}</span>
+                            <span class="col-12 text-center mx-auto">({{online_2}})</span></b></p>
+                </div>
+                <div class="col-4 mx-auto text-center">
+                    <p class="col-12 text-center mx-auto"><b>Online_3</b></p>
+                    <p class="col-12 text-center mx-auto"><b>{{income_online_3}} ({{online_3}})</b></p>
+                </div>
+            </div>
+        </div>
+        <div class="row col-12 mt-2 mx-auto">
+            {% if order_in %}
+            <table class="table mx-auto table-striped text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Pizzeria</th>
+                        <th scope="col">Lokal/Wynos</th>
+                        <th scope="col">Gotówka</th>
+                        <th scope="col">Karta</th>
+                        <th scope="col">Online_1</th>
+                        <th scope="col">Online_2</th>
+                        <th scope="col">Online_3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{pizzeria_active.workplace_name}}</td>
+                        <td>{{order_in}}</td>
+                        <td>{{cash_in}}</td>
+                        <td>{{card_in}}</td>
+                        <td>{{online_1_in}}</td>
+                        <td>{{online_2_in}}</td>
+                        <td>{{online_3_in}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {% else %}
+            <p>Nie zrealizowano zamówień w lokalu</p>
+            {% endif %}
+        </div>
+
+
+        <div class="row col-12 mt-2 mx-auto">
+            {% if no_courses == False %}
+            <table class="table mx-auto table-striped text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Imię, nazwisko</th>
+                        <th scope="col">Wyjazdy</th>
+                        <th scope="col">Gotówka</th>
+                        <th scope="col">Karta</th>
+                        <th scope="col">Online_1</th>
+                        <th scope="col">Online_2</th>
+                        <th scope="col">Online_3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in drivers %}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td><a href="/driver_courses/{{driver.id}}">{{driver.first_name}} {{driver.last_name}}</a></td>
+                        <td>{{driver.counter_cursers}}</td>
+                        <td>{{driver.counter_cursers_cash}}</td>
+                        <td>{{driver.counter_cursers_card}} / <span
+                                class="text-danger">{{driver.counter_cursers_card_count}}</span></td>
+                        <td>{{driver.counter_cursers_online_1}}</td>
+                        <td>{{driver.counter_cursers_online_2}}</td>
+                        <td>{{driver.counter_cursers_online_3}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Nie zrealizowano wyjazdów</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-12 row">
+
+    </div>
+
+</section>
+<div class="col-1 p-0 mt-2 pr-1 p-0 m-0">
+    <a href="/drivers/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto">Kierowcy
+        </button>
+    </a>
+    <a href="/menagers/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Dodaj
+            menagera
+        </button>
+    </a>
+    <a href="/barmans/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Dodaj
+            barmana
+        </button>
+    </a>
+    <a href="/purchases/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Wydatki
+            zakupy
+        </button>
+    </a>
+    <a href="/orders_archives/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto">Archiwum
+            zamówień
+        </button>
+    </a>
+</div>
+{% endblock %}

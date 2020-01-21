@@ -1,0 +1,313 @@
+{% extends 'base_orders.html' %}
+{% load static %}
+{% block content %}
+
+<div class="col-2 p-0 mt-2 mx-auto border text-left">
+    {% for cat in categorys %}
+    <a href="/products_category/{{cat.id}}" class="col-12 p-0 mt-3 mx-auto text-left">
+        <button type=" submit" class="col-12 p-0 btn btn-light mt-3 mx-auto text-center">{{cat.category_name}}</button>
+    </a>
+    {% endfor %}
+</div>
+
+<div class="col-10 p-0 border">
+    <div class="row col-12 border mx-auto mt-2">
+        <div class="col-12 row p-0 mx-auto">
+            <div class="col-8 row">
+                <p class="col-7 text-left p-auto">Nazwa:<b> {{pizza.product_id.product_name}}</b> </p>
+                <p class="col-5 text-left p-auto">Rozmiar: <b>{{pizza.size_id}}</b></p>
+            </div>
+            <div class="col-1">
+                <form action="/half_pizza/{{order.id}}/{{pizza.product_id.id}}/{{pizza.size_id.id}}/">
+                    <button type="submit" class="btn btn-success mx-auto">1/2</button>
+                </form>
+            </div>
+            <div class="col-3 text-right">
+                <p class="col-12 text-right"><b>{{pizza.price}}</b> zł</p>
+            </div>
+        </div>
+        <div class="row col-12 border mt-2 mx-auto">
+            {% for prod in other_size %}
+            {% if prod.product_size == pizza.size_id %}
+            <a class="text-center mx-auto" href="/add_pizza_to_order/{{order.id}}/{{prod.id}}">
+                <button type="submit" class="col-12 mx-auto btn btn-primary size"><span
+                        class="col-12">{{prod.product_size}}</span>
+
+                </button>
+
+            </a>
+            {% else %}
+            <a class="text-center mx-auto" href="/add_pizza_to_order/{{order.id}}/{{prod.id}}">
+                <button type="submit" class="col-12 mx-auto btn btn-warning size"><span
+                        class="col-12">{{prod.product_size}}</span>
+                    <!-- <span clas="text-center">Cena: {{prod.price}}</span> -->
+                </button>
+
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="row col-12 border mt-2 mx-auto text-wrap">
+
+            <p class="col-10 text-left"><b>Składniki pizzy:</b><span
+                    class="col-12 text-left">{{pizza.change_topps_info}}</span></p>
+            <a href="/change_topps/{{order.id}}/{{pizza.product_id.id}}" class="col-2">
+                <button type="submit" class=" col-12 btn btn-success mx-auto">Zmień składniki</button></a>
+        </div>
+        <p class="col-10 text-left">{{orderPosition.change_topps}}</p>
+        {% for el in product_add.pizza_componets.all %} <b>
+            <form class="mx-auto" method="POST" action="/delete_from_pizza/">
+                {% csrf_token %}
+                <input name="orderId" type="hidden" value="{{orderId}}">
+                <input name="pizza_id" type="hidden" value="{{product_add.id}}">
+                <input name="del_comp" type="hidden" value="{{el.id}}"><button type="submit"
+                    class="btn btn-warning mw-50">{{el.name}}<br><span>{{el.quantity}} x
+                        {{el.price}}</span></button></a>
+        </b></form>{% endfor %}
+        <div class="row col-12 border mt-2 mx-auto">
+            <p class="col-1 text-left">Wybór ciasta:</p>
+            {% for el in cakes %} <b>
+                <form class="mx-auto" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cake_change" value="{{el.id}}">
+                    <button type="button" class="caketopps btn btn-warning mw-50 m-1" data-price="{{el.price}}"
+                        data-id="{{el.id}}">{{el.product_name}}
+                        <span id="price_add_cake_topp" data-price="{{el.price}}"></button></a>
+            </b></form>{% endfor %}
+        </div>
+        <div class="col-12 row p-0 mx-auto">
+            <div class="col-11 mt-2 mx-auto text-wrap row border">
+                <p class="col-2 text-left"><b>Sosy:</b></p>
+                <span id="sauce_free_text" class="col-10 text-left"></span>
+                <p class="col-2 mt-1 text-left"><b>Sosy płatne:</b></p>
+                <span id="sauce_pay_text" class="col-10 text-left"></span>
+            </div>
+            <form method="POST" class="col-1 text-right">
+                {% csrf_token %}
+                <button name="delete" id="refresh" type="submit" class="text-right btn btn-danger">Kasuj</button>
+            </form>
+        </div>
+        <div class="row col-12 border mt-2 mx-auto">
+            <p class="col-3 text-left">Wybierz sos darmowy:</p>
+            <div class="col-9 row">
+                {% for el in souse_free %}
+                <button type="button"
+                    class="btn btn-warning mx-auto text-center sauce_free m-1">{{el.product_name}}</span></button></a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row col-12 border mt-2 mx-auto text-wrap">
+            <p class="col-3 text-left">Wybierz sos płatny:</p>
+            <div class="col-9 row">
+                {% for el in souse_pay %}
+                <button type="button" data-price="{{el.price}}"
+                    class="btn btn-warning mx-auto text-center sauce_pay m-1">{{el.product_name}}
+                </button></a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row col-12 border mt-2 mx-auto text-wrap">
+            <form class="container-fluid row mx-auto p-0" method="POST">
+                {% csrf_token %}
+                <div class="col-12">
+                    <p class="col-12 text-left">Info</p>
+                    <input class="col-12" name="info" type="textarea" max_length="256" value="">
+                </div>
+                <div class="row col-12 mt-2 mx-auto p-0 ">
+                    <div class="col-6 col-lg-4 row">
+                        <div class="col-4">
+                            <p class="col-12 text-left">Rabat</p>
+                        </div>
+                        <div class="col-6">
+                            <input name="orderPosition" type="hidden" min="1" max="100" value="{{pizza.id}}">
+                            <input id="discount" class="col-8 text-left" name="discount" type="number"
+                                value="{{pizza.discount}}" min="0" max="100">
+                        </div>
+                    </div>
+                    <div class="col-8 col-lg-4 row">
+                        <div class="col-6 row">
+                            <p class="col-12">Cena: <b>{{pizza.price}}</b>zł</p>
+                            <p class="col-4">Ustaw: </p>
+                            <input class="col-8 text-left" name="price" type="number" value="0.00" min="0" step="0.1">
+                        </div>
+                        <p class="col-6 text-center">Dodatki<br><span id="extra_price_edit"
+                                data-price={{pizza.extra_price}}><b>{{pizza.extra_price}}</b></span>
+                        </p>
+                    </div>
+                    <div class="col-4 col-lg-4 text-right">
+                        <!-- <p class="col-12 text-left row">Ilość</p> -->
+                        <input id="quantity" class="col-4 text-right" name="quantity" type="number" min="1" max="100"
+                            value="1">
+                        <button type="button" id="quantity_plus" class="col-3 mx-auto btn btn-success">+</button>
+                        <button type="button" id="quantity_minus" class="col-3 mx-auto btn btn-danger">-</button>
+                        <input name="cake_change" type="hidden" value="" id="input_add_cake">
+                        <input id="add_sauces_free" name="add_sauces_free" type="hidden" value="">
+                        <input id="add_sauces_pay" name="add_sauces_pay" type="hidden" value="">
+                        <input id="sauces_form" name="extra_price" type="hidden" value="{{pizza.extra_price}}">
+                        <input name="add" type="hidden" value="1">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="col-12 mx-auto m-1 mt-2 btn btn-success">Dodaj
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- <div class="col-3 p-0 text-center bg-light border mt-2">
+    <p class="text-left mt-3 mx-auto col-12">Zamówienie: <b><button class="btn-warning">{{order.number}}</button></b>
+    </p>
+    <p class="text-left mt-3 mx-auto col-12">Lokal: <b>{{order.workplace_id.workplace_name}}</b></p>
+    <p class="text-left mt-3 mx-auto col-12">Typ: <b>{{order.get_type_of_order_display}}</b></p>
+    {% if order.address != None %}
+    <p class="text-left mt-3 mx-auto col-12">Adres: <b>{{order.address.street}}</b></p>
+    <p class="text-left mt-3 mx-auto col-12">Telefon: <b>{{order.address.client_id.phone_number}}</b></p>
+    {% endif %}
+    <div class="row col-12">
+        <p class="text-left col-6"> <b>Kwota:</b></p>
+        <h4 class="text-center col-12">{{order.order_total_price}}</h4>
+        <a href="/order_details/{{order.id}}" class="col-12"> <button type="submit"
+                class="col-12 btn btn-success m-1 w-100 ">Zatwierdź</button>
+        </a>
+    </div>
+    <h5 class="text-left mt-3">Pozycje:</h5>
+    <div class="col-12 p-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col w-auto">L.P</th>
+                    <th scope="col w-auto">Edycja</th>
+                    <th scope="col w-auto">Produkt</th>
+                    <th scope="col w-auto">Rozmiar</th>
+                    <th scope="col w-auto">Ilość</th>
+                    <th scope="col w-auto">Rabat</th>
+                    <th scope="col w-auto">Extra cena</th>
+                    <th scope="col w-auto">Cena</th>
+                    <th scope="col w-auto">Razem</th>
+                    <th scope="col w-auto">Info</th>
+                    <th scope="col w-auto">Kasuj</th>
+                </tr>
+            </thead>
+            <tbody class="w-100 mx-auto col-12">
+                {% for el in positions_on_order %}
+
+                {% if el.pizza_half == True %}
+                <tr class="col-12">
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td scope="row"> <a href="/update_halfpizza_to_order/{{order.id}}/{{el.id}}"><span
+                                class="text-primary"><b><i class="fas fa-edit"></i>
+                                </b></span></a></td>
+                    <td class="col-5 w-auto"><span>
+                            <b> {{el.halfpizza_name}}</b></span>
+                        {% if el.change_topps_info %}
+                        <span>Zmiany:
+                            {{el.change_topps_info}}</span>
+                        {% endif %}
+                        <span>
+                            {% if el.cake_info %}
+                            Ciasto:
+                            {{el.cake_info}}</span>
+                        {% endif %}
+                        {% if el.sauces_free %}
+                        <span>Sosy: {{el.sauces_free}}</span>
+                        {% endif %}
+                        {% if el.sauces_pay %}
+                        <span>Sosy płatne:
+                            {{el.sauces_pay}}</span>
+                        {% endif %}
+                        {% if el.size_id %}
+                    <td><span>{{el.size_id}}</span></td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td><span>{{el.quantity}}</span></td>
+                    <td>
+                        {% if el.discount %}
+                        <span>
+                            {{el.discount}}</span>
+                        {% endif %}</td>
+                    <td><span>{{el.extra_price}}</span></td>
+                    <td>
+                        <span>
+                            {{el.price}}</span></td>
+                    <td>
+                        <span>
+                            <b>{{el.total_price}}</b></span></td>
+                    <td>
+                        {% if el.info %}
+                        <span>
+                            {{el.info}}</span>
+                        {% endif %}</td>
+                    <td> <a href="/delete_position_order/{{el.id}}"><span class="text-danger"><b>X
+                                </b></span></a><a href="/update_position_order/{{el.id}}"><span
+                                class="text-primary"><b>E
+                                </b></span></a></td>
+
+                </tr>
+                {% else %}
+
+                <tr class="col-12">
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td scope="row"> <a href="/update_pizza_to_order/{{order.id}}/{{el.id}}"><span
+                                class="text-primary"><b><i class="fas fa-edit"></i>
+                                </b></span></a></td>
+                    <td class="col-5 w-auto"><span>
+                            <b> {{el.product_id.product_name}}</b></span>
+                        {% if el.change_topps_info %}
+                        <span>Zmiany:
+                            {{el.change_topps_info}}</span>
+                        {% endif %}
+                        <span>
+                            {% if el.cake_info %}
+                            Ciasto:
+                            {{el.cake_info}}</span>
+                        {% endif %}
+                        {% if el.sauces_free %}
+                        <span>Sosy: {{el.sauces_free}}</span>
+                        {% endif %}
+                        {% if el.sauces_pay %}
+                        <span>Sosy płatne:
+                            {{el.sauces_pay}}</span>
+                        {% endif %}
+                        {% if el.size_id %}
+                    <td><span>{{el.size_id}}</span></td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td><span>{{el.quantity}}</span></td>
+                    <td>
+                        {% if el.discount %}
+                        <span>
+                            {{el.discount}}</span>
+                        {% endif %}</td>
+                    <td><span>{{el.extra_price}}</span></td>
+                    <td>
+                        <span>
+                            {{el.price}}</span></td>
+                    <td>
+                        <span>
+                            <b>{{el.total_price}}</b></span></td>
+                    <td>
+                        {% if el.info %}
+                        <span>
+                            {{el.info}}</span>
+                        {% endif %}</td>
+                    <td> <a href="/delete_position_order/{{el.id}}"><span class="text-danger"><b>X
+                                </b></span></a><a href="/update_position_order/{{el.id}}"><span
+                                class="text-primary"><b>E
+                                </b></span></a></td>
+
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div> -->
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/addpizza.js" %}" type="text/javascript"></script>
+{% endblock %}

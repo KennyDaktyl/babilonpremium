@@ -1,0 +1,53 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <form method="POST" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Dodaj pizzę</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-9 mx-auto">
+            <table class="table table-bordered table-striped text-center mx-auto w-100 orders">
+                <thead class="w-100">
+                    <tr>
+                        <th scope="col w-auto">Nr</th>
+                        <th scope="col w-auto">Nazwa pizzy</th>
+                        <th scope="col w-auto">Składniki</th>
+                        <th scope="col w-auto">Rozmiar</th>
+                        <th scope="col w-auto">Cena</th>
+                        <th scope="col w-auto">Szczegóły</th>
+                        <th scope="col w-auto">Anuluj</th>
+                    </tr>
+                </thead>
+                {% for pizza in pizzas %}
+                <tbody class="mx-auto orders">
+                    <td>{{pizza.pizza_number}}</td>
+                    <td>{{pizza.product_name}}</td>
+                    <td>
+                        <ul>
+                            {% for el in pizza.toppings.all %}
+                            {{el.product_name}},
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>{{pizza.product_size.size_name}}</td>
+                    <td>{{pizza.price}}</td>
+                    <td><a href="/edit_product/{{pizza.id}}">Edycja</a></td>
+                    <td><a href="/del_product/{{pizza.id}}">Usuń</a></td>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}

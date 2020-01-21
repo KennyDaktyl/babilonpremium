@@ -1,0 +1,169 @@
+<html lang="pl">
+
+
+<head>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Title</title>
+    <style type="text/css">
+        body {
+            font-family: 'Arial Unicode MS';
+            font-weight: 200;
+            font-size: 10px;
+        }
+
+        div.box {
+            width: 100%;
+            border: 1px solid;
+        }
+
+        div.box2 {
+            margin-top: 90px;
+        }
+
+        div.naglowek {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .naglowek div {
+            width: 50%;
+        }
+
+        div.prawy {
+            margin: 10px auto;
+        }
+
+        div.linia {
+            border: 1px solid;
+            width: 100%;
+        }
+
+        div.tytul {
+            width: 100%;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+
+
+        p.text {
+            font-size: 7px;
+            text-align: left;
+        }
+
+        .naglowek p {
+            margin: 10px 20px 15px 20px;
+        }
+
+        .naglowek span {
+            margin: 10px 20px 15px 20px;
+        }
+
+
+        div.right {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class='wrapper'>
+            <div class="box">
+                <div class="naglowek">
+                    <div>
+                        <p class="left">Pizzeria:</p>
+                        <p class="left"><b>{{order.workplace_id}}</b></p>
+                    </div>
+                    <div class="right">
+                        <p class="right">Data przyjęcia</p>
+                        <p class="right"><b>{{order.date}}</b><br>{{order.time_start}}</p>
+                    </div>
+                    <div class="tytul">Numer zamówienia: {{order.number}}</div>
+                    <div></div>
+                    <div class="prawy">
+                    </div>
+                    <div class="linia"></div>
+                    <div class="model">
+                        {% if order.type_of_order == 3 %}
+                        <p>Dane klienta: <b class="h6">{{order.address.street}}</b></p>
+                        <p>Telefon: <span class="h6">{{order.address.client_id.phone_number}}</span></p>
+                        {% else %}
+                        <p>Zamówienie <b class="h6">{{order.get_type_of_order_display}}</b></p>
+                        {% endif %}
+                    </div>
+                    <div class="usterka">
+                        <p>Metoda płatności: <b class="h6">{{order.get_pay_method_display}}</b></p>
+                        <p>Umówiona godzina: <b>{{order.time_zero}}</b></p>
+                    </div>
+                    <div class="linia"></div>
+                    <div class="model">
+                        <p>Cena: <span class="font-weight-bold">{{order.order_total_price2}}</span></p>
+                        <p>Info: {{order.info}}</p>
+                    </div>
+                    <div class="usterka">
+                        <p>Rabat: {{order.discount}} %</p>
+                    </div>
+                    <div class="col-12">
+                        <ul class="col-12">
+                            {% for el in positions_order %}
+                            <br>
+                            <li class="col-12"> <strong class="font-weight-bold">{{el.quantity}}</strong> x
+                                {% if el.pizza_half == True %}
+                                <strong class="font-weight-bold">{{el.halfpizza_name}}</strong>,Cena: <strong
+                                    class="font-weight-bold">{{el.quantity}} x
+                                    {{el.price}}</strong>, Dodatki: <strong class="font-weight-bold">{{el.quantity}}
+                                    x {{el.extra_price}}</strong>, Rabat: <strong
+                                    class="font-weight-bold">{{el.discount}}</strong>, Razem: <strong
+                                    class="font-weight-bold">{{el.total_price}}</strong>, Info: <strong
+                                    class="font-weight-bold">{{el.info}}</strong>
+                                {% else %}
+                                <strong class="font-weight-bold">{{el.product_id.product_name}}</strong>,Cena: <strong
+                                    class="font-weight-bold">{{el.quantity}} x
+                                    {{el.price}}</strong>, Dodatki: <strong class="font-weight-bold">{{el.quantity}}
+                                    x {{el.extra_price}}</strong>, Rabat: <strong
+                                    class="font-weight-bold">{{el.discount}}</strong>, Razem: <strong
+                                    class="font-weight-bold">{{el.total_price}}</strong>, Info: <strong
+                                    class="font-weight-bold">{{el.info}}</strong>
+                                {% endif %}<br>
+                                Rozmiar: <strong class="font-weight-bold">{{el.size_id}},</strong>,
+                                {% if el.cake_info.strip %}
+                                , Ciasto: <strong class="font-weight-bold">{{el.cake_info}},</strong><br>
+                                {% endif %}
+                                {% if el.change_topps_info.strip %}
+                                Zmiany skład.: <strong class="font-weight-bold">{{el.change_topps_info}}</strong>
+                                {% endif %}
+                                {% if el.sauces_free.strip %}
+                                Sosy: <strong class="font-weight-bold">{{el.sauces_free}}</strong>
+                                {% endif %}
+                                {% if el.sauces_pay.strip %}
+                                Sosy płatne: <strong class="font-weight-bold">{{el.sauces_pay}}</strong>
+                                {% endif %}
+                                <br>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

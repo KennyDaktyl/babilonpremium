@@ -1,0 +1,53 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <form method="POST" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Dodaj sos</button>
+                    </div>
+                </div>
+
+            </form>
+            <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+        </div>
+        <div class="col-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nazwa sosu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for topp in sauces %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{topp.product_name}}</td>
+                        <td>{{topp.get_type_of_ingredient_display}}</td>
+                        {% if topp.price != 0 %}
+
+                        <td>{{topp.price}}</td>
+                        {% else %}
+                        {% if topp.type_of_ingredient == 6 %}
+                        <td class="text-danger">Brak ceny !!!</td>
+                        {% else %}
+                        <td>Darmowy</td>
+                        {% endif %}
+                        {% endif %}
+                        <td><a href="/edit_product/{{topp.id}}">Edycja</a></td>
+                        <td><a href="/del_product/{{topp.id}}">Usuń</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

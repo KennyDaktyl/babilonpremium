@@ -1,0 +1,62 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <form method="POST" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form4.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Dodaj pizzę</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="col-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Numer</th>
+                        <th scope="col">Nazwa pizzy</th>
+                        {% for size in pizza_sizes %}
+                        <th scope="col">{{size}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pizza in pizzas %}
+                    <tr>
+                        <td class="h5">{{pizza.pizza_number}}</td>
+                        <td class="h5">{{pizza.product_name}}<br>
+                            (
+                            {% for topp in pizza.toppings.all %}
+                            <span class="topps h6">{{topp}}, </span>
+                            {% endfor %}
+                            )
+                        </td>
+                        {% for size in price_by_size %}
+                        {% if pizza.id == size.product_id.id %}
+                        {% if size.price_by_size %}
+                        <td>{{size.price_by_size}}<br><a href="/set_price_by_size/{{size.product_id.id}}">ustaw</a></td>
+                        {% else %}
+                        <td>
+                            <a href="/set_price_by_size/{{size.product_id.id}}">ustaw</a>
+                        </td>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                        <td><a href="/del_product/{{pizza.id}}">Usuń pizzę</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+
+        </div>
+        <div class="col-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Rodzaj dodatku:</th>
+                        {% for size in pizza_sizes %}
+                        <th scope="col">{{size}}<br>
+                            <a href="/set_topps_price_by_size/{{size.id}}">Ustaw cenę</a>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek vegetariański</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.vege_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek mięsny:</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.beef_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek serowy:</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.cheese_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek extra:</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.extra_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek extra_1:</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.extra_1_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek extra_2:</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.extra_2_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek extra_3:</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.extra_3_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Dodatek extra_4:</td>
+                        {% for size in pizza_sizes %}
+                        <td class="h5">{{size.extra_4_topps_price}}<br></td>
+                        {% endfor %}
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+@media (max-width: 995px) {
+    :-webkit-full-screen {
+        background-color: yellow;
+    }
+
+    .form {
+        font-size: 8rem;
+        text-align: center;
+    }
+
+    .form p {
+        height: 200px;
+    }
+
+    .form input {
+        height: 80%;
+        font-size: 80px;
+    }
+
+
+    .form label {
+        /* height: 80%; */
+        font-size: 25px;
+    }
+
+    div.form {
+        height: 80vh;
+    }
+}
+
+/* body {
+    min-height: 100vh;
+} */
+
+/* div.main {
+    min-height: 100vh;
+} */
+
+* {
+    font-size: 13px;
+
+    /* white-space: nowrap; */
+}
+
+table {
+    overflow-x: auto;
+    display: block;
+}
+
+/* button.pizza_box {
+    min-height: 120px;
+    -webkit-box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.98);
+    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.98);
+    margin: 16px;
+} */
+
+button.confirm {
+    height: 50px;
+}
+
+#price_pizza_box {
+    font-size: 11px;
+}
+
+
+#size_pizza_box {
+    font-size: 10px;
+}
+
+.table {
+    margin: auto;
+    width: 100% !important;
+}
+
+table th {
+    text-align: center;
+}
+
+td,
+th {
+    text-align: center;
+
+}
+
+.products_menu.table {
+    font-size: 0.95rem;
+}
+
+ul {
+    list-style: none;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 100vh;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+    width: 100%;
+}
+
+table.orders {
+    display: table;
+    /* check so these really applies */
+    width: 100%;
+}
+
+.counter_topps {
+    font-size: 9px;
+}
+
+@media print {
+    * {
+        display: none;
+    }
+
+    img#me-smiling {
+        display: block;
+    }
+}

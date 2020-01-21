@@ -1,0 +1,239 @@
+{% extends 'base_orders.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+<div class="row col-12 mx-auto bg-white mt-2">
+    <div class="row col-12 mx-auto">
+        <form class="col-3 d-block d-lg-none mx-auto m1" action="/add_new_order_local/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>LOKAL</button>
+        </form>
+        <form class="col-3 d-block d-lg-none mx-auto m-1" action="/add_new_order_outside/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>WYNOS</button>
+        </form>
+        <form class="col-3 d-block d-lg-none mx-auto" action="/add_new_order_driver/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>DOSTAWA</button>
+        </form>
+        <form class="col-3 d-block d-lg-none mx-auto" action="/local_status/">
+            <button type="submit" class="btn btn-success mx-auto col-12">Lokal<br>STATUS</button>
+        </form>
+    </div>
+
+    <div class="col-12 row m-2">
+
+        <form action="" method="POST" class="col-2 mx-auto  m-0 p-0">
+            {% csrf_token %}
+            <input name="driver" type="hidden" value={{driver}}>
+            <input name="pay_method" type="hidden" value="1">
+            <button id="cash" type="submit" class="btn btn-light border mx-auto col-12 p-0 m-0">Gotówka: <span
+                    id="cash_order">{{orders_cash_count}}</span><br><i class="fas fa-money-bill-wave"></i></button>
+        </form>
+
+        <form action="" method="POST" class="col-2 mx-auto  m-0 p-0">
+            {% csrf_token %}
+            <input name="driver" type="hidden" value={{driver}}>
+            <input name="pay_method" type="hidden" value="2">
+            <button id="card" type="submit" class="btn btn-light border mx-auto col-12 p-0 m-0">Karta: <span
+                    id="card_order">{{orders_card_count}}</span><br><i class="fas fa-credit-card"></i></button>
+        </form>
+        <form action="" method="POST" class="col-2 mx-auto  m-0 p-0">
+            {% csrf_token %}
+            <input name="driver" type="hidden" value={{driver}}>
+            <input name="pay_method" type="hidden" value="3">
+            <button id="on-line" type="submit" class="btn btn-light border mx-auto col-12 p-0 m-0">Online: <span
+                    id="online_order">{{orders_online_count}}</span><br><i class="fab fa-cc-amazon-pay"></i></button>
+        </form>
+        <button id="wynos" class="col-2 btn-primary mx-auto m-1" type="submit" class="">
+
+            <div class="clock">Godzina: <span id="h"></span> : <span id="m"></span> : <span id="s"></span></div>
+        </button>
+    </div>
+</div>
+<div class="col-12">{{df}}</div>
+
+<div
+    class="container-fluid mt-3 bg-white mx-auto text-center table-responsive table-wrapper-scroll-y my-custom-scrollbar p-0 m-0">
+    <table class="table table-bordered table-striped text-center mx-auto w-100 orders">
+        <thead class="w-100">
+            <tr>
+                <th scope="col w-auto">L.P.</th>
+                <th scope="col w-auto">Nr</th>
+                <th scope="col w-auto">Godz. Zam.</th>
+                <th scope="col w-auto">Godz. Dostawy</th>
+                <th scope="col w-auto">Telefon/Adres</th>
+                <th scope="col w-auto">Wartość zam.</th>
+                <th scope="col w-auto">Płatność</th>
+                <th scope="col w-auto">Info</th>
+                <th scope="col w-auto">Przyjmujący</th>
+                <th scope="col w-auto">Lokal/Wywóz</th>
+                <th scope="col w-auto">Kierowca</th>
+
+                <th scope="col w-auto">Dostawa</th>
+                <th scope="col w-auto">Status</th>
+
+            </tr>
+        </thead>
+        <tbody class="mx-auto orders">
+            {% for order in orders %}
+            {% if order.status == 2 %}
+            <tr class="lista mx-auto text-black {{order.status}} {{order.get_type_of_order_display}} order ">
+                {% endif %}
+                {% if order.status == 1 %}
+            <tr
+                class="lista table-primary w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+                {% endif %}
+                {% if order.status == 3 %}
+            <tr
+                class="lista table-warning w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+                {% endif %}
+                {% if order.status == 5 %}
+            <tr
+                class="lista table-danger w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+                {% endif %}
+
+                {% if order.status == 4 %}
+            <tr
+                class="lista table-secondary w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+                {% endif %}
+                <td class="col w-auto">{{forloop.counter}}</td>
+                <!-- <td class="col w-auto">{{order.number|slice:"0:3"}}</td> -->
+                <td class="col w-auto">{{order.number}}</td>
+                <td class="col w-auto">{{order.time_start}}</td>
+                <td class="col w-auto">
+                    <span class="time_zero text-primary col-5"
+                        data-status="{{order.status}}">{{order.time_zero}}</span><br>
+                    {% if order.status != 5 %}
+                    <span class="timer text-success col-5"></span>
+                    {% endif %}
+                </td>
+                <td class="col w-auto">{{order.address.client_id.phone_number}}<br>{{order.address.street}}</td>
+                <td class="col w-auto">{{order.order_total_price2}}<br>
+                    {% if order.discount %}
+                    <span class="text-danger">{{order.discount}}%</span>
+                    {% endif %}
+                </td>
+                <td>{{order.get_pay_method_display}}</td>
+                <td>{{order.info}}</td>
+                <td>{{order.barman_id.username}}</td>
+                <td class="col w-auto">{{order.get_type_of_order_display}}</td>
+                {% if order.type_of_order == 3 %}
+                {% if order.driver_id == None %}
+                <td class="col w-auto">
+                    <button type="button" id="drivers_button" class="drivers_button btn btn-warning" data-toggle="modal"
+                        data-target="#driverModal{{order.id}}">
+                        Kierowcy
+                    </button>
+                    <div class="modal fade" id="driverModal{{order.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+                                </div>
+                                <div class="modal-body">
+                                    {% for driver in drivers %}
+                                    <button type="button" data-driver="{{driver.id}}" data-order="{{order.id}}"
+                                        data-dismiss="modal"
+                                        class="driver modal-footer btn-secondary col-12 text-center mx-auto">
+                                        <span class="col-12 text-center" data-driver="{{driver.id}}"
+                                            data-order="{{order.id}}">{{driver.first_name}}
+                                            {{driver.last_name}}</span> </button>
+                                    {% endfor %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="new_set_driver" class="new_set_driver"></span>
+                    <form id="del_button" class="del_driver_form" action="/del_driver_from_order/{{order.id}}">
+                        <button type="submit" class="btn-danger">Usuń</button>
+                    </form>
+                    {% else %}
+                <td class="col w-auto">{{order.driver_id.first_name}} {{order.driver_id.last_name}} <br>
+                    {% if order.status != 4 %}
+                    <form id="del_driver_form" action="/del_driver_from_order/{{order.id}}">
+                        <button type="submit" class="btn-danger">Usuń</button>
+                    </form>
+                    {% endif %}
+                </td>
+                {% endif %}
+                {% else %}
+                <td class="col w-auto">Lokal</td>
+                {% endif %}
+
+                {% if order.type_of_order == 3 %}
+
+
+                {% else %}
+                <td class="col w-auto">Lokal</td>
+                {% endif %}
+
+                <td class="col w-auto">
+
+                    {{order.time_delivery_in}}
+                </td>
+
+                <td class="col w-auto">
+
+                    {{order.get_status_display}}
+                </td>
+
+
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="col-8 input-group mb-3 mx-auto">
+    <div class="col-1"></div>
+    <nav aria-label="...">
+        {% if czesc.has_other_pages %}
+        <ul class="pagination text-dark">
+            {% if czesc.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="?page={{ czesc.previous_page_number }}">Poprzednia</a>
+            </li>
+            <li class="page-item"><a class="page-link text-dark"
+                    href="?page={{ czesc.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span></span></li>
+            {% endif %}
+            {% for i in czesc.paginator.page_range %}
+            {% if czesc.number == i %}
+            <li class="page-item text-light bg-dark active">
+                <span class="page-link text-light bg-dark">
+                    {{ i }}
+                    <span class="sr-only text-dark">(current)</span>
+                </span>
+            </li>
+            {% else %}
+            <li class="page-item text-dark"></li><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% if czesc.has_next %}
+            <li class="page-item text-dark"><a class="page-link text-dark"
+                    href="?page={{ czesc.next_page_number }}">&raquo;</a>
+            </li>
+
+            <li class="page-item text-dark ">
+                <a class="page-link text-dark" href="?page={{ czesc.next_page_number }}">Następna</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span></span></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+</div>
+<div class="col-1"></div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/driver_orders.js" %}" type="text/javascript"></script>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <form method="POST" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Dodaj categorię:</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="col-3">
+            <table class="table">Kategorie
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nazwa</th>
+                        <th scope="col">Zmień</th>
+                        <th scope="col">Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for el in categorys %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{el.category_name}}</td>
+                        <td><a href="/change_category/{{el.id}}">Zmień</a></td>
+                        <td><a href="/del_category/{{el.id}}">Usuń</a></td>
+                    </tr>
+                    {% endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+</div>
+{% endblock %}

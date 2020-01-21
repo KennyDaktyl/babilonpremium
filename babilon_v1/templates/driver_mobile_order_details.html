@@ -1,0 +1,128 @@
+{% extends 'base_driver_view.html' %}
+{% load static %}
+
+
+{% block content %}
+<h5 class="col-12 text-left">Zamówienia wyjazd</h5>
+
+
+<div class="col-12 bg-light small  text-center mx-auto text-dark row text-wrap m-2">
+    {% if order.driver is null %}
+    <form class="col-12 mx-auto m-2" action="">
+        {% csrf_token %}
+        <input name="order" type="hidden" id="get_to_delivery" value="{{order.id}}">
+        <button class="btn-success h5 col-4 mx-auto m-2">Zabieram zamówienie</button>
+        <a href=""></a>
+    </form>
+    {% endif %}
+    <span class="col-6 h5 text-left">Numer</span><span class="col-6 h5 text-center">{{order.number}}</span>
+    <span class="col-6 h5 text-left">Lokal</span><span class="col-6 h5 text-center">{{order.workplace_id}}</span>
+    <span class="col-6 h5 text-left">Klient</span>
+    {% if order.address.client_id.firstlastname.strip %}
+    <span class="col-6 h5 text-center">{{order.address.client_id.phone_number}}</span>
+    {% else %}
+    <span class="col-6 h5 text-center">
+        {% endif %}
+    </span>
+    <span class="row col-12">
+        <span class="col-6 h5 text-left">Telefon</span>
+        <span class="col-6 h5 text-center">
+            <a class="col-6 h5 text-center"
+                href="tel:{{order.client.phone_number}}">{{order.address.client_id.phone_number}}</a></span>
+
+        <span class="col-6 h5 text-left">Adres</span><a class="col-6 h5 text-center"
+            href="https://maps.google.com/?q={{order.address.address}}+Kraków">{{order.address.street}}</a></span>
+
+    <span class="col-6 h5 text-left">Czas planowany</span><span
+        class="col-6 h5 text-center text-danger">{{order.time_zero}}</span>
+    <span class="col-6 h5 text-left">Płatność</span><span
+        class="col-6 h5 text-center">{{order.get_paymethod_display}}</span>
+    <span class="col-6 h5 text-left">Razem</span><span class="col-6 h5 text-center">{{order.order_total_price2}}
+        zł</span>
+    <span class="col-6 h5 text-left">Info</span><span class="col-6 h5 text-center">{{order.info}}</span>
+    </span>
+    <!-- <form class="col-12 mx-auto m-2" action="">
+        {% csrf_token %} -->
+    <!-- <input name="order" type="hidden" id="get_to_delivery" value="{{order.id}}"> -->
+    <div class="col-12 mx-auto m2">
+        <a href="/order_outside_paymethod/{{order.id}}"><button type="" class="btn-danger h5 col-4 ml-auto">Zmień
+                płatność</button></a>
+        <a href="/order_outside_cancel/{{order.id}}"><button type="" class="btn-secondary h5 col-4 ml-auto">Anuluj
+                zamówienie</button></a>
+        <a href="/order_outside_finish/{{order.id}}"><button type="button"
+                class="btn-success h5 col-12 mx-auto m-2">Wydaj<br>zamówienie</button>
+        </a>
+    </div>
+    <!-- </form> -->
+    <h5 class="col-12 h5 text-left">Dania</h5>
+
+    <div class="table-responsive col-12 text-center mt-3 bg-white">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="h5" scope="col">#</th>
+                    <th class="h5" scope="col">Danie</th>
+                    <th class="h5" scope="col">Dodatki</th>
+                    <th class="h5" scope="col">Ciasto</th>
+                    <th class="h5" scope="col">Sosy</th>
+                    <th class="h5" scope="col">Sosy płatne</th>
+                    <th class="h5" scope="col">ilość</th>
+                    <th class="h5" scope="col">Cena podst.</th>
+                    <th class="h5" scope="col">Dodatki cena</th>
+                    <th class="h5" scope="col">rabat</th>
+                    <th class="h5" scope="col">Razem</th>
+                    <th class="h5" scope="col">Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prod in positions_on_order %}
+                {% if prod.pizza_half == False %}
+                <tr>
+                    <th class="h5" scope="row">{{forloop.counter}}</th>{{prod.add_sauces_free}}
+                    <td class="h5">{{prod.product_id.product_name}}</td>
+                    <td class="h5">{{prod.change_topps}}</td>
+                    <td class="h5">{{prod.cake_info}}</td>
+                    <td class="h5">{{prod.add_sauces_free}}</td>
+                    <td class="h5">{{prod.add_sauces_pay}}</td>
+                    <td class="h5">{{prod.quantity}}</td>
+                    <td class="h5">{{prod.price}}</td>
+                    <td class="h5">{{prod.extra_price}}</td>
+                    <td class="h5">{{prod.discount}}</td>
+                    <td class="h5">{{prod.total_price}}</td>
+                    <td class="h5">{{prod.info}}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <th class="h5" scope="row">{{forloop.counter}}</th>
+                    <td class="h5"> {{prod.halfpizza_name}}</td>
+                    <td class="text-left h5">Lewa: {{prod.change_topps}}<br>
+                        Prawa: {{prod.change_topps_on_right}}</td>
+                    <td class="h5">{{prod.cake_info}}</td>
+                    <td class="h5">{{prod.add_sauces_free}}</td>
+                    <td class="h5">{{prod.add_sauces_pay}}</td>
+                    <td class="h5">{{prod.quantity}}</td>
+                    <td class="h5">{{prod.price}}</td>
+                    <td class="h5">{{prod.extra_price}}</td>
+                    <td class="h5">{{prod.discount}}</td>
+                    <td class="h5">{{prod.total_price}}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!--The div element for the map -->
+<!-- <iframe width="500" height="400" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBEJkSHJyOybH3WslnGOIqiNw2dvi0B2p4
+    &q={{address}}" allowfullscreen>
+</iframe> -->
+<!-- <a href="https://maps.google.com/?q={{address}}">{{address}}</a> -->
+
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}

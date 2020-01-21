@@ -1,0 +1,60 @@
+{% extends 'base_orders.html' %}
+{% load static %}
+{% block content %}
+
+
+<div id="client" class="col-12 row mx-auto bg-light p-1 border">
+    <table class="table mx-auto col-12">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Telefon</th>
+                <th scope="col">dane</th>
+                <th scope="col">Dodaj adres</th>
+                <th scope="col">Adres</th>
+                <th scope="col">Status</th>
+                <th scope="col">Info</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr class="lista">
+                <th scope="row">{{client.id}}</th>
+                <td>{{client.phone_number}}</td>
+                {% if client.client_name.strip %}
+                <td>{{client.client_name}}</td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                <td><a class="col-1" href="/add_client_new_address/{{client.id}}"><button
+                            class="btn-success col-12">Dodaj
+                            adres</button>
+                </td>
+                <td class="col-1">
+                    <ul class="col-12 m-2 p-0">{% for address in client_addresses %}
+                        <li class="col-12 row m-2 p-0">
+                            <a href="/add_client_to_order/{{address.id}}"
+                                class="col-6 text-left m-2 p-0">{{address.street}} </a>
+                            <span class="col-2 text-right m-2 p-0">Licznik:
+                                {{address.choice_count}}</span>
+                            <a class="col-1 m-2 p-0" href="/edit_address/{{address.id}}"><button
+                                    class="btn-primary text-center">E</button></a>
+                            <a class="col-1 m-2 p-0" href="/del_address/{{address.id}}"><button
+                                    class="btn-danger text-center">X</button></a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>{{client.get_status_display}}</td>
+                {% if client.info.strip %}
+                <td>{{client.info}}<br><a href="/edit_client/{{client.id}}"><i class="fas fa-address-card"></i></a></td>
+                {% else %}
+                <td><a href="/edit_client/{{client.id}}"><i class="fas fa-address-card"></i></a></td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    {% endblock %}
+    {% block script %}
+    <!-- <script src="{% static "babilon/mainbase.js" %}" type="text/javascript"></script> -->
+    {% endblock %}

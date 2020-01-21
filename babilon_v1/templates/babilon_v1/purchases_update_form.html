@@ -1,0 +1,16 @@
+{% extends 'base_orders.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="row col-4 m-3">
+    <form method="POST" enctype="multipart/form-data" class="col-12 m-3 mx-auto">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>Edytuj pozycję? "{{ object }}"?</p>
+        <input type="submit" class="btn-warning" value="Edytuj">
+
+    </form>
+</div>
+<a class="col-2" href="/purchases/"><button class="btn-danger m-3">Cofnij</button></a>
+{% endblock %}
