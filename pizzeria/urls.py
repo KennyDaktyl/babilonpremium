@@ -19,6 +19,16 @@ urlpatterns = [
         OrdersForDriversView.as_view(),
         name="orders_for_drivers",
     ),
+    path(
+        "orders_set_drivers/<int:pk>",
+        OrdersSetDriversView.as_view(),
+        name="orders_set_drivers",
+    ),
+    path(
+        "driver_closed_order/<int:pk>",
+        DriverClosedOrderView.as_view(),
+        name="driver_close_order",
+    ),
     path("admin/", admin.site.urls),
     path("", UserLoginView.as_view(), name="login"),
     path("logout/", User_Logout, name="logout"),

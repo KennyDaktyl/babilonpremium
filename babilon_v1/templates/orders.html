@@ -61,7 +61,8 @@
 
 <div
     class="container-fluid mt-3 bg-white mx-auto text-center table-responsive table-wrapper-scroll-y my-custom-scrollbar p-0 m-0">
-    <table class="table table-bordered table-striped text-center mx-auto w-100 orders">
+    <table id="table" class="table table-bordered table-striped text-center mx-auto w-100 orders"
+        data-workplace="{{workplace}}">
         <thead class="w-100">
             <tr>
                 <th scope="col w-auto">Nr</th>
@@ -84,24 +85,25 @@
         <tbody class="mx-auto orders">
             {% for order in orders %}
             {% if order.status == 2 %}
-            <tr class="lista mx-auto text-black {{order.status}} {{order.get_type_of_order_display}} order ">
+            <tr class="lista mx-auto text-black {{order.status}} {{order.get_type_of_order_display}} order"
+                data-order="{{order.id}}" data-workplace="{{order.workplace_id}}">
                 {% endif %}
                 {% if order.status == 1 %}
-            <tr
-                class="lista table-primary w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+            <tr class="lista table-primary w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order"
+                data-order="{{order.id}}" data-workplace="{{order.workplace_id}}">
                 {% endif %}
                 {% if order.status == 3 %}
-            <tr
-                class="lista table-warning w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+            <tr class="lista table-warning w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order"
+                data-order="{{order.id}}" data-workplace="{{order.workplace_id}}">
                 {% endif %}
                 {% if order.status == 5 %}
-            <tr
-                class="lista table-danger w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+            <tr class="lista table-danger w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order"
+                data-order="{{order.id}}" data-workplace="{{order.workplace_id}}">
                 {% endif %}
 
                 {% if order.status == 4 %}
-            <tr
-                class="lista table-secondary w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order">
+            <tr class="lista table-secondary w-100 mx-auto text-black {{order.get_type_of_order_display}} {{order.status}} order"
+                data-order="{{order.id}}" data-workplace="{{order.workplace_id}}">
                 {% endif %}
                 <!-- <td class="col w-auto">{{forloop.revcounter}}</td> -->
                 <td class="col w-auto">{{order.number|slice:"0:3"}}<br>

@@ -3670,6 +3670,9 @@ class OrderCloseDeatailsView(PermissionRequiredMixin,View):
    
     permission_required = 'babilon_v1.view_orders'
     def get(self, request,pk):
+        
+        
+        
         categorys=Category.objects.all()
         time_zero_form_details=request.GET.get('time_from_details')
         time_zero_manual=request.GET.get('time_zero_manual')
@@ -3728,12 +3731,14 @@ class OrderCloseDeatailsView(PermissionRequiredMixin,View):
             order_finish.time_zero=(datetime.now()+timedelta(minutes=int(time_zero_manual))).time()
             # order_finish.save()
         order_finish.save()
-        ctx={'order':order_finish,'positions_on_order':positions_on_order, 'categorys':categorys}
+        paid_button=True
+        google_key=(os.environ.get("GOOGLE_KEY"),)
+        ctx={'google_key':google_key,'order':order_finish,'positions_on_order':positions_on_order, 'categorys':categorys,'paid_button':paid_button}
         return TemplateResponse(request, "order_finish_details.html",ctx)
 
     def post(self, request,pk):
-        order_id=request.POST.get('order_id')
-        order=Orders.objects.get(pk=order_id)
+        # order_id=request.POST.get('order_id')
+        order=Orders.objects.get(pk=pk)
         if 'set_price' in request.POST:
             pos_id=request.POST.get('pos_id')
             new_price=request.POST.get('new_price')
@@ -3747,7 +3752,11 @@ class OrderCloseDeatailsView(PermissionRequiredMixin,View):
             order.save()
             return redirect('order_details', pk=order.id)
         
-        
+        if 'order_is_paid' in request.POST:
+            order.info="Zapłacono"
+            order.save()
+            return redirect('order_details', pk=order.id)
+
         info=request.POST.get('info')
         discount=request.POST.get('discount')
 
@@ -3800,8 +3809,8 @@ class OrdersDetailsArchivesView(PermissionRequiredMixin,View):
     def get(self, request,pk):
         order_finish=Orders.objects.get(pk=pk)
         positions_on_order=PositionOrder.objects.filter(order_id=pk).order_by('product_id.category').order_by('id')
-        
-        ctx={'order':order_finish,'positions_on_order':positions_on_order}
+        google_key=(os.environ.get("GOOGLE_KEY"),)
+        ctx={'order':order_finish,'positions_on_order':positions_on_order,'google_key':google_key}
         return TemplateResponse(request, "order_details_archives.html",ctx)
 
     def post(self, request,pk):
@@ -3963,7 +3972,7 @@ class OrdersView(PermissionRequiredMixin, View):
         #     el.active=False
         #     el.save()
         drivers=MyUser.objects.filter(profession=4).filter(work_place=pizzeria_id).filter(active=True)
-        ctx = {'orders': orders,'drivers':drivers}
+        ctx = {'orders': orders,'drivers':drivers,'workplace':pizzeria_id}
         return TemplateResponse(request, "orders.html", ctx)
     
     def post(self, request):
@@ -3974,6 +3983,8 @@ class OrdersView(PermissionRequiredMixin, View):
             order.closed=False
             order.save()
             return redirect('/orders/')
+        
+        
 
         if request.is_ajax():
             try:
@@ -4060,7 +4071,7 @@ class OrdersView(PermissionRequiredMixin, View):
      
         orders = Orders.objects.filter(date__day=today)
         drivers=MyUser.objects.filter(profession=4)
-        ctx = {'orders': orders,'drivers':drivers}
+        ctx = {'orders': orders,'drivers':drivers,'workplace':pizzeria_id}
         return TemplateResponse(request, "orders.html", ctx)
 
         

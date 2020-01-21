@@ -34,6 +34,114 @@ $(document).ready(function () {
     }
     show_close_button();
 
+    var order_in_driver_status_array = [];
+
+    var workplace_id = $('#table').data('workplace');
+    console.log(workplace_id);
+
+    function order_in_drive() {
+        var order_in_driver_status;
+        var order_in_driver_status_array = [];
+        order_in_driver_status = $('tr.2.Dostawa');
+
+        order_in_driver_status.each(function (index) {
+            order_in_driver_status_array.push($(this).data('order'))
+        });
+
+        // for (var i = 0; i < order_in_driver_status_array.length; i++) {
+        // console.log(order_in_driver_status_array[i]);
+        // console.log(order_in_driver_status.length);
+
+        function StatusChange() {
+            var result = "";
+            // var workplace_id = $(order_in_driver_status[i]).data('workplace');
+            // console.log(order_id);
+            $.ajax({
+                url: "https://pizzeriasystem.herokuapp.com/orders_set_drivers/" + workplace_id,
+                async: false,
+                type: "GET",
+                data: {
+                    // order_id: order_id,
+                    // workpace_id: 1,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    result = data;
+                }
+            });
+            return result;
+        }
+        result = StatusChange();
+        // console.log(result.length);
+        for (var i = 0; i < result.length; i++) {
+            // console.log(result[i].id);
+            // console.log(order_in_driver_status.length);
+            for (var j = 0; order_in_driver_status.length > j; j++) {
+                // console.log($(order_in_driver_status[i]).data('order'));
+                if ($(order_in_driver_status[j]).data('order') == (result[i].id)) {
+                    // console.log($(order_in_driver_status[i]).data('order'));
+                    // var name = (result[i].driver_id.first_name);
+                    // var sec_name = (result[i].driver_id.last_name);
+                    // var name = (result[i].fields.first_name);
+                    // var sec_name = (result[i].fields.last_name);
+                    // driver_name = name + " " + sec_name;
+                    // $(order_in_driver_status[j]).removeClass('2');
+                    // $(order_in_driver_status[j]).addClass('3');
+                    // $(order_in_driver_status[j]).removeClass('2');
+                    // $(order_in_driver_status[j]).addClass('table-warning');
+                    // $(order_in_driver_status[j]).children().children('button.drivers_button').hide();
+                    // $(order_in_driver_status[j]).children().children('span.new_set_driver').text(driver_name).show();
+                    // $(order_in_driver_status[j]).children().children('form.del_driver_form').show();
+                    // $(order_in_driver_status[j]).children().children('form.order_close_button').show();
+                    location.reload();
+                };
+            };
+        };
+    };
+
+    setInterval(order_in_drive, 4000);
+
+    function driver_close_order() {
+        var order_in_driver_status;
+        var order_in_driver_status_array = [];
+        order_in_driver_status = $('tr.3.Dostawa');
+
+        function StatusChange() {
+            var result = "";
+            var order_id = order_in_driver_status_array[i]
+            // console.log(order_id);
+            $.ajax({
+                url: "https://pizzeriasystem.herokuapp.com/driver_closed_order/" + workplace_id,
+                async: false,
+                type: "GET",
+                data: {
+
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    result = data;
+                }
+            });
+            return result;
+        }
+        result = StatusChange();
+        console.log(result.length);
+        for (var i = 0; i < result.length; i++) {
+            console.log(result[i].id);
+            console.log(order_in_driver_status.length);
+            for (var j = 0; order_in_driver_status.length > j; j++) {
+                console.log($(order_in_driver_status[i]).data('order'));
+                if ($(order_in_driver_status[j]).data('order') == (result[i].id)) {
+                    location.reload();
+                };
+            };
+        };
+    };
+    setInterval(driver_close_order, 5000);
+
+
     var orders = $('tr.order');
 
     hide_button.each(function (index) {

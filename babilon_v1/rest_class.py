@@ -131,5 +131,53 @@ class OrdersForDriversView(generics.ListAPIView):
         return orders
 
 
+@method_decorator(login_required, name="dispatch")
+class OrdersSetDriversView(generics.ListAPIView):
+    serializer_class = OrdersSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        pk = self.kwargs["pk"]
+        # order_id = self.kwargs["order_id"]
+
+        orders = (
+            Orders.objects.filter(workplace_id=pk)
+            .filter(status=3)
+            .filter(date__day=today)
+            .filter(date__month=month)
+            .filter(date__year=year)
+        )
+        print(orders)
+
+        return orders
+
+
+@method_decorator(login_required, name="dispatch")
+class DriverClosedOrderView(generics.ListAPIView):
+    serializer_class = OrdersSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        pk = self.kwargs["pk"]
+        # order_id = self.kwargs["order_id"]
+
+        orders = (
+            Orders.objects.filter(workplace_id=pk)
+            .filter(status=4)
+            .filter(date__day=today)
+            .filter(date__month=month)
+            .filter(date__year=year)
+        )
+        print(orders)
+
+        return orders
+
+
 router = routers.DefaultRouter()
 router.register(r"order", OrdersViewSet, basename="order")
