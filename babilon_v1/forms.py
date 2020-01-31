@@ -44,7 +44,7 @@ class LoginForm(forms.Form):
 
 class AddToppForm(forms.Form):
     type_of_ingredient = forms.ChoiceField(
-        choices=RODZAJ_SKŁADNIKA_FORM,
+        choices=INGREDIENT_TYPE_FORM,
         label="Rodzaj składnika",
         widget=forms.Select(),
         required=True,
@@ -55,7 +55,7 @@ class AddToppForm(forms.Form):
 
 class AddSauceForm(forms.Form):
     sauce_type = forms.ChoiceField(
-        choices=RODZAJ_SOSU,
+        choices=SAUCES_TYPE,
         label="Rodzaj sosu",
         widget=forms.Select(),
         required=True,
@@ -252,7 +252,7 @@ class BarmanForm(forms.Form):
 
 class AddShoppingForm(forms.Form):
     shopping_name = forms.ChoiceField(
-        choices=NAZWA_KONTRACHENTA,
+        choices=CONTRACTOR_NAME,
         label="Nazwa sklepu",
         widget=forms.Select(),
         required=True,
@@ -260,7 +260,7 @@ class AddShoppingForm(forms.Form):
     )
 
     pay_method = forms.ChoiceField(
-        choices=PŁATNOSC2,
+        choices=PAY_METHOD_2,
         label="Rodzaj płatności",
         widget=forms.Select(),
         required=True,
@@ -272,7 +272,7 @@ class AddShoppingForm(forms.Form):
 
 class AddTaxForm(forms.Form):
     tax_name = forms.ChoiceField(
-        choices=RODZAJ_PODATKU,
+        choices=TAX_TYPE,
         label="Nazwa podatku",
         widget=forms.Select(),
         required=True,
@@ -280,7 +280,7 @@ class AddTaxForm(forms.Form):
     )
 
     pay_method = forms.ChoiceField(
-        choices=PŁATNOSC2,
+        choices=PAY_METHOD_2,
         label="Rodzaj płatności",
         widget=forms.Select(),
         required=True,
@@ -296,7 +296,7 @@ class AddRewardForm(forms.Form):
     )
 
     pay_method = forms.ChoiceField(
-        choices=PŁATNOSC2,
+        choices=PAY_METHOD_2,
         label="Rodzaj płatności",
         widget=forms.Select(),
         required=True,
@@ -308,7 +308,7 @@ class AddRewardForm(forms.Form):
 
 class AddConstForm(forms.Form):
     const_name = forms.ChoiceField(
-        choices=RODZAJ_KOSZTU_SATŁEGO,
+        choices=TYPE_OF_FIXED_COST,
         label="Nazwa kosztu stałego",
         widget=forms.Select(),
         required=True,
@@ -316,7 +316,7 @@ class AddConstForm(forms.Form):
     )
 
     pay_method = forms.ChoiceField(
-        choices=PŁATNOSC2,
+        choices=PAY_METHOD_2,
         label="Rodzaj płatności",
         widget=forms.Select(),
         required=True,
@@ -333,7 +333,7 @@ class AddOtherForm(forms.Form):
     )
 
     pay_method = forms.ChoiceField(
-        choices=PŁATNOSC2,
+        choices=PAY_METHOD_2,
         label="Rodzaj płatności",
         widget=forms.Select(),
         required=True,
@@ -360,7 +360,7 @@ class ClientForm(forms.Form):
     # adres_4 = forms.CharField(label="Adres 4", max_length=128, required=False)
     # adres_5 = forms.CharField(label="Adres 5", max_length=128, required=False)
     status = forms.ChoiceField(
-        choices=STATUS_KLIENTA,
+        choices=CLIENT_STATUS,
         label="Status",
         initial="1",
         widget=forms.Select(),

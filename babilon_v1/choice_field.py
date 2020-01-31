@@ -1,4 +1,4 @@
-STANOWISKO_OSOBY = (
+JOB_STATUS = (
     (0, "Właściciel"),
     (1, "Menager"),
     (2, "Barman"),
@@ -6,13 +6,13 @@ STANOWISKO_OSOBY = (
     (4, "Kierowca"),
 )
 
-RODZAJ_UMOWY = (
+CONTRACT_TYPE = (
     (0, "Umowa o prace"),
     (1, "Umowa zlecenie"),
     (2, "Brak danych"),
     (3, "Licznik wyjazdów"),
 )
-RODZAJ_SKŁADNIKA = (
+INGREDIENT_TYPE = (
     (1, "Warzywny"),
     (2, "Mięsny"),
     (3, "Serowy"),
@@ -26,7 +26,7 @@ RODZAJ_SKŁADNIKA = (
     (11, "Dodatki extra_4"),
 )
 
-RODZAJ_SKŁADNIKA_FORM = (
+INGREDIENT_TYPE_FORM = (
     (1, "Warzywny"),
     (2, "Mięsny"),
     (3, "Serowy"),
@@ -37,14 +37,11 @@ RODZAJ_SKŁADNIKA_FORM = (
     (11, "Dodatki extra_4"),
 )
 
-RODZAJ_SOSU = (
-        (6, "Sosy płatne"),
-    (7, "Sosy darmowe")
-)
+SAUCES_TYPE = ((6, "Sosy płatne"), (7, "Sosy darmowe"))
 
-STATUS_KLIENTA = ((0, "Vip"), (1, "Normal"), (2, "Podejrzany"))
+CLIENT_STATUS = ((0, "Vip"), (1, "Normal"), (2, "Podejrzany"))
 
-STATUS_ZAMOWIENIA = (
+ORDER_STATUS = (
     (1, "Otwarte"),
     (2, "W przygotowaniu"),
     (3, "W dostawie"),
@@ -52,19 +49,19 @@ STATUS_ZAMOWIENIA = (
     (5, "Anulowane"),
 )
 
-RODZAJ_DOSTAWY = (
+DELIVERY_TYPE = (
     (1, "Lokal"),
     (2, "Wynos"),
     (3, "Dostawa"),
 )
 
-STATUS_KIEROWCY = (
+DRIVER_STATUS = (
     (1, "Wolny"),
     (2, "W dostawie"),
     (3, "Powrót"),
 )
 
-PŁATNOSC = (
+PAY_METHOD = (
     (1, "Gotówka"),
     (2, "Karta"),
     (3, "Online_1"),
@@ -72,13 +69,13 @@ PŁATNOSC = (
     (5, "Online_3"),
 )
 
-PŁATNOSC2 = (
+PAY_METHOD_2 = (
     (1, "Gotówka"),
     (2, "Karta"),
     (3, "Przelew"),
 )
 
-RODZAJ_WYDATKU = (
+TYPE_OF_PURCHASE = (
     (0, "Zakup towarów"),
     (1, "Wypłata pracownikom"),
     (2, "Podatki/ZUS"),
@@ -86,7 +83,7 @@ RODZAJ_WYDATKU = (
     (4, "Inne wydatki"),
 )
 
-NAZWA_KONTRACHENTA = (
+CONTRACTOR_NAME = (
     (0, "Biedronka"),
     (1, "Makro"),
     (2, "Szubryt"),
@@ -96,7 +93,7 @@ NAZWA_KONTRACHENTA = (
     (6, "Inne"),
 )
 
-RODZAJ_PODATKU = (
+TAX_TYPE = (
     (0, "VAT-7"),
     (1, "PIT-5"),
     (2, "PIT-4"),
@@ -105,7 +102,7 @@ RODZAJ_PODATKU = (
     (5, "Inne"),
 )
 
-RODZAJ_KOSZTU_SATŁEGO = (
+TYPE_OF_FIXED_COST = (
     (0, "Czynsz"),
     (1, "Internet"),
     (2, "Prąd"),

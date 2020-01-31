@@ -19,19 +19,9 @@ from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 from weasyprint import HTML
 
-from escpos.connections import getUSBPrinter
-import subprocess
-import usb.core
-import usb.util
-
-# import print from 'print-js'
-
 from django.db.models import Q
 from django.db.models import Count
 
-# from googlevoice import Voice
-# from googlevoice.util import input
-# from smsapi.client import SmsApiPlClient
 
 from django.core.paginator import Paginator
 
@@ -54,6 +44,12 @@ from django.utils.timezone import localtime
 
 from datetime import datetime, date, timedelta, time
 import calendar
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from babilon_v1.statistic import *
 
 year_now = datetime.now().year
 month_now = datetime.now().month
@@ -229,8 +225,7 @@ class LocalStatusView(PermissionRequiredMixin, View):
             for order in orders:
                 if order.driver_id not in drivers:
                     drivers.append(order.driver_id)
-            # print(len(drivers))
-            # drivers=MyUser.objects.filter(profession="4").filter(work_place=pizzeria_active)
+            
             orders_in_select=[1,2]
             orders_in_workplace=Orders.objects.filter(type_of_order__in=orders_in_select).filter(
             status="4").filter(date__gte=date_start).filter(
@@ -280,9 +275,10 @@ class LocalStatusView(PermissionRequiredMixin, View):
                 date_end, sort_keys=True, indent=1, cls=DjangoJSONEncoder)
             request.session['data_end'] = date_end
 
-            
-
-            ctx = {'orders_in_workplace':orders_in_workplace,'order_in':order_in,'cash_in':cash_in,'card_in':card_in,'online_1_in':online_1_in,'online_2_in':online_2_in,'online_3_in':online_3_in,'no_courses':no_courses,'drivers':drivers,'worker': worker,'cash':cash,'income_sum':income_sum,'purhases_sum':purhases_sum,'trips':trips,'income_trips':income_trips,'total_orders':total_orders,'income_online_1':income_online_1,'income_online_2':income_online_2,'income_online_3':income_online_3,'cards':cards, 'online_1':online_1,'online_2':online_2,'online_3':online_3,'setdate': setdate, 'date_start': date_start, 'pizzerias': pizzerias, 'form': form, 'pizzeria_active': pizzeria_active
+            print(pizzeria_active)
+            pizzeria_active = get_pizzeria_session(request)
+            avg_minutes=delivery_avg(pizzeria_active)
+            ctx = {'avg_minutes':avg_minutes,'orders_in_workplace':orders_in_workplace,'order_in':order_in,'cash_in':cash_in,'card_in':card_in,'online_1_in':online_1_in,'online_2_in':online_2_in,'online_3_in':online_3_in,'no_courses':no_courses,'drivers':drivers,'worker': worker,'cash':cash,'income_sum':income_sum,'purhases_sum':purhases_sum,'trips':trips,'income_trips':income_trips,'total_orders':total_orders,'income_online_1':income_online_1,'income_online_2':income_online_2,'income_online_3':income_online_3,'cards':cards, 'online_1':online_1,'online_2':online_2,'online_3':online_3,'setdate': setdate, 'date_start': date_start, 'pizzerias': pizzerias, 'form': form, 'pizzeria_active': pizzeria_active
                    }
             return TemplateResponse(request, "local_status.html", ctx)
 
@@ -399,7 +395,7 @@ class AddToppView(PermissionRequiredMixin, View):
 
     def get(self, request):
         form = AddToppForm()
-        type_of_ingredient=RODZAJ_SKŁADNIKA_FORM
+        type_of_ingredient=INGREDIENT_TYPE_FORM
         type_of_ingredient_list=[]
         for el in type_of_ingredient:
             type_of_ingredient_list.append(el[0])
@@ -1210,10 +1206,6 @@ class PurchaseView(PermissionRequiredMixin, View):
         pizzeria_active = get_pizzeria_session(request)
         date_start=request.session['data_start']
         date_end=request.session['data_end']
-        # date_start=date_start.replace('"', "")
-        # date_end=date_end.replace('"', "")
-        # date_start=date_start.replace('\\', "")
-        # date_end=date_end.replace("\\", "")
         date_start=json.loads(date_start)
         date_end=json.loads(date_end)
         
@@ -1246,7 +1238,7 @@ class PurchaseView(PermissionRequiredMixin, View):
                 p.work_place=pizzeria_active
                 p.barman_id=request.user
                 purchase_name_id=form.cleaned_data['shopping_name']
-                p.purchase_name=NAZWA_KONTRACHENTA[int(purchase_name_id)][1]
+                p.purchase_name=CONTRACTOR_NAME[int(purchase_name_id)][1]
                 p.type_purchases=0
                 p.pay_method=form.cleaned_data['pay_method']
                 p.price=form.cleaned_data['price']
@@ -1279,7 +1271,7 @@ class PurchaseView(PermissionRequiredMixin, View):
                 p.work_place=pizzeria_active
                 p.barman_id=request.user
                 tax_name_id=formTax.cleaned_data['tax_name']
-                p.purchase_name=RODZAJ_PODATKU[int(tax_name_id)][1]
+                p.purchase_name=TAX_TYPE[int(tax_name_id)][1]
                 p.pay_method=formTax.cleaned_data['pay_method']
                 p.type_purchases=2
                 p.price=formTax.cleaned_data['price']
@@ -1294,7 +1286,7 @@ class PurchaseView(PermissionRequiredMixin, View):
                 p.work_place=pizzeria_active
                 p.barman_id=request.user
                 const_name_id=formConst.cleaned_data['const_name']
-                p.purchase_name=RODZAJ_KOSZTU_SATŁEGO[int(const_name_id)][1]
+                p.purchase_name=TYPE_OF_FIXED_COST[int(const_name_id)][1]
                 p.pay_method=formConst.cleaned_data['pay_method']
                 p.type_purchases=3
                 p.price=formConst.cleaned_data['price']
@@ -1358,7 +1350,7 @@ class PurchaseCategoryView(PermissionRequiredMixin, View):
                 p.work_place=pizzeria_active
                 p.barman_id=request.user
                 purchase_name_id=form.cleaned_data['shopping_name']
-                p.purchase_name=NAZWA_KONTRACHENTA[int(purchase_name_id)][1]
+                p.purchase_name=CONTRACTOR_NAME[int(purchase_name_id)][1]
                 p.type_purchases=0
                 p.pay_method=form.cleaned_data['pay_method']
                 p.price=form.cleaned_data['price']
@@ -1389,7 +1381,7 @@ class PurchaseCategoryView(PermissionRequiredMixin, View):
                 p.work_place=pizzeria_active
                 p.barman_id=request.user
                 tax_name_id=formTax.cleaned_data['tax_name']
-                p.purchase_name=RODZAJ_PODATKU[int(tax_name_id)][1]
+                p.purchase_name=TAX_TYPE[int(tax_name_id)][1]
                 p.pay_method=formTax.cleaned_data['pay_method']
                 p.type_purchases=2
                 p.price=formTax.cleaned_data['price']
@@ -1404,7 +1396,7 @@ class PurchaseCategoryView(PermissionRequiredMixin, View):
                 p.work_place=pizzeria_active
                 p.barman_id=request.user
                 const_name_id=formConst.cleaned_data['const_name']
-                p.purchase_name=RODZAJ_KOSZTU_SATŁEGO[int(const_name_id)][1]
+                p.purchase_name=TYPE_OF_FIXED_COST[int(const_name_id)][1]
                 p.pay_method=formConst.cleaned_data['pay_method']
                 p.type_purchases=3
                 p.price=formConst.cleaned_data['price']
@@ -1445,6 +1437,68 @@ class DelPurchaseView(PermissionRequiredMixin, DeleteView):
     success_url = ('/purchases/')
     # def get_success_url(self):
     #     return f'/order_details/{self.object.order_id.id}'
+
+@method_decorator(login_required, name='dispatch')
+class StatisticsView(PermissionRequiredMixin, DeleteView):
+    permission_required = 'babilon_v1.view_orders'
+
+    def get(self, request):
+        return TemplateResponse(request, "statistics.html")
+    def post(self, request):
+        pizzeria_id=request.session["pizzeria"]
+        pizzeria=WorkPlace.objects.get(pk=pizzeria_id)
+        date_start=request.session['data_start']
+        date_end=request.session['data_end']
+        date_start=json.loads(date_start)
+        date_end=json.loads(date_end)
+        if 'income' in request.POST:
+            orders=Orders.objects.filter(status=4).filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end]).order_by('date')
+            d3=diagram_income(orders)
+            if type(d3)==str:
+                ctx={'d3':d3}
+                return TemplateResponse(request, "statistics.html",ctx)
+            img="/pizzeria/static/media/income.png"    
+            ctx={'img':img}
+            return TemplateResponse(request, "statistics.html",ctx)
+        if 'the_best_pizza' in request.POST:
+            orders=Orders.objects.filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end])
+            pos=PositionOrder.objects.filter(product_id__category=1).filter(order_id__in=orders)
+            d3=the_best_pizza(pos)
+            if type(d3)==str:
+                ctx={'d3':d3}
+                return TemplateResponse(request, "statistics.html",ctx)
+            img="/pizzeria/static/media/the_best_pizza.png" 
+            ctx={'img':img}
+            return TemplateResponse(request, "statistics.html",ctx)
+        if 'the_poor_pizza' in request.POST:
+            orders=Orders.objects.filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end])
+            pos=PositionOrder.objects.filter(product_id__category=1).filter(order_id__in=orders)
+            d3=the_poor_pizza(pos)
+            if type(d3)==str:
+                ctx={'d3':d3}
+                return TemplateResponse(request, "statistics.html",ctx)
+            img="/pizzeria/static/media/the_poor_pizza.png"
+            ctx={'img':img}
+            return TemplateResponse(request, "statistics.html",ctx)
+        if 'orders_by_hours' in request.POST:
+            orders=Orders.objects.filter(status=4).filter(type_of_order=3).filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end])
+            len_orders=(len(orders))
+            print(len(orders))
+            d3=orders_by_hours(orders)
+            if type(d3)==str:
+                try:
+                    os.remove("pizzeria/static/media/orders_by_hours.png")
+                except:
+                    pass
+                ctx={'d3':d3}
+                return TemplateResponse(request, "statistics.html",ctx)
+            img="/pizzeria/static/media/orders_by_hours.png" 
+            ctx={'img':img,'len_orders':len_orders}
+            return TemplateResponse(request, "statistics.html",ctx)
+
+
+        return TemplateResponse(request, "statistics.html")
+
 
 #Zamówienia
 
@@ -3732,7 +3786,8 @@ class OrderCloseDeatailsView(PermissionRequiredMixin,View):
             # order_finish.save()
         order_finish.save()
         paid_button=True
-        google_key=(os.environ.get("GOOGLE_KEY"),)
+        google_key=os.environ.get("GOOGLE_MAPS")
+        # print(google_key)
         ctx={'google_key':google_key,'order':order_finish,'positions_on_order':positions_on_order, 'categorys':categorys,'paid_button':paid_button}
         return TemplateResponse(request, "order_finish_details.html",ctx)
 
@@ -3829,24 +3884,15 @@ class OrdersArchivesView(PermissionRequiredMixin, View):
         date_end=request.session['data_end']
         date_start=json.loads(date_start)
         date_end=json.loads(date_end)
-        
         orders = Orders.objects.filter(
-            workplace_id=pizzeria_active).filter(date__range=[date_start, date_end])
-        order_total=[]
-        products_in=[]
-        order_details=list(orders.values('id','date', 'workplace_id', 'number','driver_id','status','time_start','time_zero','barman_id','driver_id','type_of_order','pay_method','address','start_delivery_time','time_delivery_in','sms_send','discount','info','printed'))
+                workplace_id=pizzeria_active).filter(date__range=[date_start, date_end])
+
         
-        df=pd.DataFrame(order_details)
-        
-        for el in orders:
-            order_total.append(el.order_total_price_new)
-            products_in.append(el.products_in)
-        df['Products'] = products_in
-        df['Total_price'] = order_total
-        # df = pd.DataFrame(list(orders.values('id','date', 'workplace_id', 'number','driver_id','status','time_start','time_zero','barman_id','driver_id','type_of_order','pay_method','address','start_delivery_time','time_delivery_in','sms_send','discount','info','printed','positionorder')))
-        df.index+=1
-        df.to_excel(os.path.join(settings.MEDIA_ROOT, 'orders.xlsx'))
+        df_orders(orders)
         pos_counter=orders.count()
+        
+        # numpy(df)
+        
         ctx = {'pos_counter':pos_counter,'orders':orders,'pizzeria_active':pizzeria_active,'date_start':date_start,'date_end':date_end}
         return render(request, "orders_archives.html", ctx)
 
@@ -3920,7 +3966,8 @@ class OrderChangeDeatailsView(PermissionRequiredMixin, View):
             order_finish.barman_id=request.user
             # order_finish.save()
         order_finish.save()
-        ctx={'order':order_finish,'positions_on_order':positions_on_order, 'categorys':categorys}
+        google_key=os.environ.get("GOOGLE_MAPS")
+        ctx={'order':order_finish,'positions_on_order':positions_on_order, 'categorys':categorys,'google_key':google_key}
         return TemplateResponse(request, "order_finish_details.html",ctx)
     
     def post(self, request,pk):

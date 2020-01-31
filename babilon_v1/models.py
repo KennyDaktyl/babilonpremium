@@ -17,7 +17,7 @@ class MyUser(AbstractUser):
                                  default=False)
     day_when_active = models.DateField(null=True, blank=True)
     profession = models.IntegerField(verbose_name="Stanowisko osoby",
-                                     choices=STANOWISKO_OSOBY,
+                                     choices=JOB_STATUS,
                                      null=True,
                                      blank=True)
     work_place = models.ManyToManyField("WorkPlace",
@@ -43,11 +43,11 @@ class MyUser(AbstractUser):
                                        blank=True)
     type_of_employment = models.IntegerField(
         verbose_name="Rodzaj zatrudnienia",
-        choices=RODZAJ_UMOWY,
+        choices=CONTRACT_TYPE,
         null=True,
         blank=True)
     driver_status = models.IntegerField(verbose_name="Status kierowcy",
-                                        choices=STATUS_KIEROWCY,
+                                        choices=DRIVER_STATUS,
                                         null=True,
                                         blank=True,
                                         default=1)
@@ -128,7 +128,7 @@ class Clients(models.Model):
                                     max_length=15)
 
     status = models.IntegerField(verbose_name="Status klienta",
-                                 choices=STATUS_KLIENTA,
+                                 choices=CLIENT_STATUS,
                                  null=True,
                                  blank=True,
                                  default=1)
@@ -246,7 +246,7 @@ class Products(models.Model):
                                       verbose_name="Składniki",
                                       blank=True)
     type_of_ingredient = models.IntegerField(verbose_name="Rodzaj składnika",
-                                             choices=RODZAJ_SKŁADNIKA,
+                                             choices=INGREDIENT_TYPE,
                                              null=True,
                                              blank=True)
     pizza_premium = models.BooleanField(verbose_name="Pizza premium?",
@@ -337,7 +337,7 @@ class Orders(models.Model):
                               null=True,
                               blank=True)
     status = models.IntegerField(verbose_name="Status zamówienia",
-                                 choices=STATUS_ZAMOWIENIA,
+                                 choices=ORDER_STATUS,
                                  default=1)
     date = models.DateField(auto_now_add=True)
     time_start = models.TimeField(null=True, blank=True)
@@ -363,7 +363,7 @@ class Orders(models.Model):
                                   related_name="Kierowca")
 
     type_of_order = models.IntegerField(verbose_name="Rodzaj zamówienia",
-                                        choices=RODZAJ_DOSTAWY,
+                                        choices=DELIVERY_TYPE,
                                         default=1)
 
     address = models.ForeignKey('Address',
@@ -373,7 +373,7 @@ class Orders(models.Model):
                                 blank=True)
 
     pay_method = models.IntegerField(verbose_name="Płatność zamówienia",
-                                     choices=PŁATNOSC,
+                                     choices=PAY_METHOD,
                                      default=1)
 
     start_delivery_time = models.TimeField(verbose_name="Czas wywozu",
@@ -615,13 +615,13 @@ class Purchases(models.Model):
                                      default="")
     pay_method = models.IntegerField(
         verbose_name="Rodzaj wydatku: ",
-        choices=PŁATNOSC2,default="1"
+        choices=PAY_METHOD_2,default="1"
     )
     
     price = models.FloatField(verbose_name="Cena", )
     type_purchases = models.IntegerField(
         verbose_name="Rodzaj kosztu: ",
-        choices=RODZAJ_WYDATKU,default="0"
+        choices=TYPE_OF_PURCHASE,default="0"
     )
 
     info = models.CharField(verbose_name="Info",

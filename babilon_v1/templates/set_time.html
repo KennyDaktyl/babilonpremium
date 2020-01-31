@@ -3,7 +3,7 @@
 <div class="container-fluid mt-3 mx-auto">
 
     <div class="row col-12 mx-auto">
-        <div class="col-3 ">
+        <div class="col-4 mx-auto">
             <form method="POST" action="/set_session_today_date/" class="col-12">
                 {% csrf_token %}
                 <div class="active_form">
@@ -14,7 +14,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-3 ">
+        <div class="col-4 mx-auto">
             <form method="POST" action="/set_session_month_date/" class="col-12">
                 {% csrf_token %}
                 <div class="active_form">
@@ -25,7 +25,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-3 ">
+        <div class="col-4 mx-auto">
             <form method="POST" action="/set_session_period_date/" class="col-12">
                 {% csrf_token %}
                 <div class="active_form">

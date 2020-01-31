@@ -102,6 +102,7 @@ urlpatterns = [
     path("purchases/<int:pk>", PurchaseCategoryView.as_view(), name="purchases_cat"),
     path("edit_purchase/<int:pk>", EditPurchaseView.as_view(), name="edit_purchases"),
     path("del_purchase/<int:pk>", DelPurchaseView.as_view(), name="del_purchases"),
+    path("statistics/", StatisticsView.as_view(), name="statistics"),
     # Zamówienia
     path("products/", ProductsView.as_view(), name="products"),
     path(
