@@ -20,24 +20,27 @@ STATICFILES_DIRS = (os.path.join(SITE_ROOT, "static"),)
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = (os.environ.get("SECRET_KEY"),)
+SECRET_KEY='4wc6wsjzrep!+!9ttm+einr$ndb=9ic7-*ftdi!tlc5-$487td'
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
 
-# ALLOWED_HOSTS = ["*"]
-import socket
+ALLOWED_HOSTS = ["*"]
+DEBUG = True
 
-if socket.gethostname() == "pizzeriasystem.herokuapp.com":
-    DEBUG = False
-    ALLOWED_HOSTS = [
-        "pizzeriasystem.herokuapp.com",
-    ]
+# import socket
 
-else:
-    DEBUG = True
-    ALLOWED_HOSTS = [
-        "localhost",
-        "127.0.0.1",
-    ]
+# if socket.gethostname() == "pizzeriasystem.herokuapp.com":
+#     DEBUG = False
+#     ALLOWED_HOSTS = [
+#         "pizzeriasystem.herokuapp.com",
+#     ]
+
+# else:
+#     DEBUG = True
+#     ALLOWED_HOSTS = [
+#         "localhost",
+#         "127.0.0.1",
+#     ]
 
 # Application definition
 
@@ -95,26 +98,29 @@ WSGI_APPLICATION = "pizzeria.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
+}
+# if socket.gethostname() == "pizzeriasystem.herokuapp.com":
+
+#     import dj_database_url
+
+#     PG_URL = os.environ.get("DATABASE_URL")
+#     DATABASES = {"default": dj_database_url.config(default=PG_URL)}
+
+# else:
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.sqlite3",
 #         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
 #     }
 # }
-if socket.gethostname() == "pizzeriasystem.herokuapp.com":
-
-    import dj_database_url
-
-    PG_URL = os.environ.get("DATABASE_URL")
-    DATABASES = {"default": dj_database_url.config(default=PG_URL)}
-
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-        }
-    }
+# import dj_database_url
+# PG_URL = os.environ.get("DATABASE_URL")
+# DATABASES = {"default": dj_database_url.config(default=PG_URL)}
 # DATABASES = {
 #     "default": {
 #         "NAME": "premium03",

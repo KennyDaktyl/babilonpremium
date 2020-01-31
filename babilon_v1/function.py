@@ -446,18 +446,30 @@ def orders_by_hours(orders):
     plt.rcParams["figure.figsize"] = (20, 8)
     orders = orders
     if len(orders)>0:
-        group_10_12 = []
-        group_12_14 = []
-        group_14_16 = []
-        group_16_18 = []
-        group_18_20 = []
-        group_20_22 = []
+        group_10_11 = []
+        group_11_12 = []
+        group_12_13 = []
+        group_13_14 = []
+        group_14_15 = []
+        group_15_16 = []
+        group_16_17 = []
+        group_17_18 = []
+        group_18_19 = []
+        group_19_20 = []
+        group_20_21 = []
+        group_21_22 = []
         group_10 = timedelta(hours=10, minutes=00)
+        group_11 = timedelta(hours=11, minutes=00)
         group_12 = timedelta(hours=12, minutes=00)
+        group_13 = timedelta(hours=13, minutes=00)
         group_14 = timedelta(hours=14, minutes=00)
+        group_15 = timedelta(hours=15, minutes=00)
         group_16 = timedelta(hours=16, minutes=00)
+        group_17 = timedelta(hours=17, minutes=00)
         group_18 = timedelta(hours=18, minutes=00)
+        group_19 = timedelta(hours=19, minutes=00)
         group_20 = timedelta(hours=20, minutes=00)
+        group_21 = timedelta(hours=21, minutes=00)
         group_22 = timedelta(hours=22, minutes=00)
         if len(orders) > 0:
             for order in orders:
@@ -466,36 +478,67 @@ def orders_by_hours(orders):
                 order_minute = order.time_start.minute
                 time_order = str(order_hour) + ":" + str(order_minute)
 
-                if group_12 > x > group_10:
-                    group_10_12.append(order)
+                if group_11 > x > group_10:
+                    group_10_11.append(order)
 
-                if group_14 > x > group_12:
-                    group_12_14.append(order)
+                if group_12 > x > group_11:
+                    group_11_12.append(order)
 
-                if group_16 > x > group_14:
-                    group_14_16.append(order)
+                if group_13 > x > group_12:
+                    group_12_13.append(order)
 
-                if group_18 > x > group_16:
-                    group_16_18.append(order)
+                if group_14 > x > group_13:
+                    group_13_14.append(order)
 
-                if group_20 > x > group_18:
-                    group_18_20.append(order)
+                if group_15 > x > group_14:
+                    group_14_15.append(order)
 
-                if group_22 > x > group_20:
-                    group_20_22.append(order)
-            group_10 = len(group_10_12)
-            group_12 = len(group_12_14)
-            group_14 = len(group_14_16)
-            group_16 = len(group_16_18)
-            group_18 = len(group_18_20)
-            group_20 = len(group_20_22)
+                if group_16 > x > group_15:
+                    group_15_16.append(order)
+                    
+                if group_17 > x > group_16:
+                    group_16_17.append(order)
+                    
+                if group_18 > x > group_17:
+                    group_17_18.append(order)
+                
+                if group_19 > x > group_18:
+                    group_18_19.append(order)
+                
+                if group_20 > x > group_19:
+                    group_19_20.append(order)
+                
+                if group_21 > x > group_20:
+                    group_20_21.append(order)
+                
+                if group_22 > x > group_21:
+                    group_21_22.append(order)
+                        
+            group_10 = len(group_10_11)
+            group_11 = len(group_11_12)
+            group_12 = len(group_12_13)
+            group_13 = len(group_13_14)
+            group_14 = len(group_14_15)
+            group_15 = len(group_15_16)
+            group_16 = len(group_15_16)
+            group_17 = len(group_17_18)
+            group_18 = len(group_18_19)
+            group_19 = len(group_19_20)
+            group_20 = len(group_20_21)
+            group_21 = len(group_21_22)
             order_by_hour = {
-                "10-12": group_10,
-                "12-14": group_12,
-                "14-16": group_14,
-                "16-18": group_16,
-                "18-20": group_18,
-                "20:22": group_20,
+                "10-11": group_10,
+                "11-12": group_11,
+                "12-13": group_12,
+                "13-14": group_13,
+                "14-15": group_14,
+                "15-16": group_15,
+                "16-17": group_16,
+                "17-18": group_17,
+                "18-19": group_18,
+                "19-20": group_19,
+                "20-21": group_20,
+                "21-22": group_21,
             }
             # print(order_by_hour)
             keys=[]

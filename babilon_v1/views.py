@@ -17,7 +17,7 @@ from django.urls import reverse_lazy
 
 from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
-from weasyprint import HTML
+# from weasyprint import HTML
 
 from django.db.models import Q
 from django.db.models import Count
@@ -1454,31 +1454,34 @@ class StatisticsView(PermissionRequiredMixin, DeleteView):
         if 'income' in request.POST:
             orders=Orders.objects.filter(status=4).filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end]).order_by('date')
             d3=diagram_income(orders)
+            len_orders=len(orders)
             if type(d3)==str:
                 ctx={'d3':d3}
                 return TemplateResponse(request, "statistics.html",ctx)
             img="/pizzeria/static/media/income.png"    
-            ctx={'img':img}
+            ctx={'img':img,'len_orders':len_orders}
             return TemplateResponse(request, "statistics.html",ctx)
         if 'the_best_pizza' in request.POST:
             orders=Orders.objects.filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end])
             pos=PositionOrder.objects.filter(product_id__category=1).filter(order_id__in=orders)
             d3=the_best_pizza(pos)
+            len_orders=len(pos)
             if type(d3)==str:
                 ctx={'d3':d3}
                 return TemplateResponse(request, "statistics.html",ctx)
             img="/pizzeria/static/media/the_best_pizza.png" 
-            ctx={'img':img}
+            ctx={'img':img,'len_orders':len_orders}
             return TemplateResponse(request, "statistics.html",ctx)
         if 'the_poor_pizza' in request.POST:
             orders=Orders.objects.filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end])
             pos=PositionOrder.objects.filter(product_id__category=1).filter(order_id__in=orders)
             d3=the_poor_pizza(pos)
+            len_orders=len(pos)
             if type(d3)==str:
                 ctx={'d3':d3}
                 return TemplateResponse(request, "statistics.html",ctx)
             img="/pizzeria/static/media/the_poor_pizza.png"
-            ctx={'img':img}
+            ctx={'img':img,'len_orders':len_orders}
             return TemplateResponse(request, "statistics.html",ctx)
         if 'orders_by_hours' in request.POST:
             orders=Orders.objects.filter(status=4).filter(type_of_order=3).filter(workplace_id=pizzeria).filter(date__range=[date_start, date_end])
@@ -1786,7 +1789,7 @@ class AddPizzaToOrderView(PermissionRequiredMixin,View):
         discount = request.POST.get('discount')
 
         price = request.POST.get('price')
-        
+        print(price)
         price_org=product.price
         
         new_position=PositionOrder()
@@ -1795,7 +1798,7 @@ class AddPizzaToOrderView(PermissionRequiredMixin,View):
         new_position.product_id=product
         new_position.size_id=product.product_size
         
-        if price!=None:
+        if price!="":
             price=float(price)
             if price!=price_org and price!=0.00:
                 print(price)
@@ -1807,19 +1810,30 @@ class AddPizzaToOrderView(PermissionRequiredMixin,View):
             else:
                 new_position.price=product.price
                 new_position.save()
+        else:
+            price=0.00
+            new_position.price=price
+            new_position.save()
+            order.promo=True
         positions_on_order=PositionOrder.objects.filter(order_id=order.id)
+        if discount!='':
+            if int(discount) != 0 and discount!=None:
+                new_position.discount = int(discount)
+                new_position.save()
+                print(discount)
+                # print(price_org)
+                order.promo=True
+                # order.save()
+        else:
+            new_position.discount = 0
+            new_position.save()
+            order.promo=True
+        
         if quantity != None:
             if int(quantity) > 0:
                 new_position.quantity = int(quantity)
                 new_position.save()
-
-        if int(discount) != 0 and discount!=None:
-            new_position.discount = int(discount)
-            new_position.save()
-            print(discount)
-            # print(price_org)
-            order.promo=True
-            # order.save()
+        
         if extra_price != None:
             new_position.extra_price = float(extra_price.replace(",", "."))
             new_position.save()
@@ -1971,8 +1985,11 @@ class AddPizzaFreestyleToppsView(PermissionRequiredMixin,View):
         new_position.price=product.price
         new_position.change_topps = ""
         new_position.save()
-      
-        new_position.extra_price=float(extra_price)
+        
+        if extra_price!="":
+            new_position.extra_price=float(extra_price)
+        else:
+            new_position.extra_price=0.00
         new_position.change_topps_info=input_del_topps +" "+input_add_topps
         new_position.cake_info=input_add_cake
         # new_position.order_id=order
@@ -2036,27 +2053,34 @@ class AddPizzaFreestyleToOrderView(PermissionRequiredMixin,View):
         price = request.POST.get('price')
         price_org=product.price
         
-        if price != None:
-            price=float(price)
-            if price!=price_org and price!=0:
-                position_order.price=price
-                position_order.save()
-                order.promo=True
-                # order.save()
-            else:
-                position_order.price=product.price
-                position_order.save()
-
+        if price!="":
+            if price != None:
+                price=float(price)
+                if price!=price_org and price!=0:
+                    position_order.price=price
+                    position_order.save()
+                    order.promo=True
+                    # order.save()
+                else:
+                    position_order.price=product.price
+                    position_order.save()
+        else:
+            position_order.price=0
+            position_order.save()
+            order.promo=True
         if quantity != None:
             if int(quantity) > 0:
                 position_order.quantity = int(quantity)
                 position_order.save()
-
-        if int(discount != 0) and discount!=None:
-            position_order.discount = int(discount)
+        if discount!="":
+            if int(discount != 0) and discount!=None:
+                position_order.discount = int(discount)
+                position_order.save()
+                order.promo=True
+        else:
+            position_order.discount =0
             position_order.save()
             order.promo=True
-            # order.save()
         if extra_price != None:
             position_order.extra_price = float(extra_price.replace(",", "."))
             position_order.save()
@@ -2238,8 +2262,11 @@ class ChangeToppsFreestyleView(PermissionRequiredMixin,View):
         new_position.price=product.price
         new_position.change_topps = ""
         new_position.save()
-      
-        new_position.extra_price=float(extra_price)
+
+        if extra_price!="":
+            new_position.extra_price=float(extra_price)
+        else:
+            new_position.extra_price=0.00
         new_position.change_topps_info=input_del_topps +" "+input_add_topps
         new_position.cake_info=input_add_cake
         # new_position.order_id=order
@@ -2395,8 +2422,11 @@ class ChangeToppsView(PermissionRequiredMixin,View):
         input_add_cake = request.POST.get('input_add_cake')
         extra_price = request.POST.get('extra_price')
         extra_price=extra_price.replace(",",".")
-      
-        position_order.extra_price=float(extra_price)
+        if extra_price!="":
+            position_order.extra_price=float(extra_price)
+        else:
+            position_order.extra_price=0.00
+        
         position_order.change_topps_info=input_del_topps +" "+input_add_topps
         position_order.cake_info=input_add_cake
         # position_order.order_id=order
@@ -2458,25 +2488,32 @@ class AddModyfiToOrderView(PermissionRequiredMixin,View):
             if int(quantity) > 0:
                 new_position.quantity = int(quantity)
                 new_position.save()
-
-        if int(discount != 0) and discount!=None:
-            new_position.discount = int(discount)
+        if discount!="":
+            if int(discount != 0) and discount!=None:
+                new_position.discount = int(discount)
+                new_position.save()
+                order.promo=True
+            # order.save()
+        else:
+            new_position.discount = 0
             new_position.save()
             order.promo=True
-            # order.save()
-        
         product=new_position
         price = request.POST.get('price')
         
         price_org=product.price
-        if price != None:
-            price=float(price)
-            if price!=price_org and price!=0:
-                new_position.price=price
-                new_position.save()
-                order.promo=True
-                # order.save()
-        
+        if price!="":
+            if price != None:
+                price=float(price)
+                if price!=price_org and price!=0:
+                    new_position.price=price
+                    new_position.save()
+                    order.promo=True
+                    # order.save()
+        else:
+            new_position.price=0.00
+            new_position.save()
+            order.promo=True
         if extra_price != None:
             new_position.extra_price = float(extra_price.replace(",", "."))
             new_position.save()
@@ -2565,18 +2602,21 @@ class UpdatePizzaToOrderView(PermissionRequiredMixin,View):
         productId = request.POST.get('productId')
         product=Products.objects.get(pk=productId)
         price = request.POST.get('price')
-        price=float(price)
-        price_org=product.price
         
-        if price!=price_org and price!=0:
-            position_order.price=price
+        price_org=product.price
+        if price!="":
+            if price!=price_org and price!=0:
+                position_order.price=price
+                position_order.save()
+                order.promo=True
+                # order.save()
+            else:
+                position_order.price=product.price
+                position_order.save()
+        else:
+            position_order.price=0
             position_order.save()
             order.promo=True
-            # order.save()
-        else:
-            position_order.price=product.price
-            position_order.save()
-
         if size:
             size=ProductSize.objects.get(pk=size)
             position_order.size_id=size
@@ -2588,11 +2628,16 @@ class UpdatePizzaToOrderView(PermissionRequiredMixin,View):
                 position_order.quantity = int(quantity)
                 position_order.save()
 
-        if int(discount != 0) and discount!=None:
+        if int(discount != 0) and discount!=None and discount!="":
             position_order.discount = int(discount)
             position_order.save()
             order.promo=True
             # order.save()
+        else:
+            position_order.discount =0
+            position_order.save()
+            order.promo=True
+            
         if extra_price != None:
             position_order.extra_price = float(extra_price.replace(",", "."))
             position_order.save()
@@ -2688,22 +2733,32 @@ class UpdateProductToOrderView(PermissionRequiredMixin,View):
                 position_order.quantity = int(quantity)
                 position_order.save()
 
-        if int(discount != 0) and discount!=None:
+        if int(discount != 0) and discount!=None and discount!="":
             position_order.discount = int(discount)
             position_order.save()
             order.promo=True
             # order.save()
+        else:
+            position_order.discount = o
+            position_order.save()
+            order.promo=True
+            
         
         product=position_order
         price = request.POST.get('price')
         price=float(price)
         price_org=product.price
         
-        if price!=price_org and price!=0:
+        if price!=price_org and price!=0 and price!="":
             position_order.price=price
             position_order.save()
             order.promo=True
             # order.save()
+        else:
+            position_order.price=0
+            position_order.save()
+            order.promo=True
+            
         
         if extra_price != None:
             position_order.extra_price = float(extra_price.replace(",", "."))
@@ -2882,8 +2937,10 @@ class UpdateToppsView(PermissionRequiredMixin,View):
         input_add_cake = request.POST.get('input_add_cake')
         extra_price = request.POST.get('extra_price')
         extra_price=extra_price.replace(",",".")
-      
-        position_order.extra_price=float(extra_price)
+        if extra_price!="":
+            position_order.extra_price=float(extra_price)
+        else:
+            position_order.extra_price=0.00
         position_order.change_topps_info=input_del_topps +" "+input_add_topps
         position_order.cake_info=input_add_cake
         # position_order.order_id=order
@@ -3014,11 +3071,16 @@ class Left_And_Right_Half_PizzaView(PermissionRequiredMixin,View):
                 pizza_half.quantity = int(quantity)
                 pizza_half.save()
 
-        if int(discount) != 0 and discount!=None:
+        if int(discount) != 0 and discount!=None and discount!="":
             pizza_half.discount = int(discount)
             pizza_half.save()
             order.promo=True
             # order.save()
+        else:
+            pizza_half.discount = 0
+            pizza_half.save()
+            order.promo=True
+            
             
         # productId = request.POST.get('productId')
         product=pizza_half
@@ -3026,11 +3088,17 @@ class Left_And_Right_Half_PizzaView(PermissionRequiredMixin,View):
         price=float(price)
         price_org=pizza_half.price
         
-        if price!=price_org and price!=0:
+        if price!=price_org and price!=0 and price!="":
             pizza_half.price=price
             pizza_half.save()
             order.promo=True
             # order.save()
+        else:
+            pizza_half.price=0
+            pizza_half.save()
+            order.promo=True
+            # order.save()
+            
         
         if extra_price != None:
             pizza_half.extra_price = float(extra_price.replace(",", "."))
@@ -3452,23 +3520,34 @@ class UpdateHalfPizzaToOrderView(PermissionRequiredMixin,View):
                 position_order.quantity = int(quantity)
                 position_order.save()
 
-        if int(discount != 0) and discount!=None:
+        if int(discount != 0) and discount!=None and discount!="":
             position_order.discount = int(discount)
             position_order.save()
             order.promo=True
             # order.save()
+        else:
+            position_order.discount = 0
+            position_order.save()
+            order.promo=True
+            # order.save()
+            
 
         product=position_order
         price = request.POST.get('price')
         price=float(price)
         price_org=position_order.price
         
-        if price!=price_org and price!=0:
+        if price!=price_org and price!=0 and price!="":
             position_order.price=price
             position_order.save()
             order.promo=True
             # order.save()
-
+        else:
+            position_order.price=0
+            position_order.save()
+            order.promo=True
+            # order.save()
+            
         if extra_price != None:
             position_order.extra_price = float(extra_price.replace(",", "."))
             position_order.save()
@@ -3664,22 +3743,35 @@ class AddProductToOrderView(PermissionRequiredMixin,View):
                 new_position.quantity = int(quantity)
                 new_position.save()
 
-        if int(discount != 0):
+        if int(discount != 0) and discount!="":
             new_position.discount = int(discount)
             new_position.save()
             order.promo=True
             # order.save()
+        else:
+            new_position.discount =0
+            new_position.save()
+            order.promo=True
+            # order.save()
+            
         
         product=new_position
         price = request.POST.get('price')
-        price=float(price)
+        
         price_org=product.price
         
-        if price!=price_org and price!=0:
+        if price!=price_org and price!=0 and price!="":
+            price=float(price)
             new_position.price=price
             new_position.save()
             order.promo=True
             # order.save()
+        else:
+            new_position.price=0
+            new_position.save()
+            order.promo=True
+            # order.save()
+            
         
         if extra_price != None:
             new_position.extra_price = float(extra_price.replace(",", "."))
@@ -3797,14 +3889,23 @@ class OrderCloseDeatailsView(PermissionRequiredMixin,View):
         if 'set_price' in request.POST:
             pos_id=request.POST.get('pos_id')
             new_price=request.POST.get('new_price')
-            new_price=float(new_price)
-            new_price=round(new_price, 2)
-            print(new_price)
-            pos=PositionOrder.objects.get(pk=pos_id)
-            pos.price=new_price-pos.extra_price
-            pos.save()
-            order.promo=True
-            order.save()
+            if new_price!="":
+                new_price=float(new_price)
+                new_price=round(new_price, 2)
+                print(new_price)
+                pos=PositionOrder.objects.get(pk=pos_id)
+                pos.price=new_price-pos.extra_price
+                pos.save()
+                order.promo=True
+                order.save()
+            else:
+                new_price=0.00
+                pos=PositionOrder.objects.get(pk=pos_id)
+                pos.price=new_price-pos.extra_price
+                pos.save()
+                order.promo=True
+                order.save()
+            
             return redirect('order_details', pk=order.id)
         
         if 'order_is_paid' in request.POST:
@@ -3817,7 +3918,10 @@ class OrderCloseDeatailsView(PermissionRequiredMixin,View):
 
         
         order.barman_id=request.user
-        order.discount=discount
+        if discount!="":
+            order.discount=discount
+        else:
+            order.discount=0
         order.info=info
         order.closed=True
         # order.save()
@@ -3976,9 +4080,12 @@ class OrderChangeDeatailsView(PermissionRequiredMixin, View):
         if 'set_price' in request.POST:
             pos_id=request.POST.get('pos_id')
             new_price=request.POST.get('new_price')
-            new_price=float(new_price)
-            new_price=round(new_price, 2)
-            print(new_price)
+            if new_price!="":
+                new_price=float(new_price)
+                new_price=round(new_price, 2)
+                print(new_price)
+            else:
+                new_price=0.00
             pos=PositionOrder.objects.get(pk=pos_id)
             pos.price=new_price-pos.extra_price
             pos.save()
@@ -4326,25 +4433,26 @@ class WSView(PermissionRequiredMixin, View):
 class CreatePDFOrderView(PermissionRequiredMixin, View):
     permission_required = 'babilon_v1.view_orders'
     def get(self,request,pk):
-        order=Orders.objects.get(pk=pk)
-        # order.printed=False
-        # order.save()
-        # return redirect('orders')
-        positions_order=PositionOrder.objects.filter(order_id=order.id)
-        context = {
-            'order': order,'positions_order':positions_order
-        }
-        html_string = render_to_string('order_pdf.html', context)
+        pass
+        # order=Orders.objects.get(pk=pk)
+        # # order.printed=False
+        # # order.save()
+        # # return redirect('orders')
+        # positions_order=PositionOrder.objects.filter(order_id=order.id)
+        # context = {
+        #     'order': order,'positions_order':positions_order
+        # }
+        # html_string = render_to_string('order_pdf.html', context)
 
-        html = HTML(string=html_string)
-        html.write_pdf(target='/tmp/order_pdf.pdf')
+        # html = HTML(string=html_string)
+        # html.write_pdf(target='/tmp/order_pdf.pdf')
 
-        fs = FileSystemStorage('/tmp')
-        with fs.open('/tmp/order_pdf.pdf') as pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            response[
-                'Content-Disposition'] = 'attachment; filename="order_pdf.pdf"'
-        return response 
+        # fs = FileSystemStorage('/tmp')
+        # with fs.open('/tmp/order_pdf.pdf') as pdf:
+        #     response = HttpResponse(pdf, content_type='application/pdf')
+        #     response[
+        #         'Content-Disposition'] = 'attachment; filename="order_pdf.pdf"'
+        # return response 
       
 
 # Klienci
