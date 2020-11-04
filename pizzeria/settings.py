@@ -20,27 +20,44 @@ STATICFILES_DIRS = (os.path.join(SITE_ROOT, "static"),)
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = (os.environ.get("SECRET_KEY"),)
-SECRET_KEY='4wc6wsjzrep!+!9ttm+einr$ndb=9ic7-*ftdi!tlc5-$487td'
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
+# DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
-DEBUG = True
+ALLOWED_HOSTS = [
+    "*",
+]
 
-# import socket
 
-# if socket.gethostname() == "pizzeriasystem.herokuapp.com":
-#     DEBUG = False
-#     ALLOWED_HOSTS = [
-#         "pizzeriasystem.herokuapp.com",
-#     ]
+import socket
 
-# else:
-#     DEBUG = True
-#     ALLOWED_HOSTS = [
-#         "localhost",
-#         "127.0.0.1",
-#     ]
+print(socket.gethostname())
+
+if socket.gethostname() == "Asus":
+    SECURE_SSL_REDIRECT = False
+    DEBUG = True
+    
+    DATABASES = {
+    "default": {
+        "NAME": "babilon_02",
+        "ENGINE": "django.db.backends.postgresql",
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": "localhost",
+    }
+}
+else:
+    SECURE_SSL_REDIRECT = True
+    DEBUG = bool(os.environ.get("DEBUG_VALUE") == "False")
+    DATABASES = {
+    "default": {
+        "NAME": "premium03",
+        "ENGINE": "django.db.backends.postgresql",
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": "localhost",
+    }
+}
+
 
 # Application definition
 
@@ -53,13 +70,19 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "babilon_v1",
     "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
     # 'django_extensions', # rysowanie diagramu database
 ]
 
-
+# disable view restapi without authorisation
 REST_FRAMEWORK = {
+    # "DEFAULT_PERMISSION_CLASSES": [
+    #     "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    # ]
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ]
 }
 
@@ -98,39 +121,22 @@ WSGI_APPLICATION = "pizzeria.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
-# if socket.gethostname() == "pizzeriasystem.herokuapp.com":
 
-#     import dj_database_url
-
-#     PG_URL = os.environ.get("DATABASE_URL")
-#     DATABASES = {"default": dj_database_url.config(default=PG_URL)}
-
-# else:
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-#     }
-# }
 # import dj_database_url
+
 # PG_URL = os.environ.get("DATABASE_URL")
 # DATABASES = {"default": dj_database_url.config(default=PG_URL)}
+
+
 # DATABASES = {
 #     "default": {
 #         "NAME": "premium03",
 #         "ENGINE": "django.db.backends.postgresql",
-#         "USER": os.environ.get('DB_USER'),
-#         "PASSWORD": os.environ.get('DB_PASSWORD'),
+#         "USER": os.environ.get("DB_USER"),
+#         "PASSWORD": os.environ.get("DB_PASSWORD"),
 #         "HOST": "localhost",
 #     }
 # }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -191,3 +197,10 @@ TIME_ZONE = "Poland"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 django_heroku.settings(locals())
+
+# import dj_database_url
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default="postgres://postgres:Tofik123!@51.75.127.94:5432/pizzeria"
+#     )
+# }

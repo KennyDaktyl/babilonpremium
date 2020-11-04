@@ -307,7 +307,7 @@ $(document).ready(function () {
                 var result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         driver_id: set_driver_op,
@@ -322,23 +322,23 @@ $(document).ready(function () {
                 return result;
             }
             result = testAjax();
-            var name = (result[0].fields.first_name);
-            var sec_name = (result[0].fields.last_name);
-            driver_name = name + " " + sec_name;
-            $(this).parent().parent().parent().parent().siblings('form').show();
-            $(this).parent().parent().parent().parent().siblings('span.new_set_driver').text(driver_name);
-            $(this).parent().parent().parent().parent().siblings('span.new_set_driver').show();
-            $(this).parent().parent().parent().parent().siblings('button').hide();
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('table-light');
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
-            $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('2');
-            $(this).parent().parent().parent().parent().parent().parent().addClass('3');
-            $(this).parent().parent().parent().parent().siblings().children().children('button.close_order').addClass('True');
-            $(this).parent().parent().parent().parent().parent().siblings().children().children('span.driver_warning').hide();
-            button_status();
-            delivery_status();
-            show_close_button();
+            // var name = (result[0].fields.first_name);
+            // var sec_name = (result[0].fields.last_name);
+            // driver_name = name + " " + sec_name;
+            // $(this).parent().parent().parent().parent().siblings('form').show();
+            // $(this).parent().parent().parent().parent().siblings('span.new_set_driver').text(driver_name);
+            // $(this).parent().parent().parent().parent().siblings('span.new_set_driver').show();
+            // $(this).parent().parent().parent().parent().siblings('button').hide();
+            // $(this).parent().parent().parent().parent().parent().parent().removeClass('table-light');
+            // $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
+            // $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
+            // $(this).parent().parent().parent().parent().parent().parent().removeClass('2');
+            // $(this).parent().parent().parent().parent().parent().parent().addClass('3');
+            // $(this).parent().parent().parent().parent().siblings().children().children('button.close_order').addClass('True');
+            // $(this).parent().parent().parent().parent().parent().siblings().children().children('span.driver_warning').hide();
+            // button_status();
+            // delivery_status();
+            // show_close_button();
             location.reload();
 
 
@@ -354,7 +354,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_close: order_id,
@@ -393,7 +393,6 @@ $(document).ready(function () {
             $(this).parent().parent().siblings().children('span.timer').hide();
             button_status();
             delivery_status();
-            // go_to_order.text('chuj');
         });
     })
 
@@ -406,7 +405,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_cancell_id: order_id,
@@ -420,22 +419,22 @@ $(document).ready(function () {
                 return result;
             }
             result = cancellOrderAjax();
-            console.log(result);
-            console.log('działa');
+            // console.log(result);
+            // console.log('działa');
             // console.log(result[0].pk)
-            $(this).parent().parent().parent().removeClass('table-warning');
-            $(this).parent().parent().parent().removeClass('table-secondary');
-            $(this).parent().parent().parent().addClass('table-danger');
-            $(this).parent().parent().parent().removeClass('2');
-            $(this).parent().parent().parent().removeClass('3');
-            $(this).parent().parent().parent().removeClass('4');
-            $(this).parent().parent().parent().addClass('5');
-            $(this).parent().parent().siblings().children('button.cancelled').hide();
-            console.log($(this).parent().parent().siblings().children('button'));
+            // $(this).parent().parent().parent().removeClass('table-warning');
+            // $(this).parent().parent().parent().removeClass('table-secondary');
+            // $(this).parent().parent().parent().addClass('table-danger');
+            // $(this).parent().parent().parent().removeClass('2');
+            // $(this).parent().parent().parent().removeClass('3');
+            // $(this).parent().parent().parent().removeClass('4');
+            // $(this).parent().parent().parent().addClass('5');
+            // $(this).parent().parent().siblings().children('button.cancelled').hide();
+            // console.log($(this).parent().parent().siblings().children('button'));
 
-            $(this).hide();
-            button_status();
-            delivery_status();
+            // $(this).hide();
+            // button_status();
+            // delivery_status();
             location.reload();
         });
     })
@@ -463,7 +462,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_send_sms: order_id,
@@ -504,84 +503,3 @@ $(document).ready(function () {
 
 
 });
-
-// close_order.each(function (index) {
-//     $(this).on("click", function () {
-//         event.preventDefault();
-//         $.ajax({
-//             url: url_adress,
-//             type: "POST",
-//             data: {
-//                 order_close: $(this).data('order'),
-//                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-//             },
-//             dataType: "json",
-//         }).done(function (result) {
-//             location.reload();
-//         }).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
-//         $(this).hide();
-//         // var id = $(this).data('order');
-//         // $(this).parent('tr').removeClass('table-secondary');
-
-//         // console.log($(this).parent().siblings('td').children('#del_driver_form'));
-//         $(this).parent().parent().parent().addClass('table-secondary');
-//         $(this).parent().siblings().show();
-//         // $('#del_driver_form').hide();
-//         // console.log($('#del_driver_form').hide());
-//         $(this).parent().parent().siblings().children('form').hide();
-//     });
-// })
-
-
-
-// $.ajax({
-//     url: url_adress,
-//     type: "POST",
-//     data: {
-//         driver_id: set_driver_op,
-//         order_id: order_id,
-//         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-//     },
-//     dataType: "json",
-// }).done(function (result) {
-//     driver_from_python = JSON.parse(result.save_driver);
-//     var name = (driver_from_python[0].fields.first_name);
-//     var sec_name = (driver_from_python[0].fields.last_name);
-//     driver_name = name + " " + sec_name;
-//     // console.log(driver_name);
-//     // $('#new_set_driver').text(driver_name);
-//     // $('#new_set_driver').show();
-//     old_set_driver.hide();
-//     console.log(driver_from_python);
-//     location.reload();
-//     // console.log('chuj');
-//     // del_button.show();
-//     // console.log(driver_name);
-// }).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
-
-
-
-// function testAjax() {
-//     var result = "";
-//     $.ajax({
-//         url: url_adress,
-//         async: false,
-//         type: "POST",
-//         data: {
-//             driver_id: set_driver_op,
-//             order_id: order_id,
-//             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-//         },
-//         dataType: "json",
-//         success: function (data) {
-//             result = JSON.parse(data.save_driver);;
-//             console.log(result)
-
-//         }
-//     });
-//     return result;
-
-// }
-// testAjax()
-// result = testAjax();
-// console.log(result.model);

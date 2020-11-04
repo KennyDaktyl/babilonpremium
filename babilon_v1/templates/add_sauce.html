@@ -42,6 +42,21 @@
                         {% endif %}
                         <td><a href="/edit_product/{{topp.id}}">Edycja</a></td>
                         <td><a href="/del_product/{{topp.id}}">Usuń</a></td>
+                        <td>
+                            {% if topp.is_active == True %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{topp.id}}">
+                                <button type="submit" name="is_active" class="btn btn-danger">Wycofaj</button>
+                            </form>
+                            {% else %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{topp.id}}">
+                                <button type="submit" name="is_active" class="btn btn-success">Przywróć</button>
+                            </form>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -26,77 +26,79 @@
 <div class="row col-12 border mt-2 mx-auto">
     <p id="price_size_vege" class="col-2 text-left" data-price="{{pizza.product_size.vege_topps_price}}">Dodatki
         warzywne:</p>
-    {% for el in vegetopps %}
-    <button type="button" class="vegetopps btn btn-success m-1 mx-auto {{el.type_of_ingredient}}" data-vege_price="
-            {{pizza.product_size.vege_topps_price}}">{{el.product_name}} :
-        <span id="price_add_vege_topp"
-            data-price="{{pizza.product_size.vege_topps_price}}">{{pizza.product_size.vege_topps_price}}</span></button>
-    {% endfor %}
+    <div class="col-10 row">
+        {% for el in vegetopps %}
+        <button type="button" class="vegetopps btn btn-success col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-vege_price="
+            {{pizza.product_size.vege_topps_price}}">{{el.product_name}}
+            <span id="price_add_vege_topp" data-price="{{pizza.product_size.vege_topps_price}}"></span></button>
+        {% endfor %}
+    </div>
 </div>
 
 <div class="row col-12 border mt-2 mx-auto">
     <p id="price_size_beef" class="col-2 text-left" data-price="{{pizza.product_size.beef_topps_price}}">Dodatki
         mięsne:
     </p>
-    {% for el in beeftopps %}
-    <button type="button" class="beeftopps btn btn-success m-1 mx-auto {{el.type_of_ingredient}}"
-        data-beef_price="{{pizza.product_size.beef_topps_price}}">{{el.product_name}}
-        : <span>{{pizza.product_size.beef_topps_price}}</button></a>
-    {% endfor %}
+    <div class="col-10 row">
+        {% for el in beeftopps %}
+        <button type="button" class="beeftopps btn btn-warning col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-beef_price="{{pizza.product_size.beef_topps_price}}">{{el.product_name}}
+            <span></button></a>
+        {% endfor %}
+    </div>
 </div>
 
 <div class=" row col-12 border mt-2 mx-auto">
     <p id="price_size_cheese" class="col-2 text-left" data-price="{{pizza.product_size.cheese_topps_price}}">Dodatki
         serowe:
     </p>
-    {% for el in cheesetopps %}
-    <button type="button" class="cheesetopps btn btn-success m-1 mx-auto {{el.type_of_ingredient}}"
-        data-cheese_price="{{pizza.product_size.cheese_topps_price}}">{{el.product_name}} : <span
-            id="price_add_cheese_topp"
-            data-price="{{pizza.product_size.cheese_topps_price}}">{{pizza.product_size.cheese_topps_price}}</button></a>
-    {% endfor %}
+    <div class="col-10 row">
+        {% for el in cheesetopps %}
+        <button type="button" class="cheesetopps btn btn-success col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-cheese_price="{{pizza.product_size.cheese_topps_price}}">{{el.product_name}}<span
+                id="price_add_cheese_topp" data-price="{{pizza.product_size.cheese_topps_price}}"></button></a>
+        {% endfor %}
+    </div>
 </div>
 
 <div class=" row col-12 border mt-2 mx-auto">
     <p id="price_size_extra" class="col-2 text-left" data-price="{{pizza.product_size.extra_topps_price}}">Dodatki
         extra:
     </p>
-    {% for el in extratopps %}
-    {% if el.type_of_ingredient == 4 %}
-    <button type="button" class="extratopps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
-        data-extra_price="{{pizza.product_size.extra_topps_price}}" data-price="{{el.price}}">{{el.product_name}} :
-        <span class=" price_add_extra_topp"
-            data-price="{{pizza.product_size.extra_topps_price}}">{{pizza.product_size.extra_topps_price}}</button></a>
-    {% endif %}
-    {% if el.type_of_ingredient == 8 %}
-    <button type="button" class="extra_1_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
-        data-extra_price="{{pizza.product_size.extra_1_topps_price}}"
-        data-price="{{pizza.product_size.extra_1_topps_price}}">{{el.product_name}} :
-        <span class=" price_add_extra_topp"
-            data-price="{{pizza.product_size.extra_1_topps_price}}">{{pizza.product_size.extra_1_topps_price}}</button></a>
-    {% endif %}
-    {% if el.type_of_ingredient == 9 %}
-    <button type="button" class="extra_2_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
-        data-extra_price="{{pizza.product_size.extra_2_topps_price}}"
-        data-price="{{pizza.product_size.extra_2_topps_price}}">{{el.product_name}} :
-        <span class=" price_add_extra_topp"
-            data-price="{{pizza.product_size.extra_2_topps_price}}">{{pizza.product_size.extra_2_topps_price}}</button></a>
-    {% endif %}
-    {% if el.type_of_ingredient == 10 %}
-    <button type="button" class="extra_3_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
-        data-extra_price="{{pizza.product_size.extra_3_topps_price}}"
-        data-price="{{pizza.product_size.extra_3_topps_price}}">{{el.product_name}} :
-        <span class=" price_add_extra_3_topp"
-            data-price="{{pizza.product_size.extra_topps_price}}">{{pizza.product_size.extra_3_topps_price}}</button></a>
-    {% endif %}
-    {% if el.type_of_ingredient == 11 %}
-    <button type="button" class="extra_4_topps btn btn-success  m-1 mx-auto {{el.type_of_ingredient}}"
-        data-extra_price="{{pizza.product_size.extra_4_topps_price}}"
-        data-price="{{pizza.product_size.extra_4_topps_price}}">{{el.product_name}} :
-        <span class=" price_add_extra_4_topp"
-            data-price="{{pizza.product_size.extra_4_topps_price}}">{{pizza.product_size.extra_4_topps_price}}</button></a>
-    {% endif %}
-    {% endfor %}
+    <div class="col-10 row">
+        {% for el in extratopps %}
+        {% if el.type_of_ingredient == 4 %}
+        <button type="button" class="extratopps btn btn-success  col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-extra_price="{{pizza.product_size.extra_topps_price}}" data-price="{{el.price}}">{{el.product_name}} :
+            <span class=" price_add_extra_topp" data-price="{{pizza.product_size.extra_topps_price}}"></button></a>
+        {% endif %}
+        {% if el.type_of_ingredient == 8 %}
+        <button type="button" class="extra_1_topps btn btn-success  col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-extra_price="{{pizza.product_size.extra_1_topps_price}}"
+            data-price="{{pizza.product_size.extra_1_topps_price}}">{{el.product_name}}
+            <span class=" price_add_extra_topp" data-price="{{pizza.product_size.extra_1_topps_price}}"></button></a>
+        {% endif %}
+        {% if el.type_of_ingredient == 9 %}
+        <button type="button" class="extra_2_topps btn btn-success  col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-extra_price="{{pizza.product_size.extra_2_topps_price}}"
+            data-price="{{pizza.product_size.extra_2_topps_price}}">{{el.product_name}}
+            <span class=" price_add_extra_topp" data-price="{{pizza.product_size.extra_2_topps_price}}"></button></a>
+        {% endif %}
+        {% if el.type_of_ingredient == 10 %}
+        <button type="button" class="extra_3_topps btn btn-success  col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-extra_price="{{pizza.product_size.extra_3_topps_price}}"
+            data-price="{{pizza.product_size.extra_3_topps_price}}">{{el.product_name}}
+            <span class=" price_add_extra_3_topp" data-price="{{pizza.product_size.extra_topps_price}}"></button></a>
+        {% endif %}
+        {% if el.type_of_ingredient == 11 %}
+        <button type="button" class="extra_4_topps btn btn-success  col-1 m-1 ml-4 mr-4 {{el.type_of_ingredient}}"
+            data-extra_price="{{pizza.product_size.extra_4_topps_price}}"
+            data-price="{{pizza.product_size.extra_4_topps_price}}">{{el.product_name}}
+            <span class=" price_add_extra_4_topp" data-price="{{pizza.product_size.extra_4_topps_price}}"></button></a>
+        {% endif %}
+        {% endfor %}
+    </div>
 </div>
 
 <div class="row container-fluid border p-0 m-0 flex-nowrap">

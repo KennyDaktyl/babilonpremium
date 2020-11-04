@@ -12,13 +12,15 @@ $(document).ready(function () {
     var text_sauce_free = "";
     var text_sauce_pay = "";
     var extra_price_edit = $('#extra_price_edit');
+
     var extra_price_edit_start = extra_price_edit.data('price');
     extra_price_edit_start = extra_price_edit_start.replace(',', ".");
     extra_price_edit_start = parseFloat(extra_price_edit_start).toFixed(2);
+    console.log(extra_price_edit_start);
 
     var sauces_form = $('#sauces_form');
-    // sauces_form.attr('value', sauces_form);
-    var i = sauces_form.attr('value', sauces_form)
+    sauces_form.attr('value', extra_price_edit_start);
+    var i = sauces_form.attr('value', extra_price_edit_start)
     // i = i.replace(',', ".");
     // i = parseFloat(i).toFixed(2);
     console.log(i);

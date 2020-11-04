@@ -3,7 +3,7 @@
 <html lang="pl">
 
 <head>
-
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0,  minimum-scale=1.0"> -->
     <style>
         /* Set the size of the div element that contains the map */
         #map {
@@ -13,7 +13,8 @@
             /* The width is the width of the web page */
         }
     </style>
-    <link rel="shortcut icon" href="">
+    <script src="https://kit.fontawesome.com/4665aa4717.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
     <!-- jQuery library -->
@@ -30,7 +31,7 @@
     <link rel="stylesheet" href="{% static "babilon/style.css" %}">
 </head>
 
-<body class="bg-secondary" id="content">
+<body class="bg-secondary fullscreen" id="content">
 
     <div class="container-fluid mr-auto flex-nowrap">
         <div class="row col-12 mt-2 mx-auto text-wrap flex-wrap">
@@ -44,7 +45,7 @@
 
 
         </div>
-        <div class="container-fluid mr-auto">
+        <div class="container-fluid mr-auto ">
             <div class="col-12 mt-2 mx-auto">
                 <div class="container text-center">
                     <footer class="footer col-12 mx-auto">
@@ -65,6 +66,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
+    
+
     {% block script %}
 
     {% endblock %}

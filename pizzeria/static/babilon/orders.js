@@ -1,5 +1,9 @@
 $(document).ready(function () {
 
+    // pop over claud for info drivers
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
     var hours = $('#h');
     var minutes = $('#m');
     var seconds = $('#s');
@@ -34,112 +38,96 @@ $(document).ready(function () {
     }
     show_close_button();
 
-    var order_in_driver_status_array = [];
-
     var workplace_id = $('#table').data('workplace');
-    console.log(workplace_id);
 
     function order_in_drive() {
-        var order_in_driver_status;
-        var order_in_driver_status_array = [];
-        order_in_driver_status = $('tr.2.Dostawa');
+        // var order_in_driver_status = $('tr.2.Dostawa');?
+        var order_in_driver_status = $('tr.3.Dostawa');
+        var order_closed = $('#table').data('order_closed');
 
-        order_in_driver_status.each(function (index) {
-            order_in_driver_status_array.push($(this).data('order'))
-        });
-
-        // for (var i = 0; i < order_in_driver_status_array.length; i++) {
-        // console.log(order_in_driver_status_array[i]);
-        // console.log(order_in_driver_status.length);
+        var url = "https://pizzeriasystem.herokuapp.com/driver_closed_order/" + String(workplace_id);
+        // var url = "http://51.75.127.94:8000/driver_closed_order/" + String(workplace_id)
 
         function StatusChange() {
             var result = "";
-            // var workplace_id = $(order_in_driver_status[i]).data('workplace');
-            // console.log(order_id);
-            $.ajax({
-                url: "https://pizzeriasystem.herokuapp.com/orders_set_drivers/" + workplace_id,
-                async: false,
+
+            result = $.ajax({
+                url: url,
+                async: true,
                 type: "GET",
                 data: {
                     // order_id: order_id,
-                    // workpace_id: 1,
+                    pk: workplace_id,
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                 },
                 dataType: "json",
                 success: function (data) {
                     result = data;
+                    console.log(result['length']);
+                    console.log(order_in_driver_status.length);
+                    console.log(order_closed);
+                    if (result['length'] != order_in_driver_status.length) {
+                        location.reload();
+                    }
+                    if (result['length'] != order_closed) {
+                        location.reload();
+                    }
                 }
             });
             return result;
         }
         result = StatusChange();
-        // console.log(result.length);
-        for (var i = 0; i < result.length; i++) {
-            // console.log(result[i].id);
-            // console.log(order_in_driver_status.length);
-            for (var j = 0; order_in_driver_status.length > j; j++) {
-                // console.log($(order_in_driver_status[i]).data('order'));
-                if ($(order_in_driver_status[j]).data('order') == (result[i].id)) {
-                    // console.log($(order_in_driver_status[i]).data('order'));
-                    // var name = (result[i].driver_id.first_name);
-                    // var sec_name = (result[i].driver_id.last_name);
-                    // var name = (result[i].fields.first_name);
-                    // var sec_name = (result[i].fields.last_name);
-                    // driver_name = name + " " + sec_name;
-                    // $(order_in_driver_status[j]).removeClass('2');
-                    // $(order_in_driver_status[j]).addClass('3');
-                    // $(order_in_driver_status[j]).removeClass('2');
-                    // $(order_in_driver_status[j]).addClass('table-warning');
-                    // $(order_in_driver_status[j]).children().children('button.drivers_button').hide();
-                    // $(order_in_driver_status[j]).children().children('span.new_set_driver').text(driver_name).show();
-                    // $(order_in_driver_status[j]).children().children('form.del_driver_form').show();
-                    // $(order_in_driver_status[j]).children().children('form.order_close_button').show();
-                    location.reload();
-                };
-            };
-        };
-    };
+        // console.log(result['length']);
+        // console.log(order_in_driver_status.length);
+        // console.log(order_closed);
+        // console.log(result['length']);
+        // console.log(result);
+        // console.log(order_in_driver_status.length);
+        // console.log(order_closed);
+        // if (result['length'] != order_in_driver_status.length) {
+        //     location.reload();
+        // }
+        // if (result['length'] != order_closed) {
+        //     location.reload();
+        // }
+    }
+    setInterval(order_in_drive, 5000);
 
-    setInterval(order_in_drive, 4000);
 
-    function driver_close_order() {
-        var order_in_driver_status;
-        var order_in_driver_status_array = [];
-        order_in_driver_status = $('tr.3.Dostawa');
 
-        function StatusChange() {
-            var result = "";
-            var order_id = order_in_driver_status_array[i]
-            // console.log(order_id);
-            $.ajax({
-                url: "https://pizzeriasystem.herokuapp.com/driver_closed_order/" + workplace_id,
-                async: false,
-                type: "GET",
-                data: {
 
-                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                },
-                dataType: "json",
-                success: function (data) {
-                    result = data;
-                }
-            });
-            return result;
-        }
-        result = StatusChange();
-        console.log(result.length);
-        for (var i = 0; i < result.length; i++) {
-            console.log(result[i].id);
-            console.log(order_in_driver_status.length);
-            for (var j = 0; order_in_driver_status.length > j; j++) {
-                console.log($(order_in_driver_status[i]).data('order'));
-                if ($(order_in_driver_status[j]).data('order') == (result[i].id)) {
-                    location.reload();
-                };
-            };
-        };
-    };
-    setInterval(driver_close_order, 5000);
+    // function driver_close_order() {
+    //     var order_closed = $('#table').data('order_closed');
+    //     var url_2 = "https://pizzeriasystem.herokuapp.com/driver_closed_order/" + String(workplace_id);
+    //     // var url_2 = "http://127.0.0.1:8000/driver_closed_order/" + String(workplace_id)
+
+    //     function StatusChange() {
+    //         var result = "";
+    //         // var order_id = order_in_driver_status_array[i]
+    //         // console.log(order_id);
+    //         $.ajax({
+    //             url: url_2,
+    //             async: false,
+    //             type: "GET",
+    //             data: {
+
+    //                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    //             },
+    //             dataType: "json",
+    //             success: function (data) {
+    //                 result = data;
+    //             }
+    //         });
+    //         return result;
+    //     }
+    //     result = StatusChange();
+    //     console.log(result.length);
+    //     console.log(order_closed);
+    //     if (result.length != order_closed) {
+    //         location.reload();
+    //     }
+    // };
+    // setInterval(driver_close_order, 6000);
 
 
     var orders = $('tr.order');
@@ -404,54 +392,7 @@ $(document).ready(function () {
     var old_set_driver = ($("#old_set_driver"));
     var del_button = $("form.del_driver_form").hide();
 
-    set_driver.each(function (index) {
 
-        $(this).on("click", function () {
-            var set_driver_op = $(this).data('driver');
-            event.preventDefault();
-            var order_id = $(this).data('order');
-
-            function testAjax() {
-                var result = "";
-                $.ajax({
-                    url: url_adress,
-                    async: false,
-                    type: "POST",
-                    data: {
-                        driver_id: set_driver_op,
-                        order_id: order_id,
-                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        result = JSON.parse(data.save_driver);
-                    }
-                });
-                return result;
-            }
-            result = testAjax();
-            var name = (result[0].fields.first_name);
-            var sec_name = (result[0].fields.last_name);
-            driver_name = name + " " + sec_name;
-            $(this).parent().parent().parent().parent().siblings('form').show();
-            $(this).parent().parent().parent().parent().siblings('span.new_set_driver').text(driver_name);
-            $(this).parent().parent().parent().parent().siblings('span.new_set_driver').show();
-            $(this).parent().parent().parent().parent().siblings('button').hide();
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('table-light');
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
-            $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('2');
-            $(this).parent().parent().parent().parent().parent().parent().addClass('3');
-            $(this).parent().parent().parent().parent().siblings().children().children('button.close_order').addClass('True');
-            $(this).parent().parent().parent().parent().parent().siblings().children().children('span.driver_warning').hide();
-            button_status();
-            delivery_status();
-            show_close_button();
-            location.reload();
-
-
-        })
-    })
 
     close_order.each(function (index) {
         $(this).on("click", function () {
@@ -462,7 +403,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_close: order_id,
@@ -471,44 +412,46 @@ $(document).ready(function () {
                     dataType: "json",
                     success: function (data) {
                         result = JSON.parse(data.order);
+                        console.log(result);
+                        location.reload();
                     }
                 });
                 return result;
             }
             result = closeOrderAjax();
-            var time_close = result[0].fields.time_delivery_in;
-            console.log(time_close)
-            $(this).parent().parent().parent().removeClass('table-warning');
-            $(this).parent().parent().parent().addClass('table-secondary');
-            $(this).parent().parent().parent().removeClass('2');
-            $(this).parent().parent().parent().removeClass('3');
-            $(this).parent().parent().parent().addClass('4');
-            $(this).parent().siblings().show();
-            $(this).hide();
-            var today = new Date();
-            var h = today.getHours();
-            var m = today.getMinutes();
-            var s = today.getSeconds();
-            if (s < 10) {
-                s = "0" + s;
-            }
-            if (m < 10) {
-                m = "0" + m;
-            }
-            var time_close_order = h + ":" + m + ":" + s;
-            $(this).parent().parent().siblings().children('span.time_close_order').text(time_close_order);
-            $(this).parent().parent().siblings().children('form.order_close_button').hide();
-            $(this).parent().parent().siblings().children('form.del_driver_form_x').hide();
-            $(this).parent().parent().siblings().children().children('button.del_driver_form_x').hide();
-            $(this).parent().parent().siblings().children('span.timer').hide();
-            $(this).parent().parent().siblings().children('button.sms_button').hide();
-            $(this).parent().parent().siblings().children().children('button.unlock').hide();
-            $(this).parent().parent().siblings().children().children('button.cancell_order').hide();
-            $(this).parent().parent().siblings().children().children('button.unlocked').hide();
-            // cancell_order
-            button_status();
-            delivery_status();
-            // go_to_order.text('chuj');
+            // var time_close = result[0].fields.time_delivery_in;
+            // console.log(time_close)
+            // $(this).parent().parent().parent().removeClass('table-warning');
+            // $(this).parent().parent().parent().addClass('table-secondary');
+            // $(this).parent().parent().parent().removeClass('2');
+            // $(this).parent().parent().parent().removeClass('3');
+            // $(this).parent().parent().parent().addClass('4');
+            // $(this).parent().siblings().show();
+            // $(this).hide();
+            // var today = new Date();
+            // var h = today.getHours();
+            // var m = today.getMinutes();
+            // var s = today.getSeconds();
+            // if (s < 10) {
+            //     s = "0" + s;
+            // }
+            // if (m < 10) {
+            //     m = "0" + m;
+            // }
+            // var time_close_order = h + ":" + m + ":" + s;
+            // $(this).parent().parent().siblings().children('span.time_close_order').text(time_close_order);
+            // $(this).parent().parent().siblings().children('form.order_close_button').hide();
+            // $(this).parent().parent().siblings().children('form.del_driver_form_x').hide();
+            // $(this).parent().parent().siblings().children().children('button.del_driver_form_x').hide();
+            // $(this).parent().parent().siblings().children('span.timer').hide();
+            // $(this).parent().parent().siblings().children('button.sms_button').hide();
+            // $(this).parent().parent().siblings().children().children('button.unlock').hide();
+            // $(this).parent().parent().siblings().children().children('button.cancell_order').hide();
+            // $(this).parent().parent().siblings().children().children('button.unlocked').hide();
+            // // cancell_order
+            // button_status();
+            // delivery_status();
+            // // location.reload();
         });
     })
 
@@ -521,7 +464,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_cancell_id: order_id,
@@ -535,8 +478,6 @@ $(document).ready(function () {
                 return result;
             }
             result = cancellOrderAjax();
-            console.log(result);
-            console.log('działa');
             // console.log(result[0].pk)
             $(this).parent().parent().parent().removeClass('table-warning');
             $(this).parent().parent().parent().removeClass('table-secondary');
@@ -546,7 +487,6 @@ $(document).ready(function () {
             $(this).parent().parent().parent().removeClass('4');
             $(this).parent().parent().parent().addClass('5');
             $(this).parent().parent().siblings().children('button.cancelled').hide();
-            console.log($(this).parent().parent().siblings().children('button'));
             $(this).parent().parent().siblings().children('form.order_close_button').hide();
             $(this).parent().parent().siblings().children('form.del_driver_form_x').hide();
             $(this).parent().parent().siblings().children('span.open_button').hide();
@@ -586,7 +526,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_send_sms: order_id,
@@ -598,35 +538,86 @@ $(document).ready(function () {
                     dataType: "json",
                     success: function (data) {
                         result = JSON.parse(data.order);
+                        location.reload();
                         // console.log($(this).parent().parent().siblings('div.message').text());
                     }
                 });
                 return result;
             }
-            result = sendSMSAjax();
-            $(this).text('Wysłano');
-            $(this).parent().parent().parent().parent().siblings().removeClass('btn-success');
-            $(this).parent().parent().parent().parent().siblings('button').addClass('btn-secondary');
-            $(this).parent().parent().parent().parent().siblings('button').text('Wysłano');
-            $(this).parent().parent().parent().parent().siblings('span').text(time_sent_sms);
+            // result = sendSMSAjax();
+            location.reload();
+            // $(this).text('Wysłano');
+            // $(this).parent().parent().parent().parent().siblings().removeClass('btn-success');
+            // $(this).parent().parent().parent().parent().siblings('button').addClass('btn-secondary');
+            // $(this).parent().parent().parent().parent().siblings('button').text('Wysłano');
+            // $(this).parent().parent().parent().parent().siblings('span').text(time_sent_sms);
 
             // $(this).removeClass('btn-success');
             // $(this).removeClass('send_sms');
             // $(this).addClass('btn-secondary');
             // $(this).parent().parent().removeClass('2');
-            if ($(this).parent().parent().parent().parent().parent().parent().hasClass('2')) {
-                $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
-                $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
-                $(this).parent().parent().parent().parent().parent().parent().addClass('3');
-                $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
-            }
+            // if ($(this).parent().parent().parent().parent().parent().parent().hasClass('2')) {
+            //     $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
+            //     $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
+            //     // $(this).parent().parent().parent().parent().parent().parent().addClass('3');
+            //     // $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
+            // }
 
-            button_status();
+            // button_status();
         });
     });
 
 
 });
+
+// set_driver.each(function (index) {
+
+//     $(this).on("click", function () {
+//         var set_driver_op = $(this).data('driver');
+//         event.preventDefault();
+//         var order_id = $(this).data('order');
+
+//         function testAjax() {
+//             var result = "";
+//             $.ajax({
+//                 url: url_adress,
+//                 async: false,
+//                 type: "POST",
+//                 data: {
+//                     driver_id: set_driver_op,
+//                     order_id: order_id,
+//                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+//                 },
+//                 dataType: "json",
+//                 success: function (data) {
+//                     result = JSON.parse(data.save_driver);
+//                 }
+//             });
+//             return result;
+//         }
+//         result = testAjax();
+//         var name = (result[0].fields.first_name);
+//         var sec_name = (result[0].fields.last_name);
+//         driver_name = name + " " + sec_name;
+//         $(this).parent().parent().parent().parent().siblings('form').show();
+//         $(this).parent().parent().parent().parent().siblings('span.new_set_driver').text(driver_name);
+//         $(this).parent().parent().parent().parent().siblings('span.new_set_driver').show();
+//         $(this).parent().parent().parent().parent().siblings('button').hide();
+//         $(this).parent().parent().parent().parent().parent().parent().removeClass('table-light');
+//         $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
+//         $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
+//         $(this).parent().parent().parent().parent().parent().parent().removeClass('2');
+//         $(this).parent().parent().parent().parent().parent().parent().addClass('3');
+//         $(this).parent().parent().parent().parent().siblings().children().children('button.close_order').addClass('True');
+//         $(this).parent().parent().parent().parent().parent().siblings().children().children('span.driver_warning').hide();
+//         button_status();
+//         delivery_status();
+//         show_close_button();
+//         // location.reload();
+
+
+//     })
+// })
 
 // close_order.each(function (index) {
 //     $(this).on("click", function () {

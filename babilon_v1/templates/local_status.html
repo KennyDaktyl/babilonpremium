@@ -1,36 +1,47 @@
 {% extends 'base_owner.html' %}
 {% load static %}
 {% block content %}
-<div class="col-1 mt-2 pl-1 p-0 m-0">
+<div class="col-2 mt-2 pl-1 p-0 m-0">
     <a href="/add_topp/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz dodatek <br>do pizzy</button>
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Utwórz dodatek <br>do
+            pizzy</button>
     </a>
     <a href="/set_topp_price_by_size/" class="col-12 mx-auto p-0 m-0">
         <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Ceny dodatków <br>w/g rozmiaru</button>
     </a>
     <a href="/add_sauce/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Sosy</button>
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Sosy</button>
     </a>
     <a href="/add_pizza/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz pizzę</button>
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Utwórz
+            pizzę</button>
     </a>
     <a href="/add_pizza_premium/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz pizzę<br>premium</button>
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Utwórz
+            pizzę<br>premium</button>
     </a>
     <a href="/add_dish/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz danie</button>
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Utwórz
+            danie</button>
+    </a>
+    <a href="/add_drink/" class="col-12 mx-auto p-0 m-0">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Dodaj napój</button>
     </a>
     <a href="/add_topp_dish/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz dodatki do dań</button>
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Utwórz<br> dodatki
+            do
+            dań</button>
     </a>
-    <a href="/add_category/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Utwórz pozycję w menu</button>
+    <a href="/add_category/" class="col-12 mx-auto p-0 m-0 text-wrap">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto text-center text-wrap">Utwórz<br> pozycję w
+            menu</button>
     </a>
     <a href="/products_list/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto">Lista produktów</button>
+        <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto text-center text-wrap">Lista<br>
+            produktów</button>
     </a>
 </div>
-<section id="main" class="row col-10 mt-2 mx-auto ">
+<section id="main" class="row col-8 mt-2 mx-auto ">
     <div class="row col-12 d-block d-lg-none mx-auto d-flex align-items-baseline">
         <form class="col-3 d-block d-lg-none mx-auto d-flex align-items-baseline" action="/add_new_order_local/">
             <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>LOKAL</button>
@@ -93,17 +104,17 @@
 
         </div>
         <div class="row col-12 border mt-2 mx-auto">
-            <div class="col-4 row mx-auto mt-2">
+            <div class="col-6 row mx-auto mt-2">
                 <div class="col-6 mx-auto">
-                    <p class="col-12 text-center"><b>Zamówienia</b></p>
-                    <p class="col-12 text-center"><b>{{total_orders}}</b></p>
+                    <p class="col-12 text-center"><b>Zamówienia (zrealizowane)</b></p>
+                    <p class="col-12 text-center"><b>{{total_orders}} / {{total_orders_done}}</b></p>
                 </div>
                 <div class="col-6 mx-auto">
                     <p class="col-12 text-center"><b>Przychód</b></p>
                     <p class="col-12 text-center"><b>{{income_sum}}</b></p>
                 </div>
             </div>
-            <div class="col-4 row mx-auto  mt-2">
+            <div class="col-6 row mx-auto  mt-2">
                 <div class="col-6 mx-auto">
                     <p class="col-12 text-center"><b>Wydatki</b></p>
                     <p class="col-12 text-center"><b>{{purhases_sum}}</b></p>
@@ -113,21 +124,22 @@
                     <p class="col-12 text-center"><b>{{income_trips}}</b></p>
                 </div>
             </div>
-            <div class="col-4 row mx-auto  mt-2">
+            <div class="col-8 row mx-auto  mt-2">
                 <div class="col-4 mx-auto">
                     <p class="col-12 text-center"><span><b>Online_1</b></span>
                     </p>
-                    <p class="col-12 text-center"><span><b>{{income_online_1}}</span><br>
-                        <span>({{online_1}})</span></b></p>
+                    <p class="col-12 text-center"><span><b>{{income_online_1}}</b></span>
+                        <span><b>({{online_1}})</b></span></p>
                 </div>
                 <div class="col-4 mx-auto">
-                    <p class="col-12 text-center"><b><span class="text-center mx-auto">Online_2</b></span></p>
-                    <p class="col-12 text-center"><b><span class="col-12 text-center mx-auto">{{income_online_2}}</span>
-                            <span class="col-12 text-center mx-auto">({{online_2}})</span></b></p>
+                    <p class="col-12 text-center"><span class=""><b>Online_2</b></span></p>
+                    <p class="col-12 text-center"><span><b>{{income_online_2}}</b></span>
+                        <span><b>({{online_2}})</b></span></p>
                 </div>
-                <div class="col-4 mx-auto text-center">
-                    <p class="col-12 text-center mx-auto"><b>Online_3</b></p>
-                    <p class="col-12 text-center mx-auto"><b>{{income_online_3}} ({{online_3}})</b></p>
+                <div class="col-4 mx-auto">
+                    <p class="col-12 text-center"><span><b>Online_3</b></span></p>
+                    <p class="col-12 text-center">
+                        <span><b>{{income_online_3}}</b></span><span><b> ({{online_3}})</b></span></p>
                 </div>
             </div>
         </div>
@@ -143,17 +155,20 @@
                         <th scope="col">Online_1</th>
                         <th scope="col">Online_2</th>
                         <th scope="col">Online_3</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{pizzeria_active.workplace_name}}</td>
+                        <td><a href="/orders_in_place/{{pizzeria_active.id}}">{{pizzeria_active.workplace_name}}</a>
+                        </td>
                         <td>{{order_in}}</td>
-                        <td>{{cash_in}}</td>
-                        <td>{{card_in}}</td>
-                        <td>{{online_1_in}}</td>
-                        <td>{{online_2_in}}</td>
-                        <td>{{online_3_in}}</td>
+                        <td>{{cash_in}} /<span class="text-danger"> {{cash_in_count}}</span> </td>
+                        <td>{{card_in}} /<span class="text-danger"> {{card_in_count}}</span></td>
+                        <td>{{online_1_in}} /<span class="text-danger"> {{online_1_in_count}}</span></td>
+                        <td>{{online_2_in}} /<span class="text-danger"> {{online_2_in_count}}</span></td>
+                        <td>{{online_3_in}} /<span class="text-danger"> {{online_3_in_count}}</span></td>
+
                     </tr>
                 </tbody>
             </table>
@@ -176,6 +191,7 @@
                         <th scope="col">Online_1</th>
                         <th scope="col">Online_2</th>
                         <th scope="col">Online_3</th>
+                        <th scope="col">Ilośc zamówień przy kierowcy</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -187,9 +203,28 @@
                         <td>{{driver.counter_cursers_cash}}</td>
                         <td>{{driver.counter_cursers_card}} / <span
                                 class="text-danger">{{driver.counter_cursers_card_count}}</span></td>
-                        <td>{{driver.counter_cursers_online_1}}</td>
-                        <td>{{driver.counter_cursers_online_2}}</td>
-                        <td>{{driver.counter_cursers_online_3}}</td>
+                        <td>{{driver.counter_cursers_online_1}}/ <span
+                                class="text-danger">{{driver.counter_cursers_online_1_count}}</span></td>
+                        <td>{{driver.counter_cursers_online_2}}/ <span
+                                class="text-danger">{{driver.counter_cursers_online_2_count}}</span></td>
+                        <td>{{driver.counter_cursers_online_3}}/ <span
+                                class="text-danger">{{driver.counter_cursers_online_3_count}}</span></td>
+
+                        {% if driver.counter_active_orders_in_car_count > 0 %}
+                        <td class="bg-warning p-0 m-0">
+                        <button type="button" class="btn btn-warning col-12" data-container="body" data-toggle="popover" data-html="true"
+                                data-placement="right"
+                                data-content="{% for order in driver.orders_on_car_list %} {{order.address.street}}<br> {% endfor %}">
+                        {{driver.counter_active_orders_in_car_count}}<br>
+                        {% for order in driver.orders_on_car_list %} {{order.address.street}}<br> {% endfor %}
+                        </button>
+                        </td>
+                        {% else %}
+                        <td class="bg-success">{{driver.counter_active_orders_in_car_count}}
+                        </td>
+                        {% endif %}
+
+
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -213,34 +248,45 @@
     </div>
 </section>
 
-<div class="col-1 p-0 mt-2 pr-1 p-0 m-0">
+<div class="col-2 p-0 mt-2 pr-1 p-0 m-0 text-wrap">
     <a href="/drivers/" class="col-12 mx-auto p-0 m-0">
         <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto">Kierowcy
         </button>
     </a>
     <a href="/menagers/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Dodaj
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Dodaj<br>
             menagera
         </button>
     </a>
     <a href="/barmans/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Dodaj
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Dodaj<br>
             barmana
         </button>
     </a>
-    <a href="/purchases/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Wydatki
+    <a href="/purchases/" class="col-12 mx-auto p-0 m-0 text-wrap">
+        <button type=" submit" class="col-12 btn btn-success m-1 mx-auto">Wydatki <br>
             zakupy
         </button>
     </a>
-    <a href="/orders_archives/" class="col-12 mx-auto p-0 m-0">
-        <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto">Archiwum
-            zamówień
+    <a href="/orders_archives/" class="col-12 mx-auto p-0 m-0 text-wrap">
+        <button type=" submit" class="col-12 btn btn-warning m-1 p-0 mx-auto text-wrap">Archiwum<br> zamówień
         </button>
     </a>
     <a href="/statistics/" class="col-12 mx-auto p-0 m-0">
         <button type=" submit" class="col-12 btn btn-warning m-1 mx-auto">Statystyki
         </button>
     </a>
+    <h3 class="col-12 mx-auto text-center mt-2 p-0 m-0">Saldo SMS<br>
+        {% if warning == True %}
+        <h2 class="col-12 text-center text-danger">{{saldo}} zł</h2>
+        {% else %}
+        <h2 class="col-12 text-center">{{saldo}} zł</h2>
+        {% endif %}
+    </h3>
 </div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static "babilon/local_status.js" %}" type="text/javascript"></script>
+
 {% endblock %}

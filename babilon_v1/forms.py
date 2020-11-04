@@ -5,6 +5,7 @@ from django.contrib.admin import widgets
 from django.utils.dates import MONTHS
 from babilon_v1.models import *
 from babilon_v1.choice_field import *
+from django.contrib.auth.models import Group
 
 year_range = (
     "2019",
@@ -65,6 +66,19 @@ class AddSauceForm(forms.Form):
     price = forms.FloatField(label="Cena sosu", help_text="", required=False)
 
 
+class AddDrink(forms.Form):
+    lista = [4, 5]
+    category_drink = forms.ModelChoiceField(
+        label="Categoria napoju",
+        queryset=Category.objects.filter(category_number__in=lista),
+    )
+    size_drink = forms.ModelChoiceField(
+        label="Rozmiar napoju", queryset=ProductSize.objects.filter(bottle=True)
+    )
+    drink_name = forms.CharField(label="Nazwa napoju", min_length=0, max_length=64)
+    price = forms.FloatField(label="Cena napoju", help_text="*")
+
+
 class AddPizzaForm(forms.Form):
     pizza_number = forms.IntegerField(label="Numer pizzy",)
     pizza_name = forms.CharField(label="Nazwa Pizzy", min_length=3, max_length=64)
@@ -109,7 +123,9 @@ class AddToppForDishForm(forms.Form):
 
 
 class AddCategoryForm(forms.Form):
-    category_number = forms.IntegerField(label="Numer wyświetlania kategorii",)
+    category_number = forms.IntegerField(
+        label="Numer wyświetlania kategorii", help_text="wpisz cyfrę"
+    )
     category_name = forms.CharField(
         label="Nazwa kategorii", min_length=3, max_length=128, help_text="*"
     )
@@ -157,6 +173,9 @@ class SetMonthStatsForm(forms.Form):
 class DriverForm(forms.Form):
     username = forms.CharField(label="UserName", max_length=32, help_text="*")
     password = forms.CharField(widget=forms.PasswordInput())
+    group = forms.ModelChoiceField(
+        label="Grupa praw dostępu", queryset=Group.objects.all(), help_text="*"
+    )
     first_name = forms.CharField(label="Imię", max_length=32, required=False)
     last_name = forms.CharField(label="Nazwisko", max_length=32, help_text="*")
     rate = forms.FloatField(
@@ -189,6 +208,9 @@ class DriverForm(forms.Form):
 class MenagerForm(forms.Form):
     username = forms.CharField(label="UserName", max_length=32, help_text="*")
     password = forms.CharField(widget=forms.PasswordInput())
+    group = forms.ModelChoiceField(
+        label="Grupa praw dostępu", queryset=Group.objects.all(), help_text="*"
+    )
     first_name = forms.CharField(label="Imię", max_length=32, required=False)
     last_name = forms.CharField(label="Nazwisko", max_length=32, help_text="*")
     work_places = forms.ModelMultipleChoiceField(
@@ -221,6 +243,9 @@ class MenagerForm(forms.Form):
 class BarmanForm(forms.Form):
     username = forms.CharField(label="UserName", max_length=32, help_text="*")
     password = forms.CharField(widget=forms.PasswordInput())
+    group = forms.ModelChoiceField(
+        label="Grupa praw dostępu", queryset=Group.objects.all(), help_text="*"
+    )
     first_name = forms.CharField(label="Imię", max_length=32, required=False)
     last_name = forms.CharField(label="Nazwisko", max_length=32, help_text="*")
     work_place = forms.ModelChoiceField(

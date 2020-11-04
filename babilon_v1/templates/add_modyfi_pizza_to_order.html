@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<div class="col-2 p-0 mt-2 mx-auto border text-left">
+<div class="col-1 p-0 mt-2 mx-auto border text-left">
     {% for cat in categorys %}
     <a href="/products_category/{{cat.id}}" class="col-12 p-0 mt-3 mx-auto text-left">
         <button type=" submit" class="col-12 p-0 btn btn-light mt-3 mx-auto text-center">{{cat.category_name}}</button>
@@ -10,7 +10,7 @@
     {% endfor %}
 </div>
 
-<div class="col-10 p-0 border">
+<div class="col-11 p-0 border">
     <div class="row col-12 border mx-auto mt-2">
         <div class="col-12 row p-0 mx-auto">
             <div class="col-8 row">

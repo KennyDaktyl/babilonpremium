@@ -21,18 +21,20 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
+                        <th scope="col">Liczba porządkowa</th>
                         <th scope="col">Nazwa</th>
-                        <th scope="col">Zmień</th>
-                        <th scope="col">Usuń</th>
+                        <!-- <th scope="col">Zmień</th>
+                        <th scope="col">Usuń</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for el in categorys %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{el.category_number}}</td>
                         <td>{{el.category_name}}</td>
-                        <td><a href="/change_category/{{el.id}}">Zmień</a></td>
-                        <td><a href="/del_category/{{el.id}}">Usuń</a></td>
+                        <!-- <td><a href="/change_category/{{el.id}}">Zmień</a></td>
+                        <td><a href="/del_category/{{el.id}}">Usuń</a></td> -->
                     </tr>
                     {% endfor%}
                 </tbody>

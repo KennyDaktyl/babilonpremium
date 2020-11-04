@@ -35,6 +35,21 @@
                         <td>{{el.price}}</td>
                         <td><a href="/change_product/{{el.id}}">Zmień</a></td>
                         <td><a href="/del_product/{{el.id}}">Usuń</a></td>
+                        <td>
+                            {% if el.is_active == True %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{el.id}}">
+                                <button type="submit" name="is_active" class="btn btn-danger">Wycofaj</button>
+                            </form>
+                            {% else %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{el.id}}">
+                                <button type="submit" name="is_active" class="btn btn-success">Przywróć</button>
+                            </form>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor%}
                 </tbody>

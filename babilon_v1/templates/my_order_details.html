@@ -1,0 +1,120 @@
+{% extends 'base_driver_view.html' %}
+{% load static %}
+
+
+{% block content %}
+<h5 class="col-12 text-left">Zamówienia wyjazd</h5>
+<button class="btn btn-primary" id="goFS">Go fullscreen</button>
+<div class="col-12 mt-3 mx-auto text-center border bg-light table-responsive">
+    <table class="table table-responsive border mt-2 t_mobile">
+        <thead class="">
+            <tr>
+                <th scope="col w-auto">L.P.</th>
+                <th scope="col">Danie</th>
+                <th>Ilość</th>
+                <th>Rozmiar</th>
+                <th>Cena podst.</th>
+                <th>Dodatki cena</th>
+                <th>Razem</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody class="">
+            {% for el in positions_on_order %}
+            {% if el.pizza_half == False %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td><span>
+                        <b> {{el.product_id.product_name}}</b></span></td>
+                <td><span>Ilość: {{el.quantity}}</span></td>
+                <td>
+                    {% if el.size_id %}
+                    <span>{{el.size_id}}</span>
+                    {% else %}
+                    <span>b/z</span>
+                    {% endif %}
+                </td>
+                <td><span>{{el.product_id.price}}</span></td>
+                <td><span>{{el.extra_price}}</span></td>
+                <td><b>Cena: <b>{{el.total_price}}</b></span></td>
+                <td>{{el.info}}</span></td>
+            </tr>
+            <tr>
+                {% if el.sauces_free.strip %}
+                <td colspan="5" class="text-left"><b>Sosy darmowe:</b><br> {{el.sauces_free}}</td>
+                {% endif %}
+                {% if el.sauces_pay.strip %}
+                <td colspan="5" class="text-left"><b>Sosy płatne:</b><br> {{el.sauces_pay}}</td>
+                {% endif %}
+            </tr>
+
+
+            {% else %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+
+                <td><span>
+                        <b> {{el.halfpizza_name}}</b></span></td>
+                <td><span>Ilość: {{el.quantity}}</span></td>
+                <td>
+                    {% if el.size_id %}
+                    <span>{{el.size_id}}</span>
+                    {% else %}
+                    <span>b/z</span>
+                    {% endif %}
+                </td>
+
+                <td><span>{{el.product_id.price}}</span></td>
+                <td><span>{{el.extra_price}}</span></td>
+                <td><b>Cena: <b>{{el.total_price}}</b></b></span></td>
+                <td>{{el.info}}</span></td>
+            </tr>
+            <tr>
+                {% if el.sauces_free.strip %}
+                <td colspan="5" class="text-left"><b>Sosy darmowe:</b><br> {{el.sauces_free}}</td>
+                {% endif %}
+                {% if el.sauces_pay.strip %}
+                <td colspan="5" class="text-left"><b>Sosy płatne:</b><br> {{el.sauces_pay}}</td>
+                {% endif %}
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="col-12 bg-light small  text-center mx-auto text-dark row text-wrap m-2">
+    <a class="col-6 mx-auto mt-3" href="/confirm_close_order/{{order.id}}"><button
+            class="col-12 mx-auto btn btn-danger orders_number">Wydaj zamówienia</button></a>
+    <a class="col-4 mx-auto mt-3" href="/driver_account/{{user.id}}"><button
+            class="col-12 mx-auto btn btn-warning orders_number">Cofnij</button></a>
+    <div class="col-12 row orders_box_driver mt-2">
+        <h3 class="col-6 text-left">Total: <strong>{{order.order_total_price_new}}</strong></h3>
+        <h3 class="col-6 text-right">Płatność: <strong>{{order.get_pay_method_display}}</strong></h3>
+        <h3 class="col-12 text-left">Godzina dostawy: <strong>{{order.time_zero}}</strong></h3>
+        <h3 class="col-12 text-left">Adres: <strong>{{order.address.street}}</strong></h3>
+        <h3 class="col-12 text-left">Telefon: <strong>{{order.address.client_id.phone_number}}</strong></h3>
+        {% if order.info.strip %}
+        <h3 class="col-12">Informacje: <strong>{{order.info}}</strong></h3>
+        {% endif %}
+        {% if order.discount > 0 %}
+        <h3 class="col-12">Rabat: <strong>{{order.discount}}%</strong></h3>
+        {% endif %}
+    </div>
+</div>
+
+</div>
+
+<!--The div element for the map -->
+<!-- <iframe width="500" height="400" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBEJkSHJyOybH3WslnGOIqiNw2dvi0B2p4
+    &q={{address}}" allowfullscreen>
+</iframe> -->
+<!-- <a href="https://maps.google.com/?q={{address}}">{{address}}</a> -->
+
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}

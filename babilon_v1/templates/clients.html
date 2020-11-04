@@ -2,19 +2,24 @@
 {% load static %}
 {% block content %}
 
-<div class="row col-12 m-2" id="search_div">
+<form method="POST" class="row col-4 mt-2 ml-2 m-0 p-0" id="search_form">
+    {% csrf_token %}
     <h5 class="text-left col-12 m-2">Znajdź klienta</h5>
-    <input name="search" id="search_client" class="text-left" maxlength="15"><br>
-    <button id="add_new_client" class="col-2 text-center m-3 btn-success">Dodaj klienta</button>
-</div>
-<div class="container-fluid row mx-auto mt-3" id="new_client">
-    <div class="row col-10  mx-auto">
+    <input type="hidden" name="order_id" id="" value="{{order.id}}">
+    <input name="search" id="search_client" class="text-left" maxlength="15" value="{{search}}"><br>
+    <button type="submit" class="col-2 text-center m-3 btn-dark">Szukaj</button>
+</form>
+<button id="add_new_client" class="col-2 text-center m-3 btn-success">Dodaj klienta</button>
+<!-- <div id="loading" class="col-12 mx-auto p-0 m-0"></div> -->
+<div class="container-fluid row mx-auto mt-3 " id="new_client">
+
+    <div id="new_client" class="row col-10  mx-auto">
         <form method="POST" enctype="multipart/form-data" class="col-12 text-left">
             {% csrf_token %}
             <input name="order" value="{{order.id}}" type="hidden">
-            <label class="text-left mt-2">Numer telefonu</label><br>
-            <input name="phone_number" id="phone_number" class="text-left" maxlength="15" value="" type="text"><span
-                class="col-1"></span><span id="ok" class="text-danger"></span><br>
+            <label class="text-left mt-2">Numer telefonu </label><br>
+            <input name="phone_number" id="phone_number" class="text-left" maxlength="15" value="{{search}}"
+                type="text"><span class="col-1"></span><span id="ok" class="text-danger"></span><br>
             <label class="text-left mt-2">Adres</label><br>
             <input name="address" id="address" class="text-left" value="" type="text" size="32" maxlength="128"><br>
             <label class="text-left mt-2">Imie, nazwisko</label><br>
@@ -29,49 +34,78 @@
     <a href="/clients/" class="col-2 mt-2 text-right"><button class="text-right btn btn-danger">Powrót</button></a>
 </div>
 
-<div id="client" class="col-12 row mx-auto bg-light p-1 border m-2">
-    <table class="table mx-auto col-12 ">
+<div id="clients" class="col-12 row mx-auto bg-light p-0 m-0 mt-2 page table ml-3">
+    <table class="table clients_tab p-0 m-0 table-responsive mx-auto ">
         <thead>
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Telefon</th>
                 <th scope="col">dane</th>
                 <th scope="col">Dodaj adres</th>
-                <th scope="col">Adres</th>
+                <th scope="col-2">Adres</th>
+                <th scope="col">Licznik</th>
+                <th scope="col">Edycja</th>
+                <th scope="col">Usuń</th>
                 <th scope="col">Status</th>
                 <th scope="col">Info</th>
             </tr>
         </thead>
         <tbody>
+
             {% for el in clients %}
             <tr class="lista">
                 <th scope="row">{{el.id}}</th>
-                <td>{{el.phone_number}}</td>
+                <td class="">{{el.phone_number}}<br>
+                    <a class="mx-auto text-white" href="/del_client/{{el.id}}"><button
+                            class="btn-danger text-center mx-auto">X</a></button>
+                </td>
                 {% if el.client_name.strip %}
                 <td>{{el.client_name}}</td>
                 {% else %}
                 <td></td>
                 {% endif %}
-                <td><a class="col-1" href="/add_client_new_address/{{el.id}}"><button class="btn-success col-12">Dodaj
+                <td><a href="/add_client_new_address/{{el.id}}"><button class="btn-success">Dodaj
                             adres</button></a>
                 </td>
-                <td class="col-1">
-                    <ul class="col-12 m-2 p-0">
+                <td class="mx-auto ml-3 mr-3 address">
+                    <ul>
                         {% for address in clients_addresses %}
                         {% if el.id == address.client_id.id %}
-                        <li class="col-12 row m-2 p-0">
-                            <a href="/add_client_to_order/{{address.id}}"
-                                class="col-6 text-center m-2 p-0">{{address.street}} </a>
-                            <span class="col-2 text-center m-2 p-0">Licznik:
-                                {{address.choice_count}}</span>
-                            <a class="col-1 m-2 p-0" href="/edit_address/{{address.id}}"><button
-                                    class="btn-primary text-center">E</button></a>
-                            <a class="col-1 m-2 p-0" href="/del_address/{{address.id}}"><button
-                                    class="btn-danger text-center">X</button></a>
+                        <li class="mx-auto m-2">
+                            <a href="/add_client_to_order/{{address.id}}" class="text-center ">{{address.street}}
+                            </a>
                         </li>
                         {% endif %}
                         {% endfor %}
                     </ul>
+                </td>
+                <td>
+                    <ul>
+                        {% for address in clients_addresses %}
+                        {% if el.id == address.client_id.id %}
+                        <li class="mx-auto text-center m-2 ">
+                            {{address.choice_count}}</li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    {% for address in clients_addresses %}
+                    {% if el.id == address.client_id.id %}
+                    <a class="mx-auto" href="/edit_address/{{address.id}}"><button
+                            class="btn-primary text-center mx-auto">E</button></a><br>
+                    {% endif %}
+                    {% endfor %}
+
+                </td>
+                <td>
+
+                    {% for address in clients_addresses %}
+                    {% if el.id == address.client_id.id %}
+                    <a class="mx-auto" href="/del_address/{{address.id}}"><button
+                            class="btn-danger text-center mx-auto">X</button></a><br>
+                    {% endif %}
+                    {% endfor %}
                 </td>
                 <td>{{el.get_status_display}}</td>
                 {% if el.info.strip %}

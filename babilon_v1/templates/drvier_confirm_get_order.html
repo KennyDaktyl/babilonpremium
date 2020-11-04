@@ -1,0 +1,30 @@
+{% extends 'base_driver_view.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="col-12 row mx-auto text-center mt-5">
+    <form class="col-12 row mx-auto text-center" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="order_id" value="{{order.id}}">
+        <button name="confirm" type="submit"
+            class="col-10 mx-auto text-center btn-success mt-5 confirm_get_order">Potwierdzam</button>
+        <a class="col-6 mx-auto p-0 mt-5 text-center" href="/driver_mobile_view/{{user.id}}"> <button name="back"
+                type="button" class="col-12 mx-auto text-center btn-danger back">Wróć</button>
+        </a>
+    </form>
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+
+{% block script %}
+<!-- <script src="{% static "babilon/drivers_mobile.js" %}" type="text/javascript"> -->
+<!-- </script> -->
+{% endblock %}

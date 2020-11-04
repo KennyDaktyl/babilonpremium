@@ -41,10 +41,7 @@
                         <th scope="col">Nazwisko</th>
                         <th scope="col">Telefon</th>
                         <th scope="col">Adres</th>
-                        <th scope="col">Ilość zamówień</th>
-                        <th scope="col">Gotówka</th>
-                        <th scope="col">Karta</th>
-                        <th scope="col">Razem</th>
+                        <th scope="col">Zmień hasło</th>
                         <th scope="col">Miejsce pracy</th>
                         <th scope="col">Usuń</th>
                     </tr>
@@ -58,10 +55,37 @@
                         <td class="h7">{{menager.last_name}}<br>
                         <td class="h7">{{menager.phone_number}}<br>
                         <td class="h7">{{menager.user_address}}<br>
-                        <td class="h7">później</td>
-                        <td class="h7">później</td>
-                        <td class="h7">później</td>
-                        <td class="h7">później</td>
+                        <td class="h7"><button type="button" class="btn btn-warning ml-2 mt-1 mb-1" data-toggle="modal"
+                                data-target="#{{menager.id}}ModalAddPhone">
+                                Zmień hasło
+                            </button>
+                            <div class="modal fade" id="{{menager.id}}ModalAddPhone" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Password</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form name="password_change" action="" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="user_id" value="{{menager.id}}">
+                                                <input type="text" name="password" value="" maxlength="15">
+                                                <button name="password_change" type="submit"
+                                                    class="btn btn-warning">Nowe hasło</button>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Zamknij</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td class="h7">{% for place in menager.work_place.all %}
                             <span>{{place.workplace_name}}, </span>
                             {% endfor %}

@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<div class="col-2 p-0 mt-2 mx-auto border text-left">
+<div class="col-1 p-0 mt-2 mx-auto  text-left">
     {% for cat in categorys %}
     <a href="/products_category/{{cat.id}}" class="col-12 p-0 mt-3 mx-auto text-left">
         <button type=" submit"
@@ -11,8 +11,8 @@
     {% endfor %}
 </div>
 
-<div class="col-10 p-0 border">
-    <div class="row col-12 border mx-auto mt-2">
+<div class="col-11 p-0 border">
+    <div class="row col-12 mx-auto mt-2">
         <div class="col-12 row p-0 mx-auto">
             <div class="col-8 row">
                 <p class="col-7 text-left p-auto">Nazwa:<b> {{pizza.product_name}} Cena: {{pizza.price}}</b> </p>

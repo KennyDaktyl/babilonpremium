@@ -82,6 +82,7 @@ $(document).ready(function () {
             }).done(function (result) {}).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
 
             $(this).addClass('btn-primary');
+            location.reload();
         });
 
     });

@@ -28,9 +28,52 @@
                 id="wynos_order">{{orders_outside_type}}</span><br><i class="fas fa-sign-out-alt"></i></button>
         <button id="dostawa" type="submit" class="btn btn-light mx-auto col-2 border m-1">Dostawa: <span
                 id="dostawa_order">{{orders_driver_type}}</span><br><i class="fas fa-truck"></i></button>
-        <button id="wynos" class="col-2 btn-primary mx-auto m-1" type="submit" class="">
+        <!-- <button id="wynos" class="col-2 btn-primary mx-auto m-1" type="submit" class="">
             <div class="clock">Godzina: <span id="h"></span> : <span id="m"></span> : <span id="s"></span></div>
+        </button> -->
+         <button type="button" class="col-2 btn-primary mx-auto m-1" data-toggle="modal"
+            data-target="#driverModal{{order.id}}">
+            Kierowcy Status
         </button>
+
+        <div class="modal fade" id="driverModal{{order.id}}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <h4 class="mx-auto">Licznik zamówień</h4>
+                            {% for driver in drivers %}
+                            {% if driver.order_on_car > 0 %}
+                            <button type="button" class="btn btn-warning col-12 mt-1" data-container="body" data-toggle="popover" data-html="true"
+                                data-placement="right"
+                                data-content="{% for order in driver.orders_on_car_list %} {{order.address.street}}<br> {% endfor %}">
+                                {{driver.first_name}}
+                                {{driver.last_name}}
+                                {{driver.order_on_car}}
+                            </button>
+                            
+                            {% else %}
+                            <button type="button" class="btn btn-success col-12 mt-1" data-container="body" data-toggle="popover" data-html="true"
+                                data-placement="right"
+                                data-content="{{orders_on_car_list}}">
+                                {{driver.first_name}}
+                                {{driver.last_name}}
+                                {{driver.order_on_car}}
+                            </button>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-12 row m-2">
         {% if in_progress %}
@@ -63,8 +106,9 @@
 
 <div
     class="container-fluid mt-3 bg-white mx-auto text-center table-responsive table-wrapper-scroll-y my-custom-scrollbar p-0 m-0">
-    <table class="table table-bordered table-striped text-center mx-auto w-100 orders">
-        <thead class="w-100">
+    <table id="table" class="table table-bordered table-striped text-center mx-auto w-100 orders"
+        data-workplace="{{workplace}}" data-order_closed="{{len_orders_close}}">
+        <thead class=" w-100">
             <tr>
                 <th scope="col w-auto">Nr</th>
                 <th scope="col w-auto">Godz. Zam.</th>
@@ -74,10 +118,10 @@
                 <th scope="col w-auto">Płatność</th>
                 <th scope="col w-auto">Info</th>
                 <th scope="col w-auto">Przyjmujący</th>
-                <th scope="col w-auto">Lokal/Wywóz</th>
-                <!-- <th scope="col w-auto">Podepnij kierowce</th> -->
-                <th scope="col w-auto">Wyjazd</th>
-                <th scope="col w-auto">Dostawa</th>
+                <!-- <th scope="col w-auto">Lokal/Wywóz</th> -->
+                <th scope="col w-auto">Podepnij kierowce</th>
+                <th scope="col w-auto">SMS</th>
+                <th scope="col w-auto">Czas<br>Start/Finish</th>
                 <th scope="col w-auto">Zamknij</th>
                 <th scope="col w-auto">Szczegóły</th>
                 <th scope="col w-auto">Anuluj</th>
@@ -115,7 +159,7 @@
                     <span class="timer text-success col-5"></span>
                     {% endif %}
                 </td>
-                <td class="col w-auto">
+                <td class="col w-auto text-nowrap">
                     {% if order.type_of_order == 3 %}
                     {{order.address.client_id.phone_number}}<br>{{order.address.street}}
                     {% endif %}
@@ -123,7 +167,10 @@
                     Lokal
                     {% endif %}
                     {% if order.type_of_order == 2 %}
-                    Wynos
+                    Wynos<br>
+                    {% if order.address != None %}
+                    {{order.address.client_id.phone_number}}
+                    {% endif %}
                     {% endif %}
                 </td>
                 <td class="col w-auto">{{order.order_total_price2}}<br>
@@ -131,11 +178,45 @@
                     <span class="text-danger">{{order.discount}}%</span>
                     {% endif %}
                 </td>
-                <td>{{order.get_pay_method_display}}</td>
+                <td>{{order.get_pay_method_display}}<br>
+                    {% if order.status != 4 and order.status != 5 %}
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#{{order.id}}ModalPayMethod">
+                        Zmień
+                    </button>
+                    <div class="modal fade" id="{{order.id}}ModalPayMethod" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Methody płatności</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form name="change_pay_m" action="" method="POST">
+                                        {% csrf_token %}
+                                        {% for key,value in pay_methods %}
+                                        <input type="hidden" name="order_id" value="{{order.id}}">
+                                        <button name="pay_mathod" type="submit" value="{{key}}"
+                                            class="btn btn-warning col-12">{{value}}</button>
+                                        {% endfor %}
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </td>
                 <td>{{order.info}}</td>
                 <td>{{order.barman_id.username}}</td>
                 <!-- <td class="col w-auto">{{order.get_type_of_order_display}}</td> -->
-                {% if order.type_of_order == 3 %}
+                {% if order.type_of_order == 3 and order.status != 4 and order.status != 5 %}
                 {% if order.driver_id == None %}
                 <td class="col w-auto">
                     <button type="button" id="drivers_button" class="drivers_button btn btn-warning" data-toggle="modal"
@@ -150,14 +231,36 @@
 
                                 </div>
                                 <div class="modal-body">
-                                    {% for driver in drivers %}
-                                    <button type="button" data-driver="{{driver.id}}" data-order="{{order.id}}"
-                                        data-dismiss="modal"
-                                        class="driver modal-footer btn-secondary col-12 text-center mx-auto">
-                                        <span class="col-12 text-center" data-driver="{{driver.id}}"
-                                            data-order="{{order.id}}">{{driver.first_name}}
-                                            {{driver.last_name}}</span> </button>
-                                    {% endfor %}
+                                    <div>
+                                        <form name="driver_id" action="" method="POST">
+                                            {% csrf_token %}
+                                            {% for driver in drivers %}
+                                            <input type="hidden" name="order_id" value="{{order.id}}">
+                                           
+                                                
+                                                
+                                                 {% if driver.order_on_car > 0 %}
+                            <button name="set_driver" type="submit" value="{{driver.id}}" type="button" class="btn btn-warning col-12 mt-1" data-container="body" data-toggle="popover" data-html="true"
+                                data-placement="right"
+                                data-content="{% for order in driver.orders_on_car_list %} {{order.address.street}} Czas dojazdu {{driving_time}}<br>{% endfor %}">
+                                {{driver.first_name}}
+                                {{driver.last_name}}
+                                {{driver.order_on_car}}
+                            </button>
+                            
+                            {% else %}
+                            <button name="set_driver" type="submit" value="{{driver.id}}" type="button" class="btn btn-success col-12 mt-1" data-container="body" data-toggle="popover" data-html="true"
+                                data-placement="right"
+                                data-content="{{orders_on_car_list}}">
+                                {{driver.first_name}}
+                                {{driver.last_name}}
+                                {{driver.order_on_car}}
+                            </button>
+                            {% endif %}
+                                            
+                                            {% endfor %}
+                                        </form>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -166,12 +269,14 @@
                         </div>
                     </div>
                     <span id="new_set_driver" class="new_set_driver"></span>
+                    {% if order.status != 4 or order.status != 5 %}
                     <form id="del_button" class="del_driver_form" action="/del_driver_from_order/{{order.id}}">
                         <button type="submit" class="btn-danger">Usuń</button>
                     </form>
+                    {% endif %}
                     {% else %}
                 <td class="col w-auto">{{order.driver_id.first_name}} {{order.driver_id.last_name}} <br>
-                    {% if order.status != 4 %}
+                    {% if order.status != 4 and order.status != 5 %}
                     <form id="del_driver_form" action="/del_driver_from_order/{{order.id}}">
                         <button type="submit" class="btn-danger">Usuń</button>
                     </form>
@@ -179,36 +284,26 @@
                 </td>
                 {% endif %}
                 {% else %}
-                <td class="col w-auto">Lokal</td>
+                <td class="col w-auto">Wydanie w <br>lokalu</td>
                 {% endif %}
 
-                {% if order.type_of_order == 3 %}
-                <td class="col w-auto ">
-                    {% if order.time_get == None and order.status != 4 and order.start_delivery_time == None %}
-                    <button type="button" class="btn btn-success " data-toggle="modal"
-                        data-target="#exampleModal">SMS</button><br>
-                    <span class="time_start_delivery"></span>
-                    {% else %}
-                    {% if order.start_delivery_time %}
-                    <button type="button" data-order="{{order.id}}" class="btn btn-secondary send">Wysłano</button><br>
-                    <span class="time_start_delivery">{{order.start_delivery_time}}</span>
-                    {% else %}
-                    <button type="button" data-order="{{order.id}}" class="btn btn-secondary">Brak</button><br>
-                    {% endif %}
-                    {% endif %}
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <td>
+                    {% if order.type_of_order == 3 and order.status != 1 and order.status != 4 and order.status != 5 and order.address.client_id.phone_number != None and order.sms_send == False %}
+                    <button type="button" class="btn btn-success sms_button" data-toggle="modal"
+                        data-target="#{{order.id}}" data-order="{{order.id}}">SMS</button>
+
+                    <div class="modal fade" id="{{order.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="{{order.id}}Label" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">SMS</h5>
+                                    <h5 class="modal-title" id="{{order.id}}Label">SMS</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body massage">
-                                    Pizzeria Babilon - Kierowca {{order.driver_id.first_name}} jest w drodze. Platonosc:
+                                    Pizzeria Babilon - Kierowca {{order.driver_id.first_name}} jest w drodze. Platnosc:
                                     {{order.get_pay_method_display}}, Kwota: {{order.order_total_price}}, adres:
                                     {{order.address.street}}. Dziekujemy...
                                 </div>
@@ -217,21 +312,68 @@
                                         data-dismiss="modal">Zamknij</button>
                                     <button type="button" data-order="{{order.id}}"
                                         data-phone_number="{{order.address.client_id.phone_number}}"
-                                        class="btn btn-primary send_sms" data-dismiss="modal">SMS</button>
+                                        class="btn btn-primary send_sms" data-dismiss="modal">SMS
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </td>
+                    {% endif %}
+                    {% if order.type_of_order == 2 and order.status != 1 and order.status != 4 and order.status != 5 and order.address.client_id.phone_number != None and order.sms_send == False %}
+                    <button type="button" class="btn btn-success sms_button" data-toggle="modal"
+                        data-target="#{{order.id}}" data-order="{{order.id}}">SMS</button>
 
-                {% else %}
-                <td class="col w-auto">Lokal</td>
-                {% endif %}
-                <td class="col w-auto"><span class="time_close_order">
-                        {% if order.time_delivery_in %}
-                        {{order.time_delivery_in}}</span>
+                    <div class="modal fade" id="{{order.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="{{order.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="{{order.id}}Label">SMS</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body massage">
+                                    Pizzeria Babilon - Zamowienie gotowe do odbioru.
+                                    Zapraszamy...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Zamknij</button>
+                                    <button type="button" data-order="{{order.id}}"
+                                        data-phone_number="{{order.address.client_id.phone_number}}"
+                                        class="btn btn-primary send_sms" data-dismiss="modal">SMS
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if order.type_of_order == 2 or order.type_of_order == 3 %}
+                    {% if order.status == 4 or order.status == 5 %}
+                    {% if order.sms_send == False %}
+                    <button type="button" class="btn btn-secondary">Brak
+                        Sms</button><br>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+
+                    {% if  order.status == 2 or order.status == 4 or order.status == 5 and order.type_of_order == 2 or order.type_of_order == 3 %}
+                    {% if order.sms_send == True %}
+                    <button type="button" class="btn btn-secondary">Wysłano Sms<br>
+                    </button><br><span class="mx-auto text-center">{{order.sms_time}}</span>
+                    {% endif %}
+                    {% endif %}
+                </td>
+                <td class="col w-auto">
+                    {% if order.time_delivery_in %}
+                    <span class="time_start_delivery">S-{{order.start_delivery_time}}</span><br>
+                    <span class="time_close_order"></span>F-{{order.time_delivery_in}}</span>
                     {% else %}
-                    <span>W trakcie</span>
+                    <span>Start wyj.:</span><br>
+                    {% if order.start_delivery_time %}
+                    <span class="time_start_delivery">S-{{order.start_delivery_time}}</span>
+                    {% endif %}
                     {% endif %}
                 </td>
                 <td class="col w-auto">
@@ -330,6 +472,6 @@
 {% endblock %}
 
 {% block script %}
-<script src="{% static "babilon/orders.js" %}" type="text/javascript"></script>
+<script src="{% static "babilon/orders_filter.js" %}" type="text/javascript"></script>
 
 {% endblock %}

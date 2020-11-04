@@ -13,22 +13,8 @@ from babilon_v1.rest_class import *
 urlpatterns = [
     url(r"^ws/", include(router.urls)),
     url(r"^api-auth/", include("rest_framework.urls")),
+    # path("api/auth/", include("djoser.urls.authtoken")),
     path("pos/<int:pk>", PositionOrderViewSet.as_view(), name="PositionOrder"),
-    path(
-        "orders_for_drivers/<int:pk>",
-        OrdersForDriversView.as_view(),
-        name="orders_for_drivers",
-    ),
-    path(
-        "orders_set_drivers/<int:pk>",
-        OrdersSetDriversView.as_view(),
-        name="orders_set_drivers",
-    ),
-    path(
-        "driver_closed_order/<int:pk>",
-        DriverClosedOrderView.as_view(),
-        name="driver_close_order",
-    ),
     path("admin/", admin.site.urls),
     path("", UserLoginView.as_view(), name="login"),
     path("logout/", User_Logout, name="logout"),
@@ -49,6 +35,7 @@ urlpatterns = [
     path("add_pizza/", AddPizzaView.as_view(), name="add_pizza"),
     path("add_pizza_premium/", AddPizzaPremiumView.as_view(), name="add_pizza_premium"),
     path("add_dish/", AddDishView.as_view(), name="add_dish"),
+    path("add_drink/", AddDrinkView.as_view(), name="add_drink"),
     path("add_topp_dish/", AddToppForDishView.as_view(), name="add_topp_for_dish"),
     path("add_category/", AddCategoryView.as_view(), name="add_category"),
     path("products_list/", ProductsListView.as_view(), name="products_list"),
@@ -79,14 +66,50 @@ urlpatterns = [
     ),
     # Kierdowcy, pracownicy
     path(
+        "orders_in_place/<int:pk>", OrdersInPlaceView.as_view(), name="orders_in_place"
+    ),
+    path(
+        "orders_for_drivers/<int:pk>",
+        OrdersForDriversView.as_view(),
+        name="orders_for_drivers",
+    ),
+    path(
+        "driver_account/<int:pk>", DriverAccountView.as_view(), name="driver_account",
+    ),
+    path(
+        "confirm_close_order/<int:pk>",
+        ConfirmCloseOrderView.as_view(),
+        name="confirm_close_order",
+    ),
+    path(
+        "for_drivers_orders/<int:pk>",
+        ForDriversOrderView.as_view(),
+        name="for_drivers_orders",
+    ),
+    path(
+        "driver_closed_order/<int:pk>",
+        DriverClosedOrderView.as_view(),
+        name="driver_close_order",
+    ),
+    path(
         "driver_mobile_view/<int:pk>",
         DriverMobileView.as_view(),
         name="driver_mobile_view",
     ),
     path(
         "order_outside_details/<int:pk>",
-        DriverMobileOrderView.as_view(),
-        name="driver_mobile_order_view",
+        DriverMobileOrderDetailsView.as_view(),
+        name="order_outside_details",
+    ),
+    path(
+        "my_order_outside_details/<int:pk>",
+        MyOrderOutsideDetailsView.as_view(),
+        name="my_order_outside_details",
+    ),
+    path(
+        "confirm_get_order/<int:pk>",
+        ConfirmGetOrderView.as_view(),
+        name="confirm_get_order",
     ),
     path("drivers/", DriversView.as_view(), name="drivers"),
     path(
@@ -276,6 +299,7 @@ urlpatterns = [
     ),
     path("edit_address/<int:pk>", EditAddressView.as_view(), name="edit_address"),
     path("del_address/<int:pk>", DelAddressView.as_view(), name="del_client_address"),
+    path("del_client/<int:pk>", DelClientView.as_view(), name="del_client"),
 ] + static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

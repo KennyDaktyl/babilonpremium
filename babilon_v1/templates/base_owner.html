@@ -3,18 +3,20 @@
 <html lang="pl">
 
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/4665aa4717.js" crossorigin="anonymous"></script>
-    <link rel="shortcut icon" href="">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
 
     <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
 
     <!-- Popper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
 
     <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
 
 
 
@@ -27,40 +29,39 @@
 <body class="bg-secondary">
 
 
+
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/orders/">Babilon Premium</a>
+        <a class="navbar-brand h1" href="/orders/"><span class="h2"> Babilon Premium</span></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <form class="col-1 d-none d-xl-block" action="/add_new_order_local/">
+        <form class="col-1 d-none d-lg-block col-lg-2 col-xl-1" action="/add_new_order_local/">
             <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>LOKAL</button>
         </form>
-        <form class="col-1 d-none d-xl-block" action="/add_new_order_outside/">
+        <form class="col-1 d-none d-lg-block col-lg-2 col-xl-1" action="/add_new_order_outside/">
             <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>WYNOS</button>
         </form>
-        <form class="col-1 d-none d-xl-block" action="/add_new_order_driver/">
+        <form class="col-1 d-none d-lg-block col-lg-2 col-xl-1" action="/add_new_order_driver/">
             <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>DOSTAWA</button>
         </form>
-        <a class="col-1 d-none d-xl-block" href="/orders/">
+        <a class="col-1 d-none d-lg-block col-lg-2 col-xl-1" href="/orders/">
             <button type="submit" class="btn btn-warning mx-auto col-12">Zamówienia</button>
         </a>
+        <form class="text-right col-1 d-none d-lg-block col-lg-2 col-xl-1 ml-auto" action="/local_status/">
+            <button type="submit" class="ml-auto btn btn-success col-12">Lokal<br>STATUS</button>
+        </form>
 
 
 
         <div class="collapse navbar-collapse text-right ml-auto" id="navbarSupportedContent">
-
-
-            <form class="col-2 ml-auto text-left" action="/local_status/">
+            <!-- <form class="ml-auto col-lg-2 col-xl-1" action="/local_status/">
                 <button type="submit" class="btn btn-success mx-auto col-12">Lokal<br>STATUS</button>
-            </form>
-            <ul class="navbar-nav nav-flex-icons">
-
+            </form> -->
+            <ul class="navbar-nav nav-flex-icons ml-auto">
                 <li class="nav-item dropdown">
-
-
                     {% if user.is_authenticated %}
-                    <i class="fas fa-user"></i>
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         {{ user.username }}
@@ -69,12 +70,13 @@
                         {% endif %}
                         </i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                    <div class="dropdown-menu dropdown-menu-right dropdown-default ml-auto"
                         aria-laborderledby="navbarDropdownMenuLink-333">
-                        <a class="dropdown-item" href="/profil/{{user.id}}">Mój profil</a>
+                        <!-- <a class="dropdown-item" href="/profil/{{user.id}}">Mój profil</a>
                         <a class="dropdown-item" href="#">Dane adresowe</a>
-                        <a class="dropdown-item" href="#">Dokumenty</a>
-                        <a class="dropdown-item" href="/logout/">Wyloguj</a>
+                        <a class="dropdown-item" href="#">Dokumenty</a> -->
+                        <a class="dropdown-item mx-auto text-center" href="/logout/"><span class="text-center">
+                                Wyloguj</span></a>
                     </div>
                 </li>
             </ul>
@@ -101,7 +103,7 @@
     </div>
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js">
     </script>
 
@@ -109,6 +111,16 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script> -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
     {% block script %}
 

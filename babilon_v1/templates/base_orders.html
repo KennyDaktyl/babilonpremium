@@ -3,27 +3,32 @@
 <html lang="pl">
 
 <head>
-    <!-- <script src="/node_modules/print-js/"></script> -->
-    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <!-- <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+
+    <link href="https://fonts.googleapis.com/css?family=Alex+Brush" rel="stylesheet">
+
     <script src="https://kit.fontawesome.com/4665aa4717.js" crossorigin="anonymous"></script>
-    <!-- <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
-        rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
+
 
     <link rel="shortcut icon" href="">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
 
     <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
 
     <!-- Popper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" rel="stylesheet" /> -->
 
     <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/4665aa4717.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+
 
     <link rel="stylesheet" href="{% static "babilon/style.css" %}">
     {% block head_additional %}
@@ -31,7 +36,7 @@
     <title>Pizza System Babilon | {% block title %}{% endblock %}</title>
 </head>
 
-<body class="bg-secondary">
+<body class="bg-secondary container-fluid col-12 p-0 m-0 mx-auto">
 
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
@@ -40,47 +45,49 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <form class="col-1 d-none d-xl-block" action="/add_new_order_local/">
-            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>LOKAL</button>
+        <form class="d-none m-2 d-lg-block text-center" action="/add_new_order_local/">
+            <button type="submit" class="btn btn-success mx-auto col-12 text-center">Zamówienie<br>LOKAL</button>
         </form>
-        <form class="col-1 d-none d-xl-block" action="/add_new_order_outside/">
-            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>WYNOS</button>
+        <form class="d-none m-2 d-lg-block text-center" action="/add_new_order_outside/">
+            <button type="submit" class="btn btn-success mx-auto col-12 text-center">Zamówienie<br>WYNOS</button>
         </form>
-        <form class="col-1 d-none d-xl-block" action="/add_new_order_driver/">
-            <button type="submit" class="btn btn-success mx-auto col-12">Zamówienie<br>DOSTAWA</button>
+        <form class="d-none m-2 d-lg-block text-center" action="/add_new_order_driver/">
+            <button type="submit" class="btn btn-success mx-auto col-12 text-center">Zamówienie<br>DOSTAWA</button>
         </form>
-        <a class="col-1 d-none d-xl-block" href="/orders/">
-            <button type="submit" class="btn btn-warning mx-auto col-12">Zamówienia</button>
+        <a class="d-none m-2 d-lg-block text-center" href="/orders/">
+            <button type="submit" class="btn btn-warning mx-auto col-12 text-center">Zamówienia</button>
         </a>
         <div class="collapse navbar-collapse text-right ml-auto" id="navbarSupportedContent">
 
-            <form class="col-2 text-right ml-auto" action="/local_status/">
+            <form class="text-right ml-auto" action="/local_status/">
                 <button type="submit" class="btn btn-success mx-auto col-12">Lokal<br>STATUS</button>
             </form>
-            <ul class="navbar-nav nav-flex-icons">
-
-                <li class="nav-item dropdown">
-
-
-                    {% if user.is_authenticated %}
-                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        {{ user.username }}
-                        {% else %}
-                        <a class="dropdown-item text-light" href="/login/">Zaloguj</a>
-                        {% endif %}
-                        </i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-default"
-                        aria-laborderledby="navbarDropdownMenuLink-333">
-                        <a class="dropdown-item" href="/profil/{{user.id}}">Mój profil</a>
-                        <a class="dropdown-item" href="#">Dane adresowe</a>
-                        <a class="dropdown-item" href="#">Dokumenty</a>
-                        <a class="dropdown-item" href="/logout/">Wyloguj</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+            <div class="collapse navbar-collapse text-right ml-auto" id="navbarSupportedContent">
+                <!-- <form class="ml-auto col-lg-2 col-xl-1" action="/local_status/">
+                    <button type="submit" class="btn btn-success mx-auto col-12">Lokal<br>STATUS</button>
+                </form> -->
+                <ul class="navbar-nav nav-flex-icons ml-auto">
+                    <li class="nav-item dropdown">
+                        {% if user.is_authenticated %}
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            {{ user.username }}
+                            {% else %}
+                            <a class="dropdown-item text-light" href="/login/">Zaloguj</a>
+                            {% endif %}
+                            </i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-default ml-auto"
+                            aria-laborderledby="navbarDropdownMenuLink-333">
+                            <!-- <a class="dropdown-item" href="/profil/{{user.id}}">Mój profil</a>
+                            <a class="dropdown-item" href="#">Dane adresowe</a>
+                            <a class="dropdown-item" href="#">Dokumenty</a> -->
+                            <a class="dropdown-item mx-auto text-center" href="/logout/"><span class="text-center">
+                                    Wyloguj</span></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
     </nav>
     <div class="container-fluid mx-auto p-0 m-0">
         <div class="row col-12 bg-light mx-auto mt-2 m-0 p-0 main">
@@ -103,7 +110,8 @@
     </div>
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js">
     </script>
 
@@ -111,8 +119,22 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
+    </script> -->
 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js">
+    </script> -->
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
 
     {% block script %}
 

@@ -1,0 +1,67 @@
+{% extends 'base_owner.html' %}
+{% block content %}
+<div class="container-fluid mt-3 mx-auto">
+
+    <div class="row col-12 mx-auto">
+        <div class="col-3 ">
+            <form method="POST" class="col-12">
+                {% csrf_token %}
+                <div class="active_form">
+                    {{ form.as_p }}
+                    <div class="form-group row col-10 mt-2">
+                        <button type="submit" class="btn btn-dark">Dodaj napój</button>
+                    </div>
+                </div>
+            </form>
+            <a class="col-12 mx-auto " href="/local_status/"><button class="btn-danger m-2">Cofnij</button></a>
+        </div>
+        <div class="col-3">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nazwa napoju</th>
+                        <th scope="col">Rozmiar</th>
+                        <th scope="col">Zmień</th>
+                        <th scope="col">Usuń</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for el in drinks %}
+
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{el.product_name}}</td>
+                        <td>{{el.product_size}}</td>
+                        <td><a href="/edit_product/{{el.id}}">Edytuj</a></td>
+                        <td><a href="/del_product/{{el.id}}">Usuń</a></td>
+                        <td>
+                            {% if el.is_active == True %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{el.id}}">
+                                <button type="submit" name="is_active" class="btn btn-danger">Wycofaj</button>
+                            </form>
+                            {% else %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{el.id}}">
+                                <button type="submit" name="is_active" class="btn btn-success">Przywróć</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% endfor%}
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}

@@ -5,16 +5,20 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import JsonResponse
 
-from babilon_v1.views import today, month, year
+# from babilon_v1.views import today, month, year
 import json
 from django.http import JsonResponse
+
+from rest_framework.views import APIView
+from rest_framework import permissions
+import json
 
 
 # Serializers define the API representation.
 class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
-        depth = 1
+        depth = 2
         fields = (
             "id",
             "order_total_price2",
@@ -47,7 +51,7 @@ class PostionOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PositionOrder
-        depth = 1
+        depth = 2
         fields = (
             "id",
             "order_id",
@@ -84,15 +88,21 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 # ViewSets define the view behavior.
-@method_decorator(login_required, name="dispatch")
+
+
 class OrdersViewSet(viewsets.ModelViewSet):
+    # Login authorisiation for client
+    permission_classes = [permissions.DjangoModelPermissions]
+
     queryset = Orders.objects.filter(printed=False)
-    # queryset = Orders.objects.values("workplace_id").distinct()
     serializer_class = OrdersSerializer
 
 
-@method_decorator(login_required, name="dispatch")
+# @method_decorator(login_required, name="dispatch")
 class PositionOrderViewSet(generics.ListAPIView):
+    # Login authorisiation for client
+    permission_classes = [permissions.DjangoModelPermissions]
+
     serializer_class = PostionOrderSerializer
 
     def get_queryset(self):
@@ -107,75 +117,24 @@ class PositionOrderViewSet(generics.ListAPIView):
         return PositionOrder.objects.filter(order_id=order_id).order_by("product_id")
 
 
-@method_decorator(login_required, name="dispatch")
+# @method_decorator(login_required, name="dispatch")
 class OrdersForDriversView(generics.ListAPIView):
     serializer_class = OrdersSerializer
 
     def get_queryset(self):
-        """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
-        """
         pk = self.kwargs["pk"]
+        year = datetime.now().year
+        month = datetime.now().month
+        day = datetime.now().day
         orders = (
             Orders.objects.filter(workplace_id=pk)
             .filter(status=2)
             .filter(driver_id=None)
-            .filter(date__day=today)
+            .filter(date__day=day)
             .filter(date__month=month)
             .filter(date__year=year)
+            .exclude(address=None)
         )
-        # orders = json.dumps({"data": self.get_queryset()})
-        # orders = json.dumps(list(orders.values()))
-        # print(orders)
-        return orders
-
-
-@method_decorator(login_required, name="dispatch")
-class OrdersSetDriversView(generics.ListAPIView):
-    serializer_class = OrdersSerializer
-
-    def get_queryset(self, *args, **kwargs):
-        """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
-        """
-        pk = self.kwargs["pk"]
-        # order_id = self.kwargs["order_id"]
-
-        orders = (
-            Orders.objects.filter(workplace_id=pk)
-            .filter(status=3)
-            .filter(date__day=today)
-            .filter(date__month=month)
-            .filter(date__year=year)
-        )
-        print(orders)
-
-        return orders
-
-
-@method_decorator(login_required, name="dispatch")
-class DriverClosedOrderView(generics.ListAPIView):
-    serializer_class = OrdersSerializer
-
-    def get_queryset(self, *args, **kwargs):
-        """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
-        """
-        pk = self.kwargs["pk"]
-        # order_id = self.kwargs["order_id"]
-
-        orders = (
-            Orders.objects.filter(workplace_id=pk)
-            .filter(status=4)
-            .filter(date__day=today)
-            .filter(date__month=month)
-            .filter(date__year=year)
-        )
-        print(orders)
-
         return orders
 
 

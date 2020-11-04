@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    // pop over claud for info drivers
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
 
 
     var lokal_order_button = $('#lokal_order');
@@ -150,53 +154,7 @@ $(document).ready(function () {
     var old_set_driver = ($("#old_set_driver"));
     var del_button = $("form.del_driver_form").hide();
 
-    set_driver.each(function (index) {
-
-        $(this).on("click", function () {
-            var set_driver_op = $(this).data('driver');
-            event.preventDefault();
-            var order_id = $(this).data('order');
-
-            function testAjax() {
-                var result = "";
-                $.ajax({
-                    url: url_adress,
-                    async: false,
-                    type: "POST",
-                    data: {
-                        driver_id: set_driver_op,
-                        order_id: order_id,
-                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        result = JSON.parse(data.save_driver);
-                    }
-                });
-                return result;
-            }
-            result = testAjax();
-            var name = (result[0].fields.first_name);
-            var sec_name = (result[0].fields.last_name);
-            driver_name = name + " " + sec_name;
-            $(this).parent().parent().parent().parent().siblings('form').show();
-            $(this).parent().parent().parent().parent().siblings('span.new_set_driver').text(driver_name);
-            $(this).parent().parent().parent().parent().siblings('span.new_set_driver').show();
-            $(this).parent().parent().parent().parent().siblings('button').hide();
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('table-light');
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
-            $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
-            $(this).parent().parent().parent().parent().parent().parent().removeClass('2');
-            $(this).parent().parent().parent().parent().parent().parent().addClass('3');
-            $(this).parent().parent().parent().parent().parent().siblings().children().children('span.driver_warning').hide();
-            $(this).parent().parent().parent().parent().parent().siblings().children().children('button.close_order').addClass('True');
-            go_to_order_quantity += 1;
-            go_to_order.text(go_to_order_quantity);
-            inprogress_order_quantity -= 1;
-            inprogress_order_button.text(inprogress_order_quantity);
-            show_close_button();
-        })
-    })
+    // 
 
     close_order.each(function (index) {
         $(this).on("click", function () {
@@ -245,7 +203,7 @@ $(document).ready(function () {
                 inprogress_order_quantity -= 1;
                 inprogress_order_button.text(inprogress_order_quantity);
             };
-           
+
             not_closed_order_quantity -= 1;
             not_closed_order_button.text(not_closed_order_quantity);
             done_order_quantity += 1;
@@ -268,11 +226,11 @@ $(document).ready(function () {
             if (m < 10) {
                 m = "0" + m;
             }
-            var time_close_order = h + ":" + m + ":" + s;
-            $(this).parent().parent().siblings().children('span.time_close_order').text(time_close_order);
-            $(this).parent().parent().siblings().children('form').hide();
-            $(this).parent().parent().siblings().children('span.timer').hide();
-
+            // var time_close_order = h + ":" + m + ":" + s;
+            // $(this).parent().parent().siblings().children('span.time_close_order').text(time_close_order);
+            // $(this).parent().parent().siblings().children('form').hide();
+            // $(this).parent().parent().siblings().children('span.timer').hide();
+            location.reload();
         });
     })
 
@@ -285,7 +243,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_cancell_id: order_id,
@@ -294,55 +252,46 @@ $(document).ready(function () {
                     dataType: "json",
                     success: function (data) {
                         result = JSON.parse(data.order);
+                        location.reload();
                     }
                 });
                 return result;
             }
             result = cancellOrderAjax();
-            if ($(this).parent().parent().parent().hasClass('Lokal')) {
-                lokal_order_quantity -= 1;
-                lokal_order_button.text(lokal_order_quantity);
-            };
-            if ($(this).parent().parent().parent().hasClass('Wynos')) {
-                wynos_order_quantity -= 1;
-                wynos_order_button.text(wynos_order_quantity);
-            };
-            if ($(this).parent().parent().parent().hasClass('Dostawa')) {
-                dostawa_order_quantity -= 1;
-                dostawa_order_button.text(dostawa_order_quantity);
-            };
+            // if ($(this).parent().parent().parent().hasClass('Lokal')) {
+            //     lokal_order_quantity -= 1;
+            //     lokal_order_button.text(lokal_order_quantity);
+            // };
+            // if ($(this).parent().parent().parent().hasClass('Wynos')) {
+            //     wynos_order_quantity -= 1;
+            //     wynos_order_button.text(wynos_order_quantity);
+            // };
+            // if ($(this).parent().parent().parent().hasClass('Dostawa')) {
+            //     dostawa_order_quantity -= 1;
+            //     dostawa_order_button.text(dostawa_order_quantity);
+            // };
 
 
-            if ($(this).parent().parent().parent().hasClass('3')) {
-                go_to_order_quantity -= 1;
-                go_to_order.text(go_to_order_quantity);
-            };
+            // if ($(this).parent().parent().parent().hasClass('3')) {
+            //     go_to_order_quantity -= 1;
+            //     go_to_order.text(go_to_order_quantity);
+            // };
 
-            if ($(this).parent().parent().parent().hasClass('2')) {
-                // go_to_order_quantity -= 1;
-                // go_to_order.text(go_to_order_quantity);
-                inprogress_order_quantity -= 1;
-                inprogress_order_button.text(inprogress_order_quantity);
-            };
-            if ($(this).parent().parent().parent().hasClass('3')) {
-                go_to_order_quantity -= 1;
-                go_to_order.text(go_to_order_quantity);
-            };
-            not_closed_order_quantity -= 1;
-            not_closed_order_button.text(not_closed_order_quantity);
-
-            $(this).parent().parent().parent().removeClass('table-warning');
-            $(this).parent().parent().parent().removeClass('table-secondary');
-            $(this).parent().parent().parent().addClass('table-danger');
-            $(this).parent().parent().parent().removeClass('2');
-            $(this).parent().parent().parent().removeClass('3');
-            $(this).parent().parent().parent().removeClass('4');
-            $(this).parent().parent().parent().addClass('5');
-            $(this).parent().parent().siblings().children('button.cancelled').hide();
-            $(this).hide();
-            cancelled_order_quantity += 1;
-            cancelled_order_button.text(cancelled_order_quantity);
-
+            // if ($(this).parent().parent().parent().hasClass('2')) {
+            //     // go_to_order_quantity -= 1;
+            //     // go_to_order.text(go_to_order_quantity);
+            //     inprogress_order_quantity -= 1;
+            //     inprogress_order_button.text(inprogress_order_quantity);
+            // };
+            // if ($(this).parent().parent().parent().hasClass('3')) {
+            //     go_to_order_quantity -= 1;
+            //     go_to_order.text(go_to_order_quantity);
+            // };
+            // not_closed_order_quantity -= 1;
+            // not_closed_order_button.text(not_closed_order_quantity);
+            // cancelled_order_quantity += 1;
+            // cancelled_order_button.text(cancelled_order_quantity);
+            // location.reload();
         });
     })
 
@@ -369,7 +318,7 @@ $(document).ready(function () {
                 result = "";
                 $.ajax({
                     url: url_adress,
-                    async: false,
+                    async: true,
                     type: "POST",
                     data: {
                         order_send_sms: order_id,
@@ -387,106 +336,60 @@ $(document).ready(function () {
                 return result;
             }
             result = sendSMSAjax();
-            $(this).text('Wysłano');
-            $(this).parent().parent().parent().parent().siblings().removeClass('btn-success');
-            $(this).parent().parent().parent().parent().siblings('button').addClass('btn-secondary');
-            $(this).parent().parent().parent().parent().siblings('button').text('Wysłano');
-            $(this).parent().parent().parent().parent().siblings('span').text(time_sent_sms);
-
-            // $(this).removeClass('btn-success');
-            // $(this).removeClass('send_sms');
-            // $(this).addClass('btn-secondary');
-            // $(this).parent().parent().removeClass('2');
-            if ($(this).parent().parent().parent().parent().parent().parent().hasClass('2')) {
-                $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
-                $(this).parent().parent().parent().parent().parent().parent().removeClass('table-primary');
-                $(this).parent().parent().parent().parent().parent().parent().addClass('3');
-                $(this).parent().parent().parent().parent().parent().parent().addClass('table-warning');
-            }
-
+            location.reload();
         });
     });
 
+    var workplace_id = $('#table').data('workplace');
 
+    var workplace_id = $('#table').data('workplace');
+
+    function order_in_drive() {
+        // var order_in_driver_status = $('tr.2.Dostawa');?
+        var order_in_driver_status = $('tr.3.Dostawa');
+        var order_closed = $('#table').data('order_closed');
+
+        var url = "https://pizzeriasystem.herokuapp.com/driver_closed_order/" + String(workplace_id);
+        // var url = "http://51.75.127.94:5000/driver_closed_order/" + String(workplace_id);
+
+        function StatusChange() {
+            var result = "";
+
+            $.ajax({
+                url: url,
+                async: true,
+                type: "GET",
+                data: {
+                    // order_id: order_id,
+                    pk: workplace_id,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    result = data;
+                    console.log(result['length']);
+                    console.log(order_in_driver_status.length);
+                    console.log(order_closed);
+                    if (result.length != order_in_driver_status.length) {
+                        location.reload();
+                    }
+                    if (result.length != order_closed) {
+                        location.reload();
+                    }
+                }
+            });
+            return result;
+        }
+        result = StatusChange();
+        // console.log(result['length']);
+        // console.log(order_in_driver_status.length);
+        // console.log(order_closed);
+        // if (result.length != order_in_driver_status.length) {
+        //     location.reload();
+        // }
+        // if (result.length != order_closed) {
+        //     location.reload();
+        // }
+    }
+    setInterval(order_in_drive, 5000);
 });
-
-// close_order.each(function (index) {
-//     $(this).on("click", function () {
-//         event.preventDefault();
-//         $.ajax({
-//             url: url_adress,
-//             type: "POST",
-//             data: {
-//                 order_close: $(this).data('order'),
-//                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-//             },
-//             dataType: "json",
-//         }).done(function (result) {
-//             location.reload();
-//         }).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
-//         $(this).hide();
-//         // var id = $(this).data('order');
-//         // $(this).parent('tr').removeClass('table-secondary');
-
-//         // console.log($(this).parent().siblings('td').children('#del_driver_form'));
-//         $(this).parent().parent().parent().addClass('table-secondary');
-//         $(this).parent().siblings().show();
-//         // $('#del_driver_form').hide();
-//         // console.log($('#del_driver_form').hide());
-//         $(this).parent().parent().siblings().children('form').hide();
-//     });
-// })
-
-
-
-// $.ajax({
-//     url: url_adress,
-//     type: "POST",
-//     data: {
-//         driver_id: set_driver_op,
-//         order_id: order_id,
-//         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-//     },
-//     dataType: "json",
-// }).done(function (result) {
-//     driver_from_python = JSON.parse(result.save_driver);
-//     var name = (driver_from_python[0].fields.first_name);
-//     var sec_name = (driver_from_python[0].fields.last_name);
-//     driver_name = name + " " + sec_name;
-//     // console.log(driver_name);
-//     // $('#new_set_driver').text(driver_name);
-//     // $('#new_set_driver').show();
-//     old_set_driver.hide();
-//     console.log(driver_from_python);
-//     location.reload();
-//     // console.log('chuj');
-//     // del_button.show();
-//     // console.log(driver_name);
-// }).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
-
-
-
-// function testAjax() {
-//     var result = "";
-//     $.ajax({
-//         url: url_adress,
-//         async: false,
-//         type: "POST",
-//         data: {
-//             driver_id: set_driver_op,
-//             order_id: order_id,
-//             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-//         },
-//         dataType: "json",
-//         success: function (data) {
-//             result = JSON.parse(data.save_driver);;
-//             console.log(result)
-
-//         }
-//     });
-//     return result;
-
-// }
-// testAjax()
-// result = testAjax();
-// console.log(result.model);

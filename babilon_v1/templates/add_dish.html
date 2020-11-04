@@ -41,6 +41,21 @@
                         <td><a href="/edit_product/{{dish.id}}">Edycja pro</a>
                             <br><a href="/del_product/{{dish.id}}">Usuń danie</a><br>
                         </td>
+                        <td>
+                            {% if dish.is_active == True %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{dish.id}}">
+                                <button type="submit" name="is_active" class="btn btn-danger">Wycofaj</button>
+                            </form>
+                            {% else %}
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input name="product_id" type="hidden" value="{{dish.id}}">
+                                <button type="submit" name="is_active" class="btn btn-success">Przywróć</button>
+                            </form>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

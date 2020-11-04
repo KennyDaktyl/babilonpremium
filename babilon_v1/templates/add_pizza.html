@@ -25,7 +25,8 @@
                         <th scope="col w-auto">Rozmiar</th>
                         <th scope="col w-auto">Cena</th>
                         <th scope="col w-auto">Szczegóły</th>
-                        <th scope="col w-auto">Anuluj</th>
+                        <th scope="col w-auto">Wycofaj</th>
+                        <th scope="col w-auto">Usuń</th>
                     </tr>
                 </thead>
                 {% for pizza in pizzas %}
@@ -42,6 +43,21 @@
                     <td>{{pizza.product_size.size_name}}</td>
                     <td>{{pizza.price}}</td>
                     <td><a href="/edit_product/{{pizza.id}}">Edycja</a></td>
+                    <td>
+                        {% if pizza.is_active == True %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <input name="pizza_id" type="hidden" value="{{pizza.id}}">
+                            <button type="submit" name="is_active" class="btn btn-danger">Wycofaj</button>
+                        </form>
+                        {% else %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <input name="pizza_id" type="hidden" value="{{pizza.id}}">
+                            <button type="submit" name="is_active" class="btn btn-success">Przywróć</button>
+                        </form>
+                        {% endif %}
+                    </td>
                     <td><a href="/del_product/{{pizza.id}}">Usuń</a></td>
                 </tbody>
                 {% endfor %}
