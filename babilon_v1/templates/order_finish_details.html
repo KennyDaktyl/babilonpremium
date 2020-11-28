@@ -15,7 +15,7 @@
 </div>
 <div class="row col-11 p-0 mx-auto bg-white mt-2">
     <div class="row col-12 p-0">
-        <div class="col-6 p-0 row mx-auto">
+        <div class="col-5 p-0 row mx-auto">
             <div class="col-12">
                 <p class="text-left col-12">Numer zamówienia: <button class="btn-warning">{{order.number}}</button> </p>
                 <p class="text-left col-12">Lokal: <b>{{order.workplace_id}}</b> </p>
@@ -109,12 +109,9 @@
                 </form>
                 {% endif %}
             </div>
-
-
-
         </div>
 
-        <div class="col-6 p-0">
+        <div class="col-7 p-0">
             <div class="col-12 row m-1">
                 {% if order.closed == False %}
                 <p class="col-12 text-center">Rodzaj dostawy</p>
@@ -147,45 +144,61 @@
                 <p class="col-12 text-center">Rodzaj płatności</p>
 
                 {% if order.pay_method == 1 %}
-                <button data-pay_method="1" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                <button data-pay_method="1" data-order_id={{order.id}} class="btn-primary  mx-auto pay_method"><i
                         class="fas fa-money-bill-wave"></i><br>Gotówka</button>
                 {% else %}
                 <button data-pay_method="1" data-order_id={{order.id}}
-                    class="btn-secendary col-2  mx-auto pay_method"><i
+                    class="btn-secendary  mx-auto pay_method"><i
                         class="fas fa-money-bill-wave"></i><br>Gotówka</button>
                 {% endif %}
 
                 {% if order.pay_method == 2 %}
-                <button data-pay_method="2" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                <button data-pay_method="2" data-order_id={{order.id}} class="btn-primary mx-auto pay_method"><i
                         class="fas fa-credit-card"></i><br>Karta</button>
                 {% else %}
                 <button data-pay_method="2" data-order_id={{order.id}}
-                    class="btn-secendary col-2  mx-auto pay_method"><i class="fas fa-credit-card"></i><br>Karta</button>
+                    class="btn-secendary  mx-auto pay_method"><i class="fas fa-credit-card"></i><br>Karta</button>
                 {% endif %}
 
                 {% if order.pay_method == 3 %}
-                <button data-pay_method="3" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                <button data-pay_method="3" data-order_id={{order.id}} class="btn-primary  mx-auto pay_method"><i
                         class="fab fa-cc-amazon-pay"></i><br>On-line_1</button>
                 {% else %}
                 <button data-pay_method="3" data-order_id={{order.id}}
-                    class="btn-secendary col-2  mx-auto pay_method"><i
+                    class="btn-secendary   mx-auto pay_method"><i
                         class="fab fa-cc-amazon-pay"></i><br>On-line_1</button>
                 {% endif %}
                 {% if order.pay_method == 4 %}
-                <button data-pay_method="4" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                <button data-pay_method="4" data-order_id={{order.id}} class="btn-primary  mx-auto pay_method"><i
                         class="fab fa-cc-amazon-pay"></i><br>On-line_2</button>
                 {% else %}
                 <button data-pay_method="4" data-order_id={{order.id}}
-                    class="btn-secendary col-2  mx-auto pay_method"><i
+                    class="btn-secendary  mx-auto pay_method"><i
                         class="fab fa-cc-amazon-pay"></i><br>On-line_2</button>
                 {% endif %}
                 {% if order.pay_method == 5 %}
-                <button data-pay_method="5" data-order_id={{order.id}} class="btn-primary col-2  mx-auto pay_method"><i
+                <button data-pay_method="5" data-order_id={{order.id}} class="btn-primary  mx-auto pay_method"><i
                         class="fab fa-cc-amazon-pay"></i><br>On-line_3</button>
                 {% else %}
                 <button data-pay_method="5" data-order_id={{order.id}}
-                    class="btn-secendary col-2  mx-auto pay_method"><i
+                    class="btn-secendary  mx-auto pay_method"><i
                         class="fab fa-cc-amazon-pay"></i><br>On-line_3</button>
+                {% endif %}
+                {% if order.pay_method == 6 %}
+                <button data-pay_method="6" data-order_id={{order.id}} class="btn-primary  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_4</button>
+                {% else %}
+                <button data-pay_method="6" data-order_id={{order.id}}
+                    class="btn-secendary  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_4</button>
+                {% endif %}
+                {% if order.pay_method == 7 %}
+                <button data-pay_method="7" data-order_id={{order.id}} class="btn-primary  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_5</button>
+                {% else %}
+                <button data-pay_method="7" data-order_id={{order.id}}
+                    class="btn-secendary  mx-auto pay_method"><i
+                        class="fab fa-cc-amazon-pay"></i><br>On-line_5</button>
                 {% endif %}
                 {% else %}
                 <p class="col-12 text-center">Rodzaj dostawy</p>

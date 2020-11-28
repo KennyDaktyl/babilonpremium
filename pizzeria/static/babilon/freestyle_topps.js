@@ -1,6 +1,31 @@
 $(document).ready(function () {
     //Button ze składnikami pizzy stworzonymi przez autora
 
+    var half_topps_minus = $('#half_topp_minus');
+    var half_topps_plus = $('#half_topp_plus');
+
+    half_topps_minus.on("click", function () {
+        if ($(this).hasClass("btn-outline-danger"))
+        {
+            $(this).removeClass("btn-outline-danger");
+            $(this).addClass("btn-danger");
+        } else {
+            $(this).addClass("btn-outline-danger");
+            $(this).removeClass("btn-danger");
+        }
+    });
+
+    half_topps_plus.on("click", function () {
+        if ($(this).hasClass("btn-outline-success"))
+        {
+            $(this).removeClass("btn-outline-success");
+            $(this).addClass("btn-success");
+        } else {
+            $(this).addClass("btn-outline-success");
+            $(this).removeClass("btn-success");
+        }
+    });
+
     var url_adress = window.location.href;
     var vege_ctr = $('#change_vege').data('vegectrl');
     vege_ctr = parseInt(vege_ctr);
@@ -205,7 +230,7 @@ $(document).ready(function () {
         var topps_add = $('button.add');
         var text_add_topps123 = "";
         topps_add.each(function (index) {
-            text_add_topps123 += "+" + $(this).text() + ", ";
+            text_add_topps123 += $(this).text();
         });
         // console.log(text_add_topps123);
         input_add_topps.attr('value', text_add_topps123);
@@ -302,7 +327,15 @@ $(document).ready(function () {
             sum_ctr_vege_array = eval(ctr_vege_array.join("+"));
             sum_ctr_vege_array = parseInt(sum_ctr_vege_array);
             i_vege.text(sum_ctr_vege_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 1 in add m-1',
@@ -320,7 +353,6 @@ $(document).ready(function () {
             })
             new_button.appendTo(add_topps);
             calc_topps();
-            text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li class="align-top">' + text_add + '</li>');
             input_add_text += text_add
             // input_add_topps.attr('value', input_add_text);
@@ -338,7 +370,15 @@ $(document).ready(function () {
             sum_ctr_beef_array = eval(ctr_beef_array.join("+"));
             sum_ctr_beef_array = parseInt(sum_ctr_beef_array);
             i_beef.text(sum_ctr_beef_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 2 in add m-1',
@@ -356,7 +396,7 @@ $(document).ready(function () {
             })
             new_button.appendTo(add_topps);
             calc_topps();
-            text_add = "+" + $(this).text() + ", ";
+            // text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li>' + text_add + '</li>');
             input_add_text += text_add
             // input_add_topps.attr('value', input_add_text);
@@ -370,7 +410,15 @@ $(document).ready(function () {
             sum_ctr_cheese_array = eval(ctr_cheese_array.join("+"));
             sum_ctr_cheese_array = parseInt(sum_ctr_cheese_array);
             i_cheese.text(sum_ctr_cheese_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 3 in add m-1',
@@ -388,7 +436,7 @@ $(document).ready(function () {
             })
             new_button.appendTo(add_topps);
             calc_topps();
-            text_add = "+" + $(this).text() + ", ";
+            // text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li>' + text_add + '</li>');
             input_add_text += text_add
             // input_add_topps.attr('value', input_add_text);
@@ -431,7 +479,15 @@ $(document).ready(function () {
             sum_ctr_extra_array = eval(ctr_extra_array.join("+"));
             sum_ctr_extra_array = parseInt(sum_ctr_extra_array);
             i_extra.text(sum_ctr_extra_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 4 in add m-1',
@@ -449,7 +505,7 @@ $(document).ready(function () {
             })
             new_button.appendTo(add_topps);
             calc_topps();
-            text_add = "+" + $(this).text() + ", ";
+            // text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li>' + text_add + '</li>');
             input_add_text += text_add
             input_add_topps.attr('value', input_add_text);
@@ -471,7 +527,15 @@ $(document).ready(function () {
             sum_ctr_extra_1_array = eval(ctr_extra_1_array.join("+"));
             sum_ctr_extra_1_array = parseInt(sum_ctr_extra_1_array);
             i_extra_1.text(sum_ctr_extra_1_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 8 in add m-1',
@@ -489,7 +553,7 @@ $(document).ready(function () {
             })
             new_button.appendTo(add_topps);
             calc_topps();
-            text_add = "+" + $(this).text() + ", ";
+            // text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li>' + text_add + '</li>');
             input_add_text += text_add
             // input_add_topps.attr('value', input_add_text);
@@ -510,7 +574,15 @@ $(document).ready(function () {
             sum_ctr_extra_2_array = eval(ctr_extra_2_array.join("+"));
             sum_ctr_extra_2_array = parseInt(sum_ctr_extra_2_array);
             i_extra_2.text(sum_ctr_extra_2_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 9 in add m-1',
@@ -528,7 +600,7 @@ $(document).ready(function () {
             })
             new_button.appendTo(add_topps);
             calc_topps();
-            text_add = "+" + $(this).text() + ", ";
+            // text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li>' + text_add + '</li>');
             input_add_text += text_add
             // input_add_topps.attr('value', input_add_text);
@@ -550,7 +622,15 @@ $(document).ready(function () {
             sum_ctr_extra_3_array = eval(ctr_extra_3_array.join("+"));
             sum_ctr_extra_3_array = parseInt(sum_ctr_extra_3_array);
             i_extra_3.text(sum_ctr_extra_3_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 10 in add m-1',
@@ -568,7 +648,7 @@ $(document).ready(function () {
             })
             new_button.appendTo(add_topps);
             calc_topps();
-            text_add = "+" + $(this).text() + ", ";
+            // text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li>' + text_add + '</li>');
             input_add_text += text_add
             // input_add_topps.attr('value', input_add_text);
@@ -590,7 +670,15 @@ $(document).ready(function () {
             sum_ctr_extra_4_array = eval(ctr_extra_4_array.join("+"));
             sum_ctr_extra_4_array = parseInt(sum_ctr_extra_4_array);
             i_extra_4.text(sum_ctr_extra_4_array);
-            var text = $(this).text();
+            if (half_topps_plus.hasClass("btn-success")) {
+                text_add = text_add = "+ 1/2 " + $(this).text() + ", ";
+                half_topps_plus.removeClass("btn-success");
+                half_topps_plus.addClass("btn-outline-success");
+                    }
+            else {
+                text_add = "+" + $(this).text() + ", ";
+                 }
+            var text = text_add;
             new_button = $('<button/>', {
                 text: text,
                 class: 'btn-warning 11 in add m-1',
@@ -609,7 +697,7 @@ $(document).ready(function () {
             new_button.appendTo(add_topps);
             calc_topps();
             console.log('zwrot funkcji' + calc_topps());
-            text_add = "+" + $(this).text() + ", ";
+            // text_add = "+" + $(this).text() + ", ";
             ul_add.append('<li>' + text_add + '</li>');
             input_add_text += text_add
             // input_add_topps.attr('value', input_add_text);

@@ -5,7 +5,12 @@
 <div class="row col-12 border mt-2 mx-auto topps">
     <p class="col-12 text-left topps">Składniki pizzy: <b>{{pizza.product_name}}</b>, rozmiar
         <b>{{pizza.product_size}}</b> Cena produktu: <span class=""><b>{{pizza.price}}</b></span></p>
-    <div class="col-12 row mx-auto p-0 m-0">
+
+    <div class="col-1 row mx-auto p-0 m-0">
+        <button type="button" id="half_topp_minus" class="col-12 btn btn-outline-danger">Tylko 1/2</button>
+    </div>
+    <div class="col-11 row mx-auto p-0 m-0">
+    
         {% for el in pizza.toppings.all %}
         <button type="button" class="{{el.type_of_ingredient}} topps mx-auto col-1 btn m-1 ml-4 mr-4 btn-danger in "
             data-type="{{el.type_of_ingredient}}" data-vege_price="{{pizza.product_size.vege_topps_price}}"
@@ -22,6 +27,9 @@
 </div>
 <div class="row col-12 border mt-2 mx-auto text-center text-wrap add_topps_plus">
     <p id="add_topps" class="col-12 text-left add_topps">Dodatki wybrane:</p>
+    <div class="col-1 mr-auto p-0 m-0">
+        <button type="button" id="half_topp_plus" class="col-12 btn btn-outline-success">Tylko 1/2</button>
+    </div>
 </div>
 <div class="row col-12 border mt-2 mx-auto">
     <p id="price_size_vege" class="col-2 text-left" data-price="{{pizza.product_size.vege_topps_price}}">Dodatki

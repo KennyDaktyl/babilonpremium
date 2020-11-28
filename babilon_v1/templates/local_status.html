@@ -125,21 +125,31 @@
                 </div>
             </div>
             <div class="col-8 row mx-auto  mt-2">
-                <div class="col-4 mx-auto">
+                <div class="mx-auto">
                     <p class="col-12 text-center"><span><b>Online_1</b></span>
                     </p>
                     <p class="col-12 text-center"><span><b>{{income_online_1}}</b></span>
                         <span><b>({{online_1}})</b></span></p>
                 </div>
-                <div class="col-4 mx-auto">
+                <div class="mx-auto">
                     <p class="col-12 text-center"><span class=""><b>Online_2</b></span></p>
                     <p class="col-12 text-center"><span><b>{{income_online_2}}</b></span>
                         <span><b>({{online_2}})</b></span></p>
                 </div>
-                <div class="col-4 mx-auto">
+                <div class="mx-auto">
                     <p class="col-12 text-center"><span><b>Online_3</b></span></p>
                     <p class="col-12 text-center">
                         <span><b>{{income_online_3}}</b></span><span><b> ({{online_3}})</b></span></p>
+                </div>
+                <div class="mx-auto">
+                    <p class="col-12 text-center"><span><b>Online_4</b></span></p>
+                    <p class="col-12 text-center">
+                        <span><b>{{income_online_4}}</b></span><span><b> ({{online_4}})</b></span></p>
+                </div>
+                <div class="mx-auto">
+                    <p class="col-12 text-center"><span><b>Online_5</b></span></p>
+                    <p class="col-12 text-center">
+                        <span><b>{{income_online_5}}</b></span><span><b> ({{online_5}})</b></span></p>
                 </div>
             </div>
         </div>
@@ -155,6 +165,8 @@
                         <th scope="col">Online_1</th>
                         <th scope="col">Online_2</th>
                         <th scope="col">Online_3</th>
+                        <th scope="col">Online_4</th>
+                        <th scope="col">Online_5</th>
 
                     </tr>
                 </thead>
@@ -168,7 +180,8 @@
                         <td>{{online_1_in}} /<span class="text-danger"> {{online_1_in_count}}</span></td>
                         <td>{{online_2_in}} /<span class="text-danger"> {{online_2_in_count}}</span></td>
                         <td>{{online_3_in}} /<span class="text-danger"> {{online_3_in_count}}</span></td>
-
+                        <td>{{online_4_in}} /<span class="text-danger"> {{online_4_in_count}}</span></td>
+                        <td>{{online_5_in}} /<span class="text-danger"> {{online_5_in_count}}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -191,6 +204,8 @@
                         <th scope="col">Online_1</th>
                         <th scope="col">Online_2</th>
                         <th scope="col">Online_3</th>
+                         <th scope="col">Online_4</th>
+                          <th scope="col">Online_5</th>
                         <th scope="col">Ilośc zamówień przy kierowcy</th>
                     </tr>
                 </thead>
@@ -209,7 +224,10 @@
                                 class="text-danger">{{driver.counter_cursers_online_2_count}}</span></td>
                         <td>{{driver.counter_cursers_online_3}}/ <span
                                 class="text-danger">{{driver.counter_cursers_online_3_count}}</span></td>
-
+                        <td>{{driver.counter_cursers_online_4}}/ <span
+                                class="text-danger">{{driver.counter_cursers_online_4_count}}</span></td>
+                        <td>{{driver.counter_cursers_online_5}}/ <span
+                                class="text-danger">{{driver.counter_cursers_online_5_count}}</span></td>
                         {% if driver.counter_active_orders_in_car_count > 0 %}
                         <td class="bg-warning p-0 m-0">
                         <button type="button" class="btn btn-warning col-12" data-container="body" data-toggle="popover" data-html="true"

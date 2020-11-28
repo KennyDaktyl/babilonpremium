@@ -67,6 +67,8 @@ PAY_METHOD = (
     (3, "Online_1"),
     (4, "Online_2"),
     (5, "Online_3"),
+    (6, "Online_4"),
+    (7, "Online_5"),
 )
 
 PAY_METHOD_2 = (
@@ -115,4 +117,3 @@ TYPE_OF_FIXED_COST = (
     (9, "Straty"),
     (10, "Inne"),
 )
-

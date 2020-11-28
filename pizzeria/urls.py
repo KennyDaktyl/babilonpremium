@@ -9,12 +9,14 @@ from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets, generics
 from babilon_v1.rest_class import *
 
-
 urlpatterns = [
     url(r"^ws/", include(router.urls)),
     url(r"^api-auth/", include("rest_framework.urls")),
     # path("api/auth/", include("djoser.urls.authtoken")),
     path("pos/<int:pk>", PositionOrderViewSet.as_view(), name="PositionOrder"),
+    path("orders_for_pizzeria/<int:pk>",
+         OrdersForWorkplaceView.as_view(),
+         name="orders_for_workplaces"),
     path("admin/", admin.site.urls),
     path("", UserLoginView.as_view(), name="login"),
     path("logout/", User_Logout, name="logout"),
@@ -33,14 +35,22 @@ urlpatterns = [
     ),
     path("add_sauce/", AddSauceView.as_view(), name="add_sauce"),
     path("add_pizza/", AddPizzaView.as_view(), name="add_pizza"),
-    path("add_pizza_premium/", AddPizzaPremiumView.as_view(), name="add_pizza_premium"),
+    path("add_pizza_premium/",
+         AddPizzaPremiumView.as_view(),
+         name="add_pizza_premium"),
     path("add_dish/", AddDishView.as_view(), name="add_dish"),
     path("add_drink/", AddDrinkView.as_view(), name="add_drink"),
-    path("add_topp_dish/", AddToppForDishView.as_view(), name="add_topp_for_dish"),
+    path("add_topp_dish/",
+         AddToppForDishView.as_view(),
+         name="add_topp_for_dish"),
     path("add_category/", AddCategoryView.as_view(), name="add_category"),
     path("products_list/", ProductsListView.as_view(), name="products_list"),
-    path("edit_product/<int:pk>", EditProductProView.as_view(), name="edit_product"),
-    path("change_product/<int:pk>", ChangeProductView.as_view(), name="update_product"),
+    path("edit_product/<int:pk>",
+         EditProductProView.as_view(),
+         name="edit_product"),
+    path("change_product/<int:pk>",
+         ChangeProductView.as_view(),
+         name="update_product"),
     path("del_product/<int:pk>", DelProductView.as_view(), name="del_product"),
     # Kasowanie ustawień sesji
     path(
@@ -48,7 +58,9 @@ urlpatterns = [
         DelSessionPizzeriaView.as_view(),
         name="set_session_pizzeria",
     ),
-    path("set_session_date/", SetSessionDateView.as_view(), name="set_session_date"),
+    path("set_session_date/",
+         SetSessionDateView.as_view(),
+         name="set_session_date"),
     path(
         "set_session_today_date/",
         SetTodayDateView.as_view(),
@@ -65,16 +77,18 @@ urlpatterns = [
         name="set_session_period_date",
     ),
     # Kierdowcy, pracownicy
-    path(
-        "orders_in_place/<int:pk>", OrdersInPlaceView.as_view(), name="orders_in_place"
-    ),
+    path("orders_in_place/<int:pk>",
+         OrdersInPlaceView.as_view(),
+         name="orders_in_place"),
     path(
         "orders_for_drivers/<int:pk>",
         OrdersForDriversView.as_view(),
         name="orders_for_drivers",
     ),
     path(
-        "driver_account/<int:pk>", DriverAccountView.as_view(), name="driver_account",
+        "driver_account/<int:pk>",
+        DriverAccountView.as_view(),
+        name="driver_account",
     ),
     path(
         "confirm_close_order/<int:pk>",
@@ -122,9 +136,15 @@ urlpatterns = [
     path("barmans/", BarmansView.as_view(), name="del_barman"),
     # Wydatki i koszty
     path("purchases/", PurchaseView.as_view(), name="purchases"),
-    path("purchases/<int:pk>", PurchaseCategoryView.as_view(), name="purchases_cat"),
-    path("edit_purchase/<int:pk>", EditPurchaseView.as_view(), name="edit_purchases"),
-    path("del_purchase/<int:pk>", DelPurchaseView.as_view(), name="del_purchases"),
+    path("purchases/<int:pk>",
+         PurchaseCategoryView.as_view(),
+         name="purchases_cat"),
+    path("edit_purchase/<int:pk>",
+         EditPurchaseView.as_view(),
+         name="edit_purchases"),
+    path("del_purchase/<int:pk>",
+         DelPurchaseView.as_view(),
+         name="del_purchases"),
     path("statistics/", StatisticsView.as_view(), name="statistics"),
     # Zamówienia
     path("products/", ProductsView.as_view(), name="products"),
@@ -243,18 +263,26 @@ urlpatterns = [
         CategoryProductsView.as_view(),
         name="products_category",
     ),
-    path("search_product/", SearchProductView.as_view(), name="search_product",),
-    path("orders_archives/", OrdersArchivesView.as_view(), name="orders_archives"),
+    path(
+        "search_product/",
+        SearchProductView.as_view(),
+        name="search_product",
+    ),
+    path("orders_archives/",
+         OrdersArchivesView.as_view(),
+         name="orders_archives"),
     path(
         "order_details_archives/<int:pk>",
         OrdersDetailsArchivesView.as_view(),
         name="orders_details_archives",
     ),
     path("orders/", OrdersView.as_view(), name="orders"),
-    path("orders/filter/", OrdersFilterView.as_view(), name="orders_in_progress"),
-    path(
-        "order_details/<int:pk>", OrderCloseDeatailsView.as_view(), name="order_details"
-    ),
+    path("orders/filter/",
+         OrdersFilterView.as_view(),
+         name="orders_in_progress"),
+    path("order_details/<int:pk>",
+         OrderCloseDeatailsView.as_view(),
+         name="order_details"),
     # path(
     #     "order_details_not_print/<int:pk>", OrderCloseDeatailsNotPrintView.as_view(), name="order_details_not_print"
     # ),
@@ -281,7 +309,9 @@ urlpatterns = [
         name="create_pdf_order",
     ),
     # Kierowcy
-    path("driver_courses/<int:pk>", DriverCoursesView.as_view(), name="driver_courses"),
+    path("driver_courses/<int:pk>",
+         DriverCoursesView.as_view(),
+         name="driver_courses"),
     path(
         "del_driver_from_order/<int:pk>",
         DelDriverFromOrderView.as_view(),
@@ -297,10 +327,15 @@ urlpatterns = [
         AddClientNewAddressView.as_view(),
         name="add_client_new_address",
     ),
-    path("edit_address/<int:pk>", EditAddressView.as_view(), name="edit_address"),
-    path("del_address/<int:pk>", DelAddressView.as_view(), name="del_client_address"),
+    path("edit_address/<int:pk>",
+         EditAddressView.as_view(),
+         name="edit_address"),
+    path("del_address/<int:pk>",
+         DelAddressView.as_view(),
+         name="del_client_address"),
     path("del_client/<int:pk>", DelClientView.as_view(), name="del_client"),
 ] + static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

@@ -4763,9 +4763,11 @@ class OrderCloseDeatailsView(PermissionRequiredMixin, View):
                     if delivery_method == "1":
                         order_finish.delivery_method = "1"
                         order_finish.type_of_order = "1"
+                        order_finish.address=None
                     else:
                         order_finish.delivery_method = "2"
                         order_finish.type_of_order = "2"
+                        order_finish.address=None
                     order_finish.status = "2"
                     # order_finish.save()
                 else:
@@ -4773,6 +4775,7 @@ class OrderCloseDeatailsView(PermissionRequiredMixin, View):
                         minutes=int(default_time_zoro_outside))
                     order_finish.delivery_method = "3"
                     order_finish.status = "2"
+                    order_finish.address=None
                     # order_finish.save()
         if time_zero_form_details:
             time_delivery = time_zero_form_details
@@ -5003,7 +5006,9 @@ class OrderChangeDeatailsView(PermissionRequiredMixin, View):
                 order_finish.pay_method = pay_method
                 # order_finish.save()
             delivery_method = request.GET.get("delivery_method")
+            print(delivery_method)
             if delivery_method:
+                
                 order_finish.type_of_order = delivery_method
                 # order_finish.save()
                 if delivery_method != "3":
@@ -5012,9 +5017,11 @@ class OrderChangeDeatailsView(PermissionRequiredMixin, View):
                     if delivery_method == "1":
                         order_finish.delivery_method = "1"
                         order_finish.type_of_order = "1"
+                        order_finish.address=None
                     else:
                         order_finish.delivery_method = "2"
                         order_finish.type_of_order = "2"
+                        order_finish.address=None
                     order_finish.status = "2"
                     # order_finish.save()
                 else:
@@ -5022,6 +5029,7 @@ class OrderChangeDeatailsView(PermissionRequiredMixin, View):
                         minutes=int(default_time_zoro_outside))
                     order_finish.delivery_method = "3"
                     order_finish.status = "2"
+                    order_finish.address=None
                     # order_finish.save()
         order_finish.active = True
         order_finish.barman_id = request.user

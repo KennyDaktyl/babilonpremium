@@ -196,6 +196,48 @@ def counter_cursers_online_3_count(self, date_start, date_end, pizzeria):
     return count
 
 
+def counter_cursers_online_4(self, date_start, date_end, pizzeria):
+    driver_courses = (Orders.objects.filter(type_of_order="3").filter(
+        status="4").filter(date__gte=date_start).filter(
+            date__lte=date_end).filter(workplace_id=pizzeria).filter(
+                driver_id=self).filter(pay_method=6))
+    card = 0
+    for order in driver_courses:
+        card += order.order_total_price2()
+    card = round(card, 2)
+    return card
+
+
+def counter_cursers_online_4_count(self, date_start, date_end, pizzeria):
+    driver_courses = (Orders.objects.filter(type_of_order="3").filter(
+        status="4").filter(date__gte=date_start).filter(
+            date__lte=date_end).filter(workplace_id=pizzeria).filter(
+                driver_id=self).filter(pay_method=6))
+    count = len(driver_courses)
+    return count
+
+
+def counter_cursers_online_5(self, date_start, date_end, pizzeria):
+    driver_courses = (Orders.objects.filter(type_of_order="3").filter(
+        status="4").filter(date__gte=date_start).filter(
+            date__lte=date_end).filter(workplace_id=pizzeria).filter(
+                driver_id=self).filter(pay_method=7))
+    card = 0
+    for order in driver_courses:
+        card += order.order_total_price2()
+    card = round(card, 2)
+    return card
+
+
+def counter_cursers_online_5_count(self, date_start, date_end, pizzeria):
+    driver_courses = (Orders.objects.filter(type_of_order="3").filter(
+        status="4").filter(date__gte=date_start).filter(
+            date__lte=date_end).filter(workplace_id=pizzeria).filter(
+                driver_id=self).filter(pay_method=7))
+    count = len(driver_courses)
+    return count
+
+
 def download(request, path):
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
@@ -881,6 +923,12 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
     income_online_3 = (Orders.objects.filter(
         workplace_id=pizzeria_active).filter(date__gte=date_start).filter(
             date__lte=date_end).filter(pay_method=5).filter(status=4).count())
+    income_online_4 = (Orders.objects.filter(
+        workplace_id=pizzeria_active).filter(date__gte=date_start).filter(
+            date__lte=date_end).filter(pay_method=6).filter(status=4).count())
+    income_online_5 = (Orders.objects.filter(
+        workplace_id=pizzeria_active).filter(date__gte=date_start).filter(
+            date__lte=date_end).filter(pay_method=7).filter(status=4).count())
     purhases = (Purchases.objects.filter(work_place=pizzeria_active).filter(
         date__gte=date_start).filter(date__lte=date_end))
     income_sum = 0
@@ -891,6 +939,8 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
     online_1 = 0
     online_2 = 0
     online_3 = 0
+    online_4 = 0
+    online_5 = 0
     for el in income:
         income_sum += el.income_total
         income_sum = round(income_sum, 2)
@@ -909,6 +959,10 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
             online_2 += el.income_total
         elif el.pay_method == 5:
             online_3 += el.income_total
+        elif el.pay_method == 6:
+            online_4 += el.income_total
+        elif el.pay_method == 7:
+            online_5 += el.income_total
 
     for el in purhases:
         if el.pay_method == 1:
@@ -950,6 +1004,10 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
     online_2_in_count = orders_in_workplace.filter(pay_method=4).count()
     online_3_in = 0
     online_3_in_count = orders_in_workplace.filter(pay_method=5).count()
+    online_4_in = 0
+    online_4_in_count = orders_in_workplace.filter(pay_method=6).count()
+    online_5_in = 0
+    online_5_in_count = orders_in_workplace.filter(pay_method=7).count()
     if order_in > 0:
         for el in orders_in_workplace:
             if el.pay_method == 1:
@@ -968,6 +1026,12 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
             if el.pay_method == 5:
                 online_3_in += float(el.income_total)
                 online_3_in = round(online_3_in, 2)
+            if el.pay_method == 6:
+                online_4_in += float(el.income_total)
+                online_4_in = round(online_4_in, 2)
+            if el.pay_method == 7:
+                online_5_in += float(el.income_total)
+                online_5_in = round(online_5_in, 2)
     if len(drivers) > 0:
         for driver in drivers:
             driver.counter_cursers = counter_cursers(driver, date_start,
@@ -989,6 +1053,14 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
             driver.counter_cursers_online_3 = counter_cursers_online_3(
                 driver, date_start, date_end, pizzeria_active)
             driver.counter_cursers_online_3_count = counter_cursers_online_3_count(
+                driver, date_start, date_end, pizzeria_active)
+            driver.counter_cursers_online_4 = counter_cursers_online_4(
+                driver, date_start, date_end, pizzeria_active)
+            driver.counter_cursers_online_4_count = counter_cursers_online_4_count(
+                driver, date_start, date_end, pizzeria_active)
+            driver.counter_cursers_online_5 = counter_cursers_online_5(
+                driver, date_start, date_end, pizzeria_active)
+            driver.counter_cursers_online_5_count = counter_cursers_online_5_count(
                 driver, date_start, date_end, pizzeria_active)
             driver.counter_active_orders_in_car_count = counter_active_orders_in_car_count(
                 driver, date_start, date_end, pizzeria_active)
@@ -1018,6 +1090,8 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
         "online_1_in_count": online_1_in_count,
         "online_2_in_count": online_2_in_count,
         "online_3_in_count": online_3_in_count,
+        "online_4_in_count": online_4_in_count,
+        "online_5_in_count": online_5_in_count,
         "warning": warning,
         "saldo": saldo,
         "avg_minutes": avg_minutes,
@@ -1028,6 +1102,8 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
         "online_1_in": online_1_in,
         "online_2_in": online_2_in,
         "online_3_in": online_3_in,
+        "online_4_in": online_4_in,
+        "online_5_in": online_5_in,
         "no_courses": no_courses,
         "drivers": drivers,
         "worker": worker,
@@ -1040,10 +1116,14 @@ def local_status(request, form, worker, warning, saldo, pizzerias):
         "income_online_1": income_online_1,
         "income_online_2": income_online_2,
         "income_online_3": income_online_3,
+        "income_online_4": income_online_4,
+        "income_online_5": income_online_5,
         "cards": cards,
         "online_1": round(online_1, 2),
         "online_2": round(online_2, 2),
         "online_3": round(online_3, 2),
+        "online_4": round(online_4, 2),
+        "online_5": round(online_5, 2),
         "setdate": setdate,
         "date_start": date_start,
         "pizzerias": pizzerias,

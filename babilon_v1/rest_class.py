@@ -43,7 +43,16 @@ class OrdersSerializer(serializers.ModelSerializer):
             "promo",
         )
         ordering_fields = "__all__"
-        ordering = ("name",)
+        ordering = ("name", )
+
+
+class WorkPlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkPlace
+        depth = 2
+        fields = ("id", "workplace_name")
+        ordering_fields = "__all__"
+        ordering = ("id", )
 
 
 class PostionOrderSerializer(serializers.ModelSerializer):
@@ -76,7 +85,7 @@ class PostionOrderSerializer(serializers.ModelSerializer):
             "total_price",
         )
         ordering_fields = "__all__"
-        ordering = ("id",)
+        ordering = ("id", )
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -84,7 +93,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Products
         fields = "__all__"
         ordering_fields = "__all__"
-        ordering = ("id",)
+        ordering = ("id", )
 
 
 # ViewSets define the view behavior.
@@ -98,11 +107,17 @@ class OrdersViewSet(viewsets.ModelViewSet):
     serializer_class = OrdersSerializer
 
 
+class WorkPlaceViewSet(viewsets.ModelViewSet):
+    # Login authorisiation for client
+    permission_classes = [permissions.DjangoModelPermissions]
+    queryset = WorkPlace.objects.filter(is_active=True)
+    serializer_class = WorkPlaceSerializer
+
+
 # @method_decorator(login_required, name="dispatch")
 class PositionOrderViewSet(generics.ListAPIView):
     # Login authorisiation for client
     permission_classes = [permissions.DjangoModelPermissions]
-
     serializer_class = PostionOrderSerializer
 
     def get_queryset(self):
@@ -114,7 +129,24 @@ class PositionOrderViewSet(generics.ListAPIView):
         order = Orders.objects.get(pk=order_id)
         order.printed = True
         order.save()
-        return PositionOrder.objects.filter(order_id=order_id).order_by("product_id")
+        return PositionOrder.objects.filter(
+            order_id=order_id).order_by("product_id")
+
+
+# @method_decorator(login_required, name="dispatch")
+class OrdersForWorkplaceView(generics.ListAPIView):
+    permission_classes = [permissions.DjangoModelPermissions]
+    serializer_class = OrdersSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        year = datetime.now().year
+        month = datetime.now().month
+        day = datetime.now().day
+        orders = (Orders.objects.filter(workplace_id=pk).filter(
+            printed=False).filter(date__day=day).filter(
+                date__month=month).filter(date__year=year))
+        return orders
 
 
 # @method_decorator(login_required, name="dispatch")
@@ -126,17 +158,13 @@ class OrdersForDriversView(generics.ListAPIView):
         year = datetime.now().year
         month = datetime.now().month
         day = datetime.now().day
-        orders = (
-            Orders.objects.filter(workplace_id=pk)
-            .filter(status=2)
-            .filter(driver_id=None)
-            .filter(date__day=day)
-            .filter(date__month=month)
-            .filter(date__year=year)
-            .exclude(address=None)
-        )
+        orders = (Orders.objects.filter(workplace_id=pk).filter(
+            status=2).filter(driver_id=None).filter(date__day=day).filter(
+                date__month=month).filter(date__year=year).exclude(
+                    address=None))
         return orders
 
 
 router = routers.DefaultRouter()
 router.register(r"order", OrdersViewSet, basename="order")
+router.register(r"workplaces", WorkPlaceViewSet, basename="work_places")

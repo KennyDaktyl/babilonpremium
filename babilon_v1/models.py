@@ -181,6 +181,7 @@ class WorkPlace(models.Model):
     address = models.ForeignKey(
         "Address", verbose_name="Adres pizzerii", on_delete=models.CASCADE
     )
+    is_active=models.BooleanField(verbose_name="Czy aktywna pizzeria",default=True, null=True, blank=True)
 
     def __str__(self):
         return str(self.id) + ", " + str(self.workplace_name)

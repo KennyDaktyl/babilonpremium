@@ -30,7 +30,7 @@ ALLOWED_HOSTS = [
 
 import socket
 
-print(socket.gethostname())
+# print(socket.gethostname())
 
 if socket.gethostname() == "Asus":
     SECURE_SSL_REDIRECT = False

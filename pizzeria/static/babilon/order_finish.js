@@ -16,13 +16,6 @@ $(document).ready(function () {
         set_time_zero.text('OK');
     })
 
-    // var time_realisation=('button.time_realisation');
-
-    // $(document).keyup(function (event) {
-    //     if (event.keyCode === 13) {
-    //         $('#enter').click();
-    //     }
-    // });
 
     time_zero.each(function (index) {
         $(this).on("click", function () {
@@ -69,7 +62,6 @@ $(document).ready(function () {
         $(this).on("click", function () {
             delivery_method.removeClass('btn-primary');
             delivery_method.addClass('btn-secendary');
-            console.log($(this).data('delivery'));
             $.ajax({
                 url: url_adress,
                 type: "GET",
@@ -82,7 +74,6 @@ $(document).ready(function () {
             }).done(function (result) {}).fail(function (xhr, status, err) {}).always(function (xhr, status) {});
 
             $(this).addClass('btn-primary');
-            location.reload();
         });
 
     });
