@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import django_heroku
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATICFILES_DIRS = (os.path.join(SITE_ROOT, "static"),)
@@ -32,13 +31,13 @@ import socket
 
 # print(socket.gethostname())
 
-if socket.gethostname() == "Asus":
+if socket.gethostname() in ["Asus", "michalp"]:
     SECURE_SSL_REDIRECT = False
     DEBUG = True
     
     DATABASES = {
     "default": {
-        "NAME": "babilon_02",
+        "NAME": "babilon_v1",
         "ENGINE": "django.db.backends.postgresql",
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
@@ -47,10 +46,10 @@ if socket.gethostname() == "Asus":
 }
 else:
     SECURE_SSL_REDIRECT = True
-    DEBUG = bool(os.environ.get("DEBUG_VALUE") == "False")
+    DEBUG = False
     DATABASES = {
     "default": {
-        "NAME": "premium03",
+        "NAME": "pizzeria_v04",
         "ENGINE": "django.db.backends.postgresql",
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
@@ -180,7 +179,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_URL = "pizzeria/static/media/"
+# MEDIA_URL = "pizzeria/static/media/"
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, "static/media/")
 
@@ -196,7 +195,7 @@ TIME_ZONE = "Poland"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 # import dj_database_url
 # DATABASES = {
